@@ -246,7 +246,6 @@
     <div id="submissionsSection" class="hidden fade-in space-y-6">
       <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-6">
         
-        <!-- Header Page Penghantaran -->
         <div class="flex flex-wrap justify-between items-center gap-4 border-b border-slate-200 pb-5">
           <div class="flex items-center gap-3">
             <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-700 flex items-center justify-center text-2xl font-bold border border-indigo-100">
@@ -262,7 +261,6 @@
           </button>
         </div>
 
-        <!-- 3 Kad Ringkasan Penghantaran Murid -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
             <div>
@@ -287,7 +285,6 @@
           </div>
         </div>
 
-        <!-- Bar Carian & Saringan Kelas -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
           <div>
             <label class="block text-xs font-bold text-slate-600 mb-1">Tapis Mengikut Kelas:</label>
@@ -309,7 +306,6 @@
           </div>
         </div>
 
-        <!-- Jadual Penghantaran Murid (Nama, Kelas, Matapelajaran) -->
         <div class="overflow-x-auto rounded-xl border border-slate-200">
           <table class="w-full text-left text-sm">
             <thead class="bg-slate-100 text-slate-700 text-xs uppercase font-bold border-b border-slate-200">
@@ -332,16 +328,12 @@
             </tbody>
           </table>
         </div>
-
-        <p class="text-xs text-slate-400 italic text-center">
-          * Nota: Senarai di atas disegerakkan terus daripada pangkalan data Google Sheets rasmi Kelas Cikgu Zainal.
-        </p>
       </div>
     </div>
 
     <!-- ======================================================== -->
     <!-- BAHAGIAN 3: SEMAK STATUS KEPUTUSAN (MURID)               -->
-    <!-- (DROPDOWN SAHAJA & NOTA SEMAKAN GURU)                    -->
+    <!-- (DROPDOWN SAHAJA & KAWALAN PELEPASAN OLEH GURU)          -->
     <!-- ======================================================== -->
     <div id="statusSection" class="hidden fade-in space-y-6">
       <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 max-w-xl mx-auto">
@@ -352,17 +344,15 @@
           </div>
           <h2 class="text-2xl font-bold text-slate-800">Semak Keputusan Murid</h2>
           
-          <!-- NOTA UTAMA MENGIKUT PERMINTAAN -->
           <div class="p-3.5 bg-amber-50 border border-amber-300 rounded-xl text-amber-900 text-xs font-semibold text-left flex items-start gap-2.5">
             <i class="fa-solid fa-circle-exclamation text-amber-600 text-sm mt-0.5 flex-shrink-0"></i>
             <div>
-              <span class="font-bold uppercase tracking-wider block text-amber-950 mb-0.5">Peringatan Semakan:</span>
-              Keputusan, markah, dan skema jawapan <strong>hanya boleh ditunjukkan selepas Cikgu Zainal selesai menyemak tugasan anda</strong>. Jika status masih belum disemak, paparan keputusan akan kekal dikunci.
+              <span class="font-bold uppercase tracking-wider block text-amber-950 mb-0.5">Peringatan Integriti:</span>
+              Keputusan, markah, dan skema jawapan <strong>hanya akan dibuka selepas Cikgu Zainal melepaskan keputusan secara rasmi di portal</strong>. Selagi belum dilepaskan, paparan kekal dikunci bagi mengelakkan murid lain meniru.
             </div>
           </div>
         </div>
 
-        <!-- BORANG DROPDOWN SAHAJA -->
         <div class="space-y-4">
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">1. Pilih Kelas</label>
@@ -395,9 +385,10 @@
       </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- BAHAGIAN 4: DASHBOARD GURU (CIKGU ZAINAL)  -->
-    <!-- ========================================== -->
+    <!-- ======================================================== -->
+    <!-- BAHAGIAN 4: DASHBOARD GURU (CIKGU ZAINAL)                -->
+    <!-- (DENGAN SUIS PELEPASAN KEPUTUSAN KEPADA MURID)           -->
+    <!-- ======================================================== -->
     <div id="adminSection" class="hidden fade-in space-y-6">
 
       <!-- Login Guru -->
@@ -422,6 +413,7 @@
       <!-- Panel Pengurusan Guru -->
       <div id="adminPanelBox" class="hidden space-y-6">
 
+        <!-- Top Header & Sesi -->
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-4">
           <div class="flex items-center gap-3">
             <div class="w-12 h-12 rounded-xl bg-slate-50 p-1 border border-slate-200 flex items-center justify-center">
@@ -444,6 +436,35 @@
             </button>
             <button onclick="logoutAdmin()" class="px-3.5 py-2 bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition">
               <i class="fa-solid fa-right-from-bracket"></i> Log Keluar
+            </button>
+          </div>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- PANEL KAWALAN: SUIS PELEPASAN KEPUTUSAN KEPADA MURID      -->
+        <!-- ======================================================== -->
+        <div id="releaseControlCard" class="rounded-2xl p-5 border shadow-sm flex flex-wrap items-center justify-between gap-4 transition-all bg-amber-50/70 border-amber-300">
+          <div class="flex items-center gap-3.5">
+            <div id="releaseControlIcon" class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl font-bold bg-amber-100 text-amber-700">
+              <i class="fa-solid fa-lock"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-extrabold uppercase tracking-wider text-slate-600">Kawalan Pelepasan Keputusan:</span>
+                <span id="releaseStatusBadge" class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-amber-200 text-amber-900">
+                  DIKUNCI (SULIT)
+                </span>
+              </div>
+              <p id="releaseStatusDesc" class="text-xs text-slate-600 mt-0.5 leading-relaxed">
+                Anda boleh menyemak jawapan murid sekarang. Murid <strong>TIDAK DAPAT MELIHAT</strong> markah & skema jawapan selagi butang ini belum ditekan.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button onclick="toggleResultsRelease()" id="btnToggleRelease" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl shadow transition flex items-center gap-2">
+              <i class="fa-solid fa-bullhorn"></i>
+              <span>Lepaskan Keputusan Kepada Murid</span>
             </button>
           </div>
         </div>
@@ -492,8 +513,8 @@
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
           <div class="p-5 border-b border-slate-200 flex flex-wrap justify-between items-center gap-3">
             <div>
-              <h3 class="text-lg font-bold text-slate-800">Senarai Kerja Murid (Sumber: Google Sheets)</h3>
-              <p class="text-xs text-slate-500">Rekod menunjukkan masa sebenar penghantaran dan penanda 'Lewat'.</p>
+              <h3 class="text-lg font-bold text-slate-800">Senarai Tugasan Murid untuk Disemak</h3>
+              <p class="text-xs text-slate-500">Klik butang <strong>"Semak & Nilai"</strong> untuk mula menyemak jawapan objektif & subjektif murid.</p>
             </div>
             
             <div class="flex flex-wrap items-center gap-2">
@@ -538,9 +559,9 @@
 
   </main>
 
-  <!-- ========================================== -->
-  <!-- MODAL SEMAKAN GURU (CIKGU ZAINAL)          -->
-  <!-- ========================================== -->
+  <!-- ======================================================== -->
+  <!-- MODAL SEMAKAN PINTAR GURU (CIKGU ZAINAL)                 -->
+  <!-- ======================================================== -->
   <div id="reviewModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 no-print">
     <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[92vh] flex flex-col overflow-hidden">
       
@@ -584,23 +605,32 @@
 
         <div>
           <h4 class="font-bold text-slate-800 text-base mb-3 border-b pb-1 flex items-center gap-2">
-            <i class="fa-solid fa-pen-nib text-indigo-600"></i> Semakan 5 Soalan Subjektif
+            <i class="fa-solid fa-pen-nib text-indigo-600"></i> Semakan 5 Soalan Subjektif Berbantu Kata Kunci & Rubrik
           </h4>
           <div id="modalSubjDetail" class="space-y-4"></div>
         </div>
 
-        <!-- Ruangan Markah Subjektif & Ulasan -->
+        <!-- Ruangan Markah Subjektif & Ulasan Pintar -->
         <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 space-y-3">
-          <h5 class="font-bold text-indigo-950 text-sm">Pemarkahan & Pengesahan Cikgu Zainal</h5>
+          <div class="flex flex-wrap justify-between items-center gap-2">
+            <h5 class="font-bold text-indigo-950 text-sm">Pemarkahan & Pengesahan Cikgu Zainal</h5>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-indigo-800">Cadangan Sistem: <strong id="suggestedMarkBadge" class="bg-amber-200 px-2 py-0.5 rounded text-amber-950 font-black">0 / 20</strong></span>
+              <button type="button" onclick="applySuggestedScore()" class="px-2.5 py-1 bg-indigo-600 text-white text-[11px] font-bold rounded-lg hover:bg-indigo-700 shadow-sm">
+                Guna Cadangan
+              </button>
+            </div>
+          </div>
+
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">Markah Subjektif (/20)</label>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Jumlah Markah Subjektif (/20)</label>
               <input type="number" id="inputSubjMark" min="0" max="20" placeholder="0 - 20" 
-                     class="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                     class="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-bold text-indigo-900 text-base" />
             </div>
             <div>
               <label class="block text-xs font-semibold text-slate-700 mb-1">Kemas Kini Status ke Sheet</label>
-              <select id="selectMarkStatus" class="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <select id="selectMarkStatus" class="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-xs">
                 <option value="Belum Disemak">Belum Disemak</option>
                 <option value="Belum Disemak (Lewat)">Belum Disemak (Lewat)</option>
                 <option value="Telah Disemak">Telah Disemak</option>
@@ -608,8 +638,23 @@
               </select>
             </div>
           </div>
+
           <div>
-            <label class="block text-xs font-semibold text-slate-700 mb-1">Ulasan / Komen Cikgu Zainal</label>
+            <label class="block text-xs font-semibold text-slate-700 mb-1.5">Ulasan Pantas (Klik untuk tambah):</label>
+            <div class="flex flex-wrap gap-1.5 mb-2">
+              <button type="button" onclick="appendQuickComment('Tahniah, jawapan huraian sangat lengkap dan tepat! ⭐')" class="px-2.5 py-1 bg-white hover:bg-emerald-50 text-emerald-800 border border-emerald-300 rounded-full text-[11px] font-medium transition">
+                + Sangat Tepat ⭐
+              </button>
+              <button type="button" onclick="appendQuickComment('Jawapan memuaskan. Sila perkemaskan istilah teknikal mekatronik.')" class="px-2.5 py-1 bg-white hover:bg-blue-50 text-blue-800 border border-blue-300 rounded-full text-[11px] font-medium transition">
+                + Perlu Kemas Istilah
+              </button>
+              <button type="button" onclick="appendQuickComment('Kurang huraian pada bahagian komponen proses dan output.')" class="px-2.5 py-1 bg-white hover:bg-amber-50 text-amber-800 border border-amber-300 rounded-full text-[11px] font-medium transition">
+                + Kurang Huraian
+              </button>
+              <button type="button" onclick="appendQuickComment('Sila rujuk semula skema bab reka bentuk mekatronik.')" class="px-2.5 py-1 bg-white hover:bg-rose-50 text-rose-800 border border-rose-300 rounded-full text-[11px] font-medium transition">
+                + Rujuk Semula Skema
+              </button>
+            </div>
             <textarea id="inputTeacherComment" rows="2" placeholder="Tulis ulasan pembetulan untuk murid..." 
                       class="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xs"></textarea>
           </div>
@@ -636,8 +681,6 @@
   <!-- ========================================== -->
   <div id="printableSlip" class="hidden">
     <div class="max-w-3xl mx-auto border-2 border-slate-800 p-8 rounded-lg">
-      
-      <!-- Kepala Surat Rasmi Sekolah -->
       <div class="flex items-center justify-between border-b-2 border-slate-800 pb-4 mb-6">
         <div class="w-20 h-20 flex-shrink-0 flex items-center justify-center mr-4">
           <img src="logo.png" alt="Logo SMK SEMEKAR" class="max-w-full max-h-full object-contain"
@@ -706,7 +749,7 @@
               <td class="border border-slate-400 p-2 text-left">JUMLAH KESELURUHAN</td>
               <td class="border border-slate-400 p-2">30</td>
               <td class="border border-slate-400 p-2 text-indigo-900" id="slipTotalScore">-</td>
-              <td class="border border-slate-400 p-2 text-indigo-900" id="slipTotalPercent">-</td>
+              <td class="border border-slate-400 p-2" id="slipTotalPercent">-</td>
             </tr>
           </tbody>
         </table>
@@ -732,9 +775,7 @@
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- FOOTER (WebApp Cikgu Enal)                 -->
-  <!-- ========================================== -->
+  <!-- FOOTER -->
   <footer class="bg-slate-900 text-slate-400 py-6 text-xs text-center border-t border-slate-800 no-print">
     <div class="max-w-6xl mx-auto px-4 flex flex-col items-center justify-center space-y-2">
       <div class="w-8 h-8 rounded-lg bg-white/5 p-1 flex items-center justify-center border border-white/10">
@@ -746,7 +787,7 @@
     </div>
   </footer>
 
-  <!-- SCRIPT APLIKASI WEB & LOGIK SISTEM -->
+  <!-- SCRIPT APLIKASI WEB & LOGIK SEMAKAN -->
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxrPzsXB7xn8U4vI6LdCZQojLdmQRYOEqXL0mjAS_g-NwXNUR8Nj4x7W4yt5OH_Qh3GSQ/exec";
 
@@ -755,7 +796,7 @@
     ========================================================== */
     function getTodayDeadline() {
       const d = new Date();
-      d.setHours(17, 0, 0, 0); // 5:00 PM hari ini
+      d.setHours(17, 0, 0, 0);
       return d;
     }
 
@@ -829,7 +870,7 @@
     window.addEventListener('DOMContentLoaded', updateDeadlineUI);
 
     /* ==========================================================
-       DATA SOALAN TINGKATAN 3
+       DATA SOALAN OBJEKTIF & SUBJEKTIF
     ========================================================== */
     const objectiveQuestions = [
       { id: 1, question: "Apakah takrifan yang paling tepat bagi reka bentuk mekatronik?", options: ["A. Gabungan sistem mekanikal dan elektrik semata-mata.", "B. Aplikasi reka bentuk industri dalam menghasilkan perabot moden.", "C. Integrasi disiplin ilmu mekanikal, elektrik, elektronik, serta kawalan dan pengaturcaraan.", "D. Penggunaan komputer untuk melukis pelan struktur bangunan."], answer: 2 },
@@ -852,9 +893,44 @@
       { id: 5, question: "Cikgu Zainal meminta murid mereka bentuk peranti amaran banjir mekatronik. Cadangkan penderia yang sesuai dan terangkan bagaimana sistem tersebut beroperasi apabila paras air meningkat.", hint: "Penderia aras air, mikropengawal, buzzer & LED." }
     ];
 
+    /* RUBRIK DAN KATA KUNCI SUBJEKTIF */
+    const subjectiveRubrics = [
+      {
+        id: 1,
+        maxMark: 4,
+        keywords: ["mekanikal", "elektrik", "elektronik", "kawalan", "pengaturcaraan"],
+        sampleScheme: "4 Elemen Utama: 1. Sistem Mekanikal, 2. Sistem Elektrik, 3. Sistem Elektronik, 4. Sistem Kawalan dan Pengaturcaraan."
+      },
+      {
+        id: 2,
+        maxMark: 4,
+        keywords: ["input", "penderia", "sensor", "proses", "mikropengawal", "output", "motor", "penggerak"],
+        sampleScheme: "Input: Penderia kesan isyarat fizikal. Proses: Mikropengawal memproses data kod. Output: Penggerak (motor DC/servo) menghasilkan pergerakan."
+      },
+      {
+        id: 3,
+        maxMark: 4,
+        keywords: ["makmal", "terkawal", "parameter", "sebenar", "lapangan", "lokasi"],
+        sampleScheme: "Ujian Makmal: Dijalankan di tempat terkawal (makmal). Ujian Parameter: Dijalankan di persekitaran atau situasi penggunaan sebenar produk."
+      },
+      {
+        id: 4,
+        maxMark: 4,
+        keywords: ["rupa bentuk", "fungsi", "kefungsian", "ergonomik", "bahan", "keselamatan", "kos"],
+        sampleScheme: "Mana-mana 3: Daya tarikan rupa bentuk, kefungsian, ergonomik, kesesuaian bahan, faktor keselamatan, atau kos."
+      },
+      {
+        id: 5,
+        maxMark: 4,
+        keywords: ["aras air", "water level", "ultrasonik", "mikropengawal", "buzzer", "led", "lampu", "bunyi", "amaran"],
+        sampleScheme: "Penderia aras air/ultrasonik mengesan kenaikan paras air -> hantar isyarat ke mikropengawal -> mikropengawal membunyikan buzzer & menyalakan LED amaran."
+      }
+    ];
+
     let currentStudent = { name: "", class: "" };
     let isAdminLoggedIn = false;
     let cachedSheetSubmissions = [];
+    let isResultsReleased = false; // Status pelepasan dari Google Sheet
     let selectedStudentIndex = null;
 
     /* PENGURUSAN TAB NAVIGASI */
@@ -1055,7 +1131,7 @@
     }
 
     /* ==========================================================
-       LOGIK HALAMAN BAHARU: SENARAI PENGHANTARAN
+       HALAMAN PENGHANTARAN: SENARAI MURID TELAH HANTAR
     ========================================================== */
     async function loadPublicSubmissions() {
       const tbody = document.getElementById('publicSubmissionsTableBody');
@@ -1070,7 +1146,7 @@
         <tr>
           <td colspan="6" class="text-center py-8 text-slate-400">
             <i class="fa-solid fa-spinner fa-spin text-lg mb-2 block text-indigo-600"></i>
-            Sedang mengambil senarai murid yang telah menghantar dari Google Sheets...
+            Sedang mengambil senarai penghantaran dari Google Sheets...
           </td>
         </tr>
       `;
@@ -1079,6 +1155,7 @@
         const response = await fetch(SCRIPT_URL);
         const result = await response.json();
         cachedSheetSubmissions = result.data || [];
+        isResultsReleased = result.isReleased === true;
         renderPublicSubmissionsTable();
       } catch (e) {
         tbody.innerHTML = `
@@ -1103,7 +1180,6 @@
       const classFilter = document.getElementById('pubClassFilter').value;
       const searchKeyword = (document.getElementById('pubSearchInput').value || "").trim().toUpperCase();
 
-      // Kemas kini kad metrik
       const total = cachedSheetSubmissions.length;
       const count3S1 = cachedSheetSubmissions.filter(s => s.class === "3S1").length;
       const count3S2 = cachedSheetSubmissions.filter(s => s.class === "3S2").length;
@@ -1114,12 +1190,10 @@
 
       let list = cachedSheetSubmissions;
 
-      // Saringan Kelas
       if (classFilter !== "ALL") {
         list = list.filter(s => s.class === classFilter);
       }
 
-      // Saringan Carian Nama
       if (searchKeyword) {
         list = list.filter(s => s.name.toUpperCase().indexOf(searchKeyword) !== -1);
       }
@@ -1161,7 +1235,7 @@
     }
 
     /* ==========================================================
-       LOGIK SEMAK KEPUTUSAN (DROPDOWN SAHAJA & NOTA SEMAKAN)
+       SEMAK KEPUTUSAN: KAWALAN PELEPASAN & DROPDOWN MURID
     ========================================================== */
     async function ensureDataLoadedForLookup() {
       const note = document.getElementById('lookupLoadingNote');
@@ -1170,6 +1244,7 @@
         const response = await fetch(SCRIPT_URL);
         const result = await response.json();
         cachedSheetSubmissions = result.data || [];
+        isResultsReleased = result.isReleased === true;
       } catch (e) {
         console.error("Gagal muat data Google Sheet:", e);
       }
@@ -1227,7 +1302,10 @@
       const isReviewed = found.reviewStatus && found.reviewStatus.indexOf("Telah Disemak") !== -1;
       const isLate = found.isLate || found.timestamp.indexOf("LEWAT") !== -1 || (found.reviewStatus && found.reviewStatus.indexOf("Lewat") !== -1);
 
-      if (!isReviewed) {
+      // KAWALAN UTAMA CIKGU ZAINAL:
+      // Sekiranya cikgu BELUM melepaskan keputusan di portal (isResultsReleased == false),
+      // murid sama sekali tidak dapat melihat markah/skema walau sudah siap disemak!
+      if (!isResultsReleased) {
         container.innerHTML = `
           <div class="p-5 bg-amber-50 border-2 border-amber-300 rounded-2xl text-center space-y-3.5 shadow-sm animate-scale">
             <div class="w-14 h-14 bg-amber-100 text-amber-700 rounded-2xl flex items-center justify-center mx-auto text-2xl font-bold border border-amber-200">
@@ -1235,7 +1313,7 @@
             </div>
             <div>
               <span class="px-2.5 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wide bg-amber-200 text-amber-900">
-                Status: Menunggu Semakan Guru
+                Status: Semakan Sedang Dijalankan
               </span>
               <h4 class="font-extrabold text-slate-800 text-lg mt-2">${found.name}</h4>
               <p class="text-xs text-slate-600 mt-0.5">
@@ -1246,12 +1324,29 @@
             
             <div class="p-3.5 bg-white rounded-xl border border-amber-200 text-xs text-amber-950 text-left leading-relaxed shadow-inner">
               <i class="fa-solid fa-shield-halved text-amber-600 mr-1"></i>
-              <strong>Keputusan Belum Boleh Ditunjukkan:</strong><br>
-              Tugasan anda telah berjaya direkodkan dalam Google Sheet. Walau bagaimanapun, markah dan skema jawapan <strong>hanya akan dibuka secara automatik selepas Cikgu Zainal menyemak dan meluluskan jawapan anda</strong>. Sila semak semula kemudian.
+              <strong>Keputusan Belum Dilepaskan:</strong><br>
+              Cikgu Zainal sedang dalam proses menyemak latihan semua murid. Bagi menjamin keadilan dan mengelakkan murid lain daripada meniru, <strong>markah dan skema jawapan belum dibuka untuk paparan umum</strong>. Sila nantikan pengumuman rasmi daripada guru anda.
             </div>
           </div>
         `;
+        return;
+      }
+
+      // JIKA KEPUTUSAN TELAH DILEPASKAN OLEH CIKGU ZAINAL:
+      if (!isReviewed) {
+        container.innerHTML = `
+          <div class="p-5 bg-slate-50 border border-slate-300 rounded-2xl text-center space-y-3 shadow-sm">
+            <div class="w-12 h-12 bg-slate-200 text-slate-600 rounded-2xl flex items-center justify-center mx-auto text-xl font-bold">
+              <i class="fa-solid fa-hourglass-start"></i>
+            </div>
+            <h4 class="font-bold text-slate-800 text-base">${found.name}</h4>
+            <p class="text-xs text-slate-600">
+              Tugasan anda masih dalam giliran semakan guru. Sila semak semula sebentar lagi.
+            </p>
+          </div>
+        `;
       } else {
+        // PAPARKAN KEPUTUSAN PENUH & BUTANG CETAK SLIP PDF
         const objScore = parseInt(found.objScore) || 0;
         const subjScore = parseInt(found.subjMark) || 0;
         const totalScore = objScore + subjScore;
@@ -1323,7 +1418,9 @@
       }
     }
 
-    /* DASHBOARD GURU: BACA DATA GOOGLE SHEETS */
+    /* ==========================================================
+       DASHBOARD GURU: BACA DATA & SUIS KAWALAN PELEPASAN
+    ========================================================== */
     function loginAdmin() {
       const pass = document.getElementById('adminPassInput').value;
       const err = document.getElementById('adminLoginErr');
@@ -1363,12 +1460,16 @@
       tbody.innerHTML = `<tr><td colspan="8" class="text-center py-6 text-slate-400">Sedang menarik data langsung dari Google Sheets...</td></tr>`;
 
       try {
-        const response = await fetch(SCRIPT_URL);
+        // Hantar pass=adminzainal supaya Google Apps Script memulangkan data penuh untuk disemak guru
+        const response = await fetch(`${SCRIPT_URL}?pass=adminzainal`);
         const result = await response.json();
         cachedSheetSubmissions = result.data || [];
+        isResultsReleased = result.isReleased === true;
+
+        updateReleaseControlUI();
 
         document.getElementById('statTotalSubmissions').innerText = cachedSheetSubmissions.length;
-        const pendingCount = cachedSheetSubmissions.filter(item => item.reviewStatus.indexOf("Telah Disemak") === -1).length;
+        const pendingCount = cachedSheetSubmissions.filter(item => !item.reviewStatus || item.reviewStatus.indexOf("Telah Disemak") === -1).length;
         document.getElementById('statPendingReview').innerText = pendingCount;
         const lateCount = cachedSheetSubmissions.filter(item => item.isLate || item.timestamp.indexOf("LEWAT") !== -1 || (item.reviewStatus && item.reviewStatus.indexOf("Lewat") !== -1)).length;
         document.getElementById('statLateSubmissions').innerText = lateCount;
@@ -1383,7 +1484,70 @@
       refBtn.innerHTML = `<i class="fa-solid fa-rotate"></i> Muat Semula Data Sheet`;
     }
 
-    /* RENDER JADUAL DENGAN TAPISAN KELAS & STATUS LEWAT DI DASHBOARD */
+    /* KEMAS KINI PAPARAN SUIS PELEPASAN KEPUTUSAN GURU */
+    function updateReleaseControlUI() {
+      const card = document.getElementById('releaseControlCard');
+      const icon = document.getElementById('releaseControlIcon');
+      const badge = document.getElementById('releaseStatusBadge');
+      const desc = document.getElementById('releaseStatusDesc');
+      const btn = document.getElementById('btnToggleRelease');
+
+      if (isResultsReleased) {
+        card.className = "rounded-2xl p-5 border shadow-sm flex flex-wrap items-center justify-between gap-4 transition-all bg-emerald-50/80 border-emerald-300";
+        icon.className = "w-12 h-12 rounded-xl flex items-center justify-center text-2xl font-bold bg-emerald-100 text-emerald-700";
+        icon.innerHTML = `<i class="fa-solid fa-lock-open"></i>`;
+        badge.className = "px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-200 text-emerald-900";
+        badge.innerText = "TELAH DILEPASKAN KEPADA MURID";
+        desc.innerHTML = "Semua murid yang telah disemak kini <strong>boleh melihat keputusan dan menjana slip PDF</strong> mereka di portal.";
+        
+        btn.className = "px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-xs rounded-xl shadow transition flex items-center gap-2";
+        btn.innerHTML = `<i class="fa-solid fa-lock"></i> <span>Kunci Semula Keputusan (Sekat Murid)</span>`;
+      } else {
+        card.className = "rounded-2xl p-5 border shadow-sm flex flex-wrap items-center justify-between gap-4 transition-all bg-amber-50/80 border-amber-300";
+        icon.className = "w-12 h-12 rounded-xl flex items-center justify-center text-2xl font-bold bg-amber-100 text-amber-700";
+        icon.innerHTML = `<i class="fa-solid fa-lock"></i>`;
+        badge.className = "px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-amber-200 text-amber-900";
+        badge.innerText = "DIKUNCI (SULIT)";
+        desc.innerHTML = "Anda boleh menyemak jawapan murid sekarang. Murid <strong>TIDAK DAPAT MELIHAT</strong> markah & skema jawapan selagi butang ini belum ditekan.";
+
+        btn.className = "px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl shadow transition flex items-center gap-2";
+        btn.innerHTML = `<i class="fa-solid fa-bullhorn"></i> <span>Lepaskan Keputusan Kepada Murid</span>`;
+      }
+    }
+
+    async function toggleResultsRelease() {
+      const willRelease = !isResultsReleased;
+      const confirmText = willRelease
+        ? "Adakah anda pasti mahu MELEPASKAN keputusan kepada semua murid sekarang? Murid yang telah disemak akan dapat melihat markah dan skema jawapan serta-merta."
+        : "Adakah anda pasti mahu MENGUNCI SEMULA keputusan? Murid tidak lagi dapat melihat markah dan skema jawapan.";
+
+      if (!confirm(confirmText)) return;
+
+      const btn = document.getElementById('btnToggleRelease');
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Mengemas kini status...`;
+
+      try {
+        await fetch(SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            action: "TOGGLE_RELEASE",
+            isReleased: willRelease
+          })
+        });
+
+        isResultsReleased = willRelease;
+        updateReleaseControlUI();
+        alert(willRelease ? "Keputusan berjaya dilepaskan kepada murid!" : "Keputusan telah dikunci semula.");
+      } catch (e) {
+        alert("Ralat mengemas kini status pelepasan: " + e);
+      }
+
+      btn.disabled = false;
+      updateReleaseControlUI();
+    }
+
+    /* RENDER JADUAL DASHBOARD */
     function renderTableRows() {
       const tbody = document.getElementById('studentSubmissionsTable');
       const classFilter = document.getElementById('adminClassFilter').value;
@@ -1426,7 +1590,7 @@
             <td class="px-4 py-3 font-bold">
               <span class="px-2 py-0.5 rounded text-xs ${classBadgeColor}">${sub.class}</span>
             </td>
-            <td class="px-4 py-3 font-extrabold text-indigo-900">${sub.objScore} / 10</td>
+            <td class="px-4 py-3 font-extrabold text-indigo-900">${sub.objScore !== null ? sub.objScore + ' / 10' : '-'}</td>
             <td class="px-4 py-3 font-extrabold text-blue-900">${sub.subjMark || '-'} / 20</td>
             <td class="px-4 py-3">
               <span class="px-2.5 py-1 rounded-full text-xs font-bold ${badgeClass}">${sub.reviewStatus}</span>
@@ -1441,7 +1605,20 @@
       });
     }
 
-    /* MODAL SEMAKAN GURU */
+    /* ==========================================================
+       MODAL SEMAKAN PINTAR GURU DENGAN KATA KUNCI & RUBRIK
+    ========================================================== */
+    function highlightKeywords(text, keywords) {
+      if (!text || text === "(Tiada jawapan)") return `<span class="text-rose-500 italic">Tiada jawapan dihantar</span>`;
+      let escapedText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      
+      keywords.forEach(kw => {
+        const regex = new RegExp(`(${kw})`, 'gi');
+        escapedText = escapedText.replace(regex, `<mark class="bg-emerald-200 text-emerald-950 px-1 rounded font-bold border border-emerald-300">$1</mark>`);
+      });
+      return escapedText;
+    }
+
     function openReviewModal(index) {
       selectedStudentIndex = index;
       const student = cachedSheetSubmissions[index];
@@ -1449,7 +1626,7 @@
 
       document.getElementById('modalStudentName').innerText = student.name;
       document.getElementById('modalStudentMeta').innerText = `Kelas: ${student.class} • Baris Sheet: ${student.rowIndex} • Masa: ${student.timestamp}`;
-      document.getElementById('modalObjScore').innerText = `${student.objScore} / 10`;
+      document.getElementById('modalObjScore').innerText = `${student.objScore !== null ? student.objScore : 0} / 10`;
       document.getElementById('modalReviewStatus').innerText = student.reviewStatus;
 
       const timingBadge = document.getElementById('modalTimingBadge');
@@ -1461,6 +1638,7 @@
         timingBadge.innerText = "TEPAT MASA";
       }
 
+      // 1. Semakan Objektif
       const objDetailContainer = document.getElementById('modalObjDetail');
       objDetailContainer.innerHTML = "";
       objectiveQuestions.forEach((q, qIdx) => {
@@ -1470,7 +1648,7 @@
         const correctAnsText = q.options[q.answer];
 
         objDetailContainer.innerHTML += `
-          <div class="p-3 rounded-lg border ${isCorrect ? 'border-emerald-200 bg-emerald-50/50' : 'border-rose-200 bg-rose-50/50'} text-xs space-y-1">
+          <div class="p-2.5 rounded-lg border ${isCorrect ? 'border-emerald-200 bg-emerald-50/50' : 'border-rose-200 bg-rose-50/50'} text-xs space-y-0.5">
             <div class="font-semibold text-slate-800 flex justify-between">
               <span>S${qIdx + 1}. ${q.question}</span>
               <span class="font-bold ${isCorrect ? 'text-emerald-700' : 'text-rose-700'}">${isCorrect ? '✓ Betul' : '✗ Salah'}</span>
@@ -1481,32 +1659,110 @@
         `;
       });
 
+      // 2. Semakan Subjektif Berbantu Kata Kunci & Rubrik
       const subjDetailContainer = document.getElementById('modalSubjDetail');
       subjDetailContainer.innerHTML = "";
+      let totalSuggestedScore = 0;
+
       subjectiveQuestions.forEach((q, qIdx) => {
-        const studentSubjText = student.subjAnswers ? student.subjAnswers[qIdx] : "(Tiada jawapan)";
+        const rubric = subjectiveRubrics[qIdx];
+        const rawStudentText = student.subjAnswers ? student.subjAnswers[qIdx] : "(Tiada jawapan)";
+        
+        let matchedKeywordsCount = 0;
+        if (rawStudentText && rawStudentText !== "(Tiada jawapan)") {
+          rubric.keywords.forEach(kw => {
+            if (new RegExp(kw, 'i').test(rawStudentText)) matchedKeywordsCount++;
+          });
+        }
+
+        let suggestedQMark = Math.min(rubric.maxMark, Math.round((matchedKeywordsCount / rubric.keywords.length) * rubric.maxMark * 1.5));
+        if (matchedKeywordsCount >= 2 && suggestedQMark === 0) suggestedQMark = 1;
+        totalSuggestedScore += suggestedQMark;
+
+        const highlightedHTML = highlightKeywords(rawStudentText, rubric.keywords);
 
         subjDetailContainer.innerHTML += `
-          <div class="p-3.5 rounded-lg border border-slate-200 bg-slate-50 text-xs space-y-2">
-            <div class="font-bold text-slate-800">S${qIdx + 1}. ${q.question}</div>
-            <div class="p-2.5 bg-white rounded border border-slate-200 text-slate-700 whitespace-pre-wrap leading-relaxed font-mono">
-              ${studentSubjText}
+          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50 text-xs space-y-3">
+            <div class="flex justify-between items-start gap-2">
+              <div class="font-bold text-slate-900 text-sm">S${qIdx + 1}. ${q.question}</div>
+              <span class="px-2 py-0.5 bg-indigo-100 text-indigo-800 rounded font-bold text-[11px] whitespace-nowrap">Max: ${rubric.maxMark}m</span>
+            </div>
+
+            <div class="bg-white p-3 rounded-lg border border-slate-300">
+              <div class="text-[10px] uppercase font-bold text-slate-400 mb-1 flex items-center gap-1">
+                <i class="fa-solid fa-highlighter text-emerald-600"></i> Jawapan Murid (Kata kunci dikesan diwarnakan):
+              </div>
+              <div class="text-slate-800 whitespace-pre-wrap leading-relaxed text-xs">
+                ${highlightedHTML}
+              </div>
+            </div>
+
+            <div class="p-2.5 bg-amber-50/70 border border-amber-200 rounded-lg text-slate-700">
+              <span class="font-bold text-amber-900 block mb-0.5 text-[10px] uppercase">
+                <i class="fa-solid fa-key text-amber-600"></i> Skema / Kriteria Pemarkahan:
+              </span>
+              <p class="text-slate-600 text-[11px] leading-relaxed">${rubric.sampleScheme}</p>
+            </div>
+
+            <div class="flex items-center justify-between pt-1 border-t border-slate-200">
+              <span class="text-slate-500 text-[11px]">Dikesan: <strong>${matchedKeywordsCount} kata kunci</strong> (Cadangan: ${suggestedQMark}/${rubric.maxMark}m)</span>
+              <div class="flex items-center gap-1">
+                <span class="text-[11px] text-slate-600 mr-1">Beri Markah:</span>
+                ${[0, 1, 2, 3, 4].map(num => `
+                  <button type="button" onclick="setSubjScoreManual(${qIdx},${num})" id="qBtn_${qIdx}_${num}" 
+                          class="q-score-btn-${qIdx} w-6 h-6 rounded text-xs font-bold border transition${num === suggestedQMark ? 'bg-indigo-600 text-white border-indigo-700' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'}">
+                    ${num}
+                  </button>
+                `).join('')}
+              </div>
             </div>
           </div>
         `;
       });
 
-      document.getElementById('inputSubjMark').value = student.subjMark !== "-" ? student.subjMark : "";
-      
+      const currentMark = student.subjMark !== "-" ? student.subjMark : totalSuggestedScore;
+      document.getElementById('inputSubjMark').value = currentMark;
+      document.getElementById('suggestedMarkBadge').innerText = `${totalSuggestedScore} / 20`;
+
       const statusSelect = document.getElementById('selectMarkStatus');
-      if (student.reviewStatus) {
-        statusSelect.value = student.reviewStatus;
-      } else {
-        statusSelect.value = isLate ? "Telah Disemak (Lewat)" : "Telah Disemak";
-      }
+      statusSelect.value = isLate ? "Telah Disemak (Lewat)" : "Telah Disemak";
 
       document.getElementById('inputTeacherComment').value = student.teacherComment || "";
       document.getElementById('reviewModal').classList.remove('hidden');
+    }
+
+    function setSubjScoreManual(questionIdx, score) {
+      document.querySelectorAll(`.q-score-btn-${questionIdx}`).forEach(btn => {
+        btn.className = `q-score-btn-${questionIdx} w-6 h-6 rounded text-xs font-bold border bg-white text-slate-700 border-slate-300 hover:bg-slate-100`;
+      });
+      const activeBtn = document.getElementById(`qBtn_${questionIdx}_${score}`);
+      if (activeBtn) {
+        activeBtn.className = `q-score-btn-${questionIdx} w-6 h-6 rounded text-xs font-bold border bg-indigo-600 text-white border-indigo-700 shadow-sm`;
+      }
+
+      let currentTotal = 0;
+      for (let i = 0; i < 5; i++) {
+        const selectedBtn = document.querySelector(`.q-score-btn-${i}.bg-indigo-600`);
+        if (selectedBtn) {
+          currentTotal += parseInt(selectedBtn.innerText);
+        }
+      }
+      document.getElementById('inputSubjMark').value = currentTotal;
+    }
+
+    function applySuggestedScore() {
+      const badgeText = document.getElementById('suggestedMarkBadge').innerText;
+      const score = parseInt(badgeText);
+      document.getElementById('inputSubjMark').value = score;
+    }
+
+    function appendQuickComment(commentText) {
+      const commentInput = document.getElementById('inputTeacherComment');
+      if (commentInput.value.trim() === "") {
+        commentInput.value = commentText;
+      } else {
+        commentInput.value += " " + commentText;
+      }
     }
 
     function closeReviewModal() {
