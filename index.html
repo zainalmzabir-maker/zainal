@@ -12,7 +12,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   
   <style>
-    /* Fon Sistem Pantas (0ms Latensi) */
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
     
     .ease-smooth {
@@ -27,7 +26,7 @@
       to { opacity: 1; transform: translateY(0); } 
     }
 
-    /* Cetakan Slip PDF Rasmi A4 */
+    /* Format Cetakan Slip PDF Rasmi A4 */
     @media print {
       @page { size: A4 portrait; margin: 12mm 10mm; }
       body * { visibility: hidden; }
@@ -92,7 +91,6 @@
     <!-- BAHAGIAN 1: KELAS & LATIHAN (MURID) -->
     <div id="studentSection" class="fade-in space-y-4">
       
-      <!-- Banner Status Waktu (Patuh Masa / Lewat / Ditutup) -->
       <div id="deadlineBanner" class="bg-indigo-950 text-white rounded-xl p-3.5 shadow-sm flex flex-wrap items-center justify-between gap-3 border border-indigo-800 ease-smooth">
         <div>
           <h4 id="deadlineBannerTitle" class="font-extrabold text-xs sm:text-sm text-amber-300">SESI PEMBELAJARAN HARI INI</h4>
@@ -668,10 +666,10 @@
         defaultClass: "3S2",
         sessionName: "Sesi 10.30 pagi - 11.30 pagi (Khamis, 8 Okt 2026)",
         shortName: "Sesi T3 (3S1 & 3S2)",
-        // Peringkat 1: Had Patuh Masa (5.00 Petang)
+        // Had Patuh Masa: 5.00 Petang (17:00)
         onTimeHour: 17,
         onTimeMinute: 0,
-        // Peringkat 2: Had Terakhir Penghantaran / Portal Tutup (12.00 Malam)
+        // Had Terakhir / Tutup: 12.00 Malam (23:59:59)
         closeHour: 23,
         closeMinute: 59,
         closeSecond: 59,
@@ -683,16 +681,58 @@
         defaultClass: "2S1",
         sessionName: "Sesi 8.00 pagi - 9.00 pagi (Jumaat, 9 Okt 2026)",
         shortName: "Sesi T2 (2S1 & 2S2)",
-        // Peringkat 1: Had Patuh Masa (3.00 Petang)
+        // Had Patuh Masa: 3.00 Petang (15:00)
         onTimeHour: 15,
         onTimeMinute: 0,
-        // Peringkat 2: Had Terakhir Penghantaran / Portal Tutup (12.00 Malam)
+        // Had Terakhir / Tutup: 12.00 Malam (23:59:59)
         closeHour: 23,
         closeMinute: 59,
         closeSecond: 59,
         sessionDate: "2026-10-09"
       }
     };
+
+    /* ==========================================================
+       FUNGSI PENGHURAI WAKTU PINTAR (SMART TIMESTAMP PARSER)
+       Membaca rentetan waktu sebenar seperti "8/10/2026 7:24:35 PTG"
+       dan menentukan status Lewat secara tepat tanpa bergantung
+       pada perkataan harfiah "LEWAT".
+    ========================================================== */
+    function isSubmissionTimeLate(rawTimestamp, studentClass) {
+      if (!rawTimestamp) return false;
+      const str = String(rawTimestamp).trim().toUpperCase();
+      
+      // Jika sudah ada tag LEWAT
+      if (str.indexOf("LEWAT") !== -1) return true;
+
+      const isT3 = (studentClass === "3S1" || studentClass === "3S2");
+      const cutoffHour = isT3 ? 17 : 15; // 17:00 (5 PTG) atau 15:00 (3 PTG)
+      const cutoffMin = 0;
+
+      // Padankan pola waktu: jam:minit[:saat] [AM/PM/PG/PTG/MLM]
+      const match = str.match(/(\d{1,2}):(\d{1,2})(?::(\d{1,2}))?\s*(PG|PTG|MLM|AM|PM)?/i);
+      if (!match) return false;
+
+      let hour = parseInt(match[1], 10);
+      const min = parseInt(match[2], 10);
+      const sec = match[3] ? parseInt(match[3], 10) : 0;
+      const period = (match[4] || "").toUpperCase();
+
+      // Penukaran format 12 jam kepada 24 jam
+      if (period === "PTG" || period === "PM") {
+        if (hour < 12) hour += 12;
+      } else if (period === "MLM") {
+        if (hour < 12) hour += 12;
+        if (hour === 12) hour = 0;
+      } else if (period === "PG" || period === "AM") {
+        if (hour === 12) hour = 0;
+      }
+
+      // Perbandingan dengan had masa cutoff
+      if (hour > cutoffHour) return true;
+      if (hour === cutoffHour && (min > cutoffMin || sec > 0)) return true;
+      return false;
+    }
 
     /* BANK SOALAN TINGKATAN 2 */
     const questionsData_T2 = {
@@ -867,7 +907,7 @@
     }
 
     function loadFastLocalCache(isAdmin = false) {
-      const key = isAdmin ? 'semekar_admin_cache' : 'semekar_public_cache';
+      const key = isAdmin ? 'semekar_admin_cache_v7' : 'semekar_public_cache_v7';
       const raw = localStorage.getItem(key);
       if (raw) {
         try {
@@ -899,7 +939,7 @@
               sessionReleaseState = json.releaseStatus;
             }
 
-            const key = isAdmin ? 'semekar_admin_cache' : 'semekar_public_cache';
+            const key = isAdmin ? 'semekar_admin_cache_v7' : 'semekar_public_cache_v7';
             localStorage.setItem(key, JSON.stringify(cachedSheetSubmissions));
             localStorage.setItem('semekar_release_state', JSON.stringify(sessionReleaseState));
             showToast("Data terkini disegerak ✓");
@@ -1113,7 +1153,6 @@
       }
     }
 
-    /* MENGIRA DUA TARIKH SASARAN WAKTU */
     function getSessionOnTimeDeadline(sessionKey) {
       const config = SESSIONS_CONFIG[sessionKey] || SESSIONS_CONFIG["T3_SESI_HARI_INI"];
       const d = new Date(config.sessionDate + "T00:00:00");
@@ -1136,9 +1175,6 @@
       return new Date() > getSessionCloseDeadline(sessionKey);
     }
 
-    /* ==========================================================
-       PENGEMASKINIAN UI PEMASA MENGIKUT 3 TAHAP STATUS WAKTU
-    ========================================================== */
     function updateBannerUI() {
       const now = new Date();
       const onTimeDeadline = getSessionOnTimeDeadline(currentSessionKey);
@@ -1158,7 +1194,6 @@
       const submitBtnText = document.getElementById('submitBtnText');
       const startBtn = document.getElementById('startBtn');
 
-      // TAHAP 3: SELEPAS JAM 12.00 MALAM (PORTAL DITUTUP SEPENUHNYA)
       if (now > closeDeadline) {
         banner.className = "bg-slate-900 text-white rounded-xl p-3.5 shadow-sm flex flex-wrap items-center justify-between gap-3 border border-rose-600 ease-smooth";
         title.innerText = `${config.subject.toUpperCase()} - PENGHANTARAN TELAH DITUTUP`;
@@ -1182,9 +1217,7 @@
           startBtn.className = "w-full py-2.5 bg-slate-400 cursor-not-allowed text-white font-extrabold rounded-xl shadow text-xs";
           startBtn.innerText = "Sesi Telah Ditutup (Tamat 12.00 Malam)";
         }
-      }
-      // TAHAP 2: SELEPAS JAM SASARAN SEHINGGA 12.00 MALAM (LEWAT)
-      else if (now > onTimeDeadline) {
+      } else if (now > onTimeDeadline) {
         const diffClose = closeDeadline - now;
         const h = Math.floor(diffClose / 3600000);
         const m = Math.floor((diffClose % 3600000) / 60000);
@@ -1212,9 +1245,7 @@
           startBtn.className = "w-full py-2.5 bg-rose-600 hover:bg-rose-700 active:scale-[0.99] text-white font-extrabold rounded-xl shadow text-xs ease-smooth";
           startBtn.innerText = "Daftar & Mula Menjawab (Status: Lewat)";
         }
-      }
-      // TAHAP 1: SEBELUM JAM SASARAN (PATUH MASA)
-      else {
+      } else {
         const diffOnTime = onTimeDeadline - now;
         const h = Math.floor(diffOnTime / 3600000);
         const m = Math.floor((diffOnTime % 3600000) / 60000);
@@ -1471,7 +1502,8 @@
       }
 
       list.forEach((sub, idx) => {
-        const isLate = sub.isLate || (sub.timestamp && sub.timestamp.indexOf("LEWAT") !== -1);
+        // Tentukan status Lewat menggunakan fungsi cerdas waktu
+        const isLate = sub.isLate || isSubmissionTimeLate(sub.timestamp, sub.class);
         let classColor = (sub.class === "2S1" || sub.class === "2S2") ? "bg-amber-100 text-amber-800" : (sub.class === "3S1" ? "bg-blue-100 text-blue-800" : "bg-purple-100 text-purple-800");
 
         tbody.innerHTML += `
@@ -1555,8 +1587,8 @@
 
       container.classList.remove('hidden');
 
+      const isLate = found.isLate || isSubmissionTimeLate(found.timestamp, found.class);
       const isReviewed = found.reviewStatus && found.reviewStatus.indexOf("Telah Disemak") !== -1;
-      const isLate = found.isLate || (found.timestamp && found.timestamp.indexOf("LEWAT") !== -1);
       const isT2 = (found.class === "2S1" || found.class === "2S2" || (found.subject && found.subject.indexOf("Tingkatan 2") !== -1));
       const bank = isT2 ? questionsData_T2 : questionsData_T3;
 
@@ -1597,7 +1629,6 @@
         const totalScore = objScore + subjScore;
         const totalPercent = Math.round((totalScore / 30) * 100);
 
-        // 1. Semakan Bahagian A (Objektif)
         let objReviewHtml = "";
         bank.objective.forEach((q, idx) => {
           const studentAnsIdx = found.objAnswers ? found.objAnswers[idx] : null;
@@ -1617,7 +1648,6 @@
           `;
         });
 
-        // 2. Semakan Bahagian B (Subjektif) Lengkap Bersama Skema Tepat
         let subjReviewHtml = "";
         bank.subjective.forEach((q, idx) => {
           const rawSubjText = (found.subjAnswers && found.subjAnswers[idx]) ? found.subjAnswers[idx] : "(Tiada jawapan)";
@@ -1740,7 +1770,8 @@
       document.getElementById('statTotalSubmissions').innerText = cachedSheetSubmissions.length;
       const pending = cachedSheetSubmissions.filter(item => !item.reviewStatus || item.reviewStatus.indexOf("Telah Disemak") === -1).length;
       document.getElementById('statPendingReview').innerText = pending;
-      const late = cachedSheetSubmissions.filter(item => item.isLate || (item.timestamp && item.timestamp.indexOf("LEWAT") !== -1)).length;
+      
+      const late = cachedSheetSubmissions.filter(item => item.isLate || isSubmissionTimeLate(item.timestamp, item.class)).length;
       document.getElementById('statLateSubmissions').innerText = late;
 
       const t3Count = cachedSheetSubmissions.filter(s => s.class === "3S1" || s.class === "3S2").length;
@@ -1878,9 +1909,9 @@
       }
 
       if (timingFilter === "ON_TIME") {
-        list = list.filter(s => !s.isLate && (!s.timestamp || s.timestamp.indexOf("LEWAT") === -1));
+        list = list.filter(s => !s.isLate && !isSubmissionTimeLate(s.timestamp, s.class));
       } else if (timingFilter === "LATE") {
-        list = list.filter(s => s.isLate || (s.timestamp && s.timestamp.indexOf("LEWAT") !== -1));
+        list = list.filter(s => s.isLate || isSubmissionTimeLate(s.timestamp, s.class));
       }
 
       tbody.innerHTML = "";
@@ -1892,7 +1923,7 @@
       list.forEach(sub => {
         const realIdx = cachedSheetSubmissions.indexOf(sub);
         const isReviewed = sub.reviewStatus && sub.reviewStatus.indexOf("Telah Disemak") !== -1;
-        const isLate = sub.isLate || (sub.timestamp && sub.timestamp.indexOf("LEWAT") !== -1);
+        const isLate = sub.isLate || isSubmissionTimeLate(sub.timestamp, sub.class);
 
         const badgeClass = isReviewed ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800";
         let classColor = (sub.class === "2S1" || sub.class === "2S2") ? "bg-amber-100 text-amber-800" : (sub.class === "3S1" ? "bg-blue-100 text-blue-800" : "bg-purple-100 text-purple-800");
@@ -1931,7 +1962,7 @@
         points.push(`📌 Prestasi Bahagian B (Subjektif: ${subjScore}/20):\n• Penguasaan 4 elemen mekatronik dan rajah blok sistem berada pada tahap ${subjScore >= 15 ? 'cemerlang' : 'baik'}.\n• Penjelasan ujian kefungsian dan logik peranti amaran banjir dijawab dengan munasabah.`);
       }
 
-      const isLate = student.isLate || (student.timestamp && student.timestamp.indexOf("LEWAT") !== -1);
+      const isLate = student.isLate || isSubmissionTimeLate(student.timestamp, student.class);
       if (isLate) {
         points.push(`⏱️ Pengurusan Masa:\nTugasan diterima selepas waktu sasaran (Lewat). Komitmen menyiapkan latihan dihargai, tingkatkan ketepatan masa kelak.`);
       } else {
@@ -1944,7 +1975,7 @@
     function openReviewModal(index) {
       selectedStudentIndex = index;
       const student = cachedSheetSubmissions[index];
-      const isLate = student.isLate || (student.timestamp && student.timestamp.indexOf("LEWAT") !== -1);
+      const isLate = student.isLate || isSubmissionTimeLate(student.timestamp, student.class);
       const isT2 = (student.class === "2S1" || student.class === "2S2" || (student.subject && student.subject.indexOf("Tingkatan 2") !== -1));
       const bank = isT2 ? questionsData_T2 : questionsData_T3;
 
@@ -2118,7 +2149,7 @@
 
     /* CETAK SLIP PDF (TERMASUK SKEMA PENUH A4) */
     function triggerPrintSlip(student) {
-      const isLate = student.isLate || (student.timestamp && student.timestamp.indexOf("LEWAT") !== -1);
+      const isLate = student.isLate || isSubmissionTimeLate(student.timestamp, student.class);
       const isT2 = (student.class === "2S1" || student.class === "2S2" || (student.subject && student.subject.indexOf("Tingkatan 2") !== -1));
       const bank = isT2 ? questionsData_T2 : questionsData_T3;
 
