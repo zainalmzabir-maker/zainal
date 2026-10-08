@@ -12,18 +12,18 @@
   <script src="https://cdn.tailwindcss.com"></script>
   
   <style>
-    /* Fon Sistem Asli Pantas & Animasi Easy-Ease */
+    /* Fon Sistem Asli Pantas (0ms Latensi) */
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
     
     .ease-smooth {
-      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
     
     .fade-in { 
-      animation: fadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1); 
+      animation: fadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1); 
     }
     @keyframes fadeIn { 
-      from { opacity: 0; transform: translateY(4px); } 
+      from { opacity: 0; transform: translateY(3px); } 
       to { opacity: 1; transform: translateY(0); } 
     }
 
@@ -48,7 +48,7 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased">
 
-  <!-- Penunjuk Segerak Data Pantas di Sudut Bawah (Tidak Mengganggu Pengguna) -->
+  <!-- Penunjuk Segerak Data Pantas di Sudut Bawah -->
   <div id="syncToast" class="fixed bottom-3 right-3 z-50 bg-slate-900/90 text-white text-[11px] font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 opacity-0 pointer-events-none ease-smooth">
     <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
     <span id="syncToastText">Menyegerak data...</span>
@@ -96,10 +96,10 @@
     <!-- ========================================== -->
     <div id="studentSection" class="fade-in space-y-4">
 
-      <!-- Banner Waktu & Status -->
+      <!-- Banner Waktu & Status Sesi Semasa -->
       <div id="deadlineBanner" class="bg-indigo-950 text-white rounded-xl p-3.5 shadow-sm flex flex-wrap items-center justify-between gap-3 border border-indigo-800 ease-smooth">
         <div>
-          <h4 id="deadlineBannerTitle" class="font-extrabold text-xs sm:text-sm text-amber-300">SESI PEMBELAJARAN ATAS TALIAN</h4>
+          <h4 id="deadlineBannerTitle" class="font-extrabold text-xs sm:text-sm text-amber-300">SESI PEMBELAJARAN HARI INI</h4>
           <p id="deadlineBannerDesc" class="text-[11px] text-indigo-200">Masa penghantaran dipantau secara langsung.</p>
         </div>
         <div id="headerDeadlineBadge" class="px-2.5 py-1 bg-indigo-900 text-amber-400 font-mono font-bold text-xs rounded-lg border border-indigo-700">
@@ -107,7 +107,7 @@
         </div>
       </div>
 
-      <!-- Borang Pendaftaran (Hierarki Sesi) -->
+      <!-- Borang Pendaftaran (Hierarki Sesi: Keutamaan Hari Semasa) -->
       <div id="regBox" class="bg-white rounded-2xl p-5 sm:p-7 shadow-sm border border-slate-200 ease-smooth">
         <div class="max-w-xl mx-auto text-center space-y-1.5">
           <div class="w-14 h-14 mx-auto p-1 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center mb-1">
@@ -115,18 +115,17 @@
                  onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'text-indigo-700 font-bold text-xs\'>SEMEKAR</div>';">
           </div>
           <span class="inline-block px-2.5 py-0.5 bg-indigo-100 text-indigo-800 text-[10px] font-bold rounded-full uppercase" id="regSessionBadge">
-            Pilih Sesi Kelas
+            Sesi Hari Semasa
           </span>
           <h2 class="text-lg sm:text-xl font-black text-slate-800">Daftar Masuk Kelas</h2>
-          <p class="text-xs text-slate-500">Pilih sesi kelas yang ingin dijawab dan masukkan nama penuh anda.</p>
+          <p class="text-xs text-slate-500">Sesi hari semasa telah diutamakan secara automatik. Anda juga boleh menukar sesi jika perlu.</p>
         </div>
 
         <div class="max-w-md mx-auto mt-4 space-y-3">
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">1. Pilih Mata Pelajaran</label>
             <select id="regSubjectSelect" onchange="onRegSubjectChange()" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white font-bold text-xs text-slate-700 ease-smooth">
-              <option value="RBT Tingkatan 2">Reka Bentuk dan Teknologi (RBT) Tingkatan 2 (Sesi Esok: 2S1 & 2S2)</option>
-              <option value="RBT Tingkatan 3">Reka Bentuk dan Teknologi (RBT) Tingkatan 3 (Sesi Sedia Ada: 3S1 & 3S2)</option>
+              <!-- Dijana mengikut keutamaan tarikh -->
             </select>
           </div>
 
@@ -240,8 +239,7 @@
     </div>
 
     <!-- ======================================================== -->
-    <!-- BAHAGIAN 2: HALAMAN PENGHANTARAN (MENGIKUT SESI)        -->
-    <!-- STATUS WAKTU: 'Patuh Masa' ATAU 'Lewat'                  -->
+    <!-- BAHAGIAN 2: HALAMAN PENGHANTARAN (MENGIKUT SESI SEMASA) -->
     <!-- ======================================================== -->
     <div id="submissionsSection" class="hidden fade-in space-y-4">
       <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-200 space-y-3.5">
@@ -256,17 +254,9 @@
           </button>
         </div>
 
-        <!-- Butang Sesi Pengelompokan -->
+        <!-- Butang Sesi Pengelompokan (Urutan Diutamakan Mengikut Tarikh) -->
         <div class="flex flex-wrap gap-1.5 pt-0.5" id="subSessionPills">
-          <button onclick="filterSubmissionsBySession('T2')" id="pill_T2" class="sub-pill px-3 py-1 rounded-lg text-xs font-bold border ease-smooth bg-indigo-600 text-white border-indigo-700">
-            Sesi RBT Tingkatan 2 (2S1 & 2S2) [<span id="countPillT2">0</span>]
-          </button>
-          <button onclick="filterSubmissionsBySession('T3')" id="pill_T3" class="sub-pill px-3 py-1 rounded-lg text-xs font-bold border ease-smooth bg-white text-slate-700 border-slate-300 hover:bg-slate-50">
-            Sesi RBT Tingkatan 3 (3S1 & 3S2) [<span id="countPillT3">0</span>]
-          </button>
-          <button onclick="filterSubmissionsBySession('ALL')" id="pill_ALL" class="sub-pill px-3 py-1 rounded-lg text-xs font-bold border ease-smooth bg-white text-slate-700 border-slate-300 hover:bg-slate-50">
-            Semua Sesi [<span id="countPillAll">0</span>]
-          </button>
+          <!-- Dijana mengikut susunan keutamaan tarikh -->
         </div>
 
         <!-- Carian Nama -->
@@ -309,8 +299,7 @@
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">1. Pilih Sesi & Mata Pelajaran</label>
             <select id="lookupSubject" onchange="onLookupSubjectChange()" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs font-bold text-slate-700 ease-smooth">
-              <option value="RBT Tingkatan 2" selected>RBT Tingkatan 2 (Sesi Esok: 2S1 & 2S2)</option>
-              <option value="RBT Tingkatan 3">RBT Tingkatan 3 (Sesi Sedia Ada: 3S1 & 3S2)</option>
+              <!-- Diisi dinamik mengikut keutamaan sesi semasa -->
             </select>
           </div>
 
@@ -333,7 +322,7 @@
 
     <!-- ======================================================== -->
     <!-- BAHAGIAN 4: DASHBOARD GURU (CIKGU ZAINAL)                -->
-    <!-- DUA SUIS PELEPASAN BERASINGAN (SESI T3 & SESI T2)        -->
+    <!-- KEUTAMAAN SESI SEMASA & SKEMA JAWAPAN TEPAT              -->
     <!-- ======================================================== -->
     <div id="adminSection" class="hidden fade-in space-y-4">
 
@@ -374,14 +363,13 @@
         </div>
 
         <!-- DUA KAD SUIS KAWALAN PELEPASAN BERASINGAN (T3 & T2) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-          
-          <!-- SUIS 1: SESI TINGKATAN 3 (3S1 & 3S2) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="adminReleaseCardsContainer">
+          <!-- Kad sesi semasa diletakkan paling atas secara automatik -->
           <div id="releaseCard_T3" class="rounded-2xl p-4 border shadow-sm space-y-2.5 bg-amber-50 border-amber-300 ease-smooth">
             <div class="flex justify-between items-start">
               <div>
                 <span class="text-[10px] font-black uppercase tracking-wider text-slate-500">Sesi RBT Tingkatan 3</span>
-                <h4 class="text-sm font-black text-slate-800">Kelas 3S1 & 3S2 (8 Okt 2026)</h4>
+                <h4 class="text-sm font-black text-slate-800">Kelas 3S1 & 3S2 (Khamis, 8 Okt)</h4>
               </div>
               <span id="badgeRelease_T3" class="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-200 text-amber-900">
                 DIKUNCI (SULIT)
@@ -395,25 +383,23 @@
             </button>
           </div>
 
-          <!-- SUIS 2: SESI TINGKATAN 2 (2S1 & 2S2) -->
           <div id="releaseCard_T2" class="rounded-2xl p-4 border shadow-sm space-y-2.5 bg-amber-50 border-amber-300 ease-smooth">
             <div class="flex justify-between items-start">
               <div>
                 <span class="text-[10px] font-black uppercase tracking-wider text-slate-500">Sesi RBT Tingkatan 2</span>
-                <h4 class="text-sm font-black text-slate-800">Kelas 2S1 & 2S2 (Esok: 9 Okt 2026)</h4>
+                <h4 class="text-sm font-black text-slate-800">Kelas 2S1 & 2S2 (Jumaat, 9 Okt)</h4>
               </div>
               <span id="badgeRelease_T2" class="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-200 text-amber-900">
                 DIKUNCI (SULIT)
               </span>
             </div>
             <p id="descRelease_T2" class="text-[11px] text-slate-600 leading-relaxed">
-              Murid kelas 2S1 & 2S2 tidak dapat melihat keputusan sebelum/semasa latihan berjalan esok.
+              Murid kelas 2S1 & 2S2 tidak dapat melihat keputusan sebelum/semasa latihan berjalan.
             </p>
             <button onclick="toggleSessionRelease('T2')" id="btnRelease_T2" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow ease-smooth">
               Lepaskan Keputusan Sesi T2
             </button>
           </div>
-
         </div>
 
         <!-- 4 Kad Metrik Ringkasan -->
@@ -436,7 +422,7 @@
           </div>
         </div>
 
-        <!-- Jadual Semakan Tugasan Murid (DIKUMPULKAN MENGIKUT SESI) -->
+        <!-- Jadual Semakan Tugasan Murid (DIKUMPULKAN MENGIKUT SESI SEMASA DAHULU) -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
           <div class="p-3.5 border-b border-slate-200 space-y-2.5">
             <div class="flex flex-wrap justify-between items-center gap-2">
@@ -449,25 +435,17 @@
                 </select>
                 <select id="adminClassFilter" onchange="renderTableRows()" class="px-2 py-1 rounded-lg border border-slate-300 text-xs font-bold text-slate-700 bg-slate-50 ease-smooth">
                   <option value="ALL">Semua Kelas</option>
-                  <option value="2S1">Kelas 2S1</option>
-                  <option value="2S2">Kelas 2S2</option>
                   <option value="3S1">Kelas 3S1</option>
                   <option value="3S2">Kelas 3S2</option>
+                  <option value="2S1">Kelas 2S1</option>
+                  <option value="2S2">Kelas 2S2</option>
                 </select>
               </div>
             </div>
 
-            <!-- BUTANG PIL KUMPULAN SESI DI DASHBOARD -->
-            <div class="flex flex-wrap gap-1.5">
-              <button onclick="filterAdminSession('T2')" id="adminPill_T2" class="px-2.5 py-1 rounded-lg text-xs font-bold border ease-smooth bg-indigo-600 text-white border-indigo-700">
-                Sesi RBT Tingkatan 2 (2S1 & 2S2) [<span id="adminCountT2">0</span> Murid]
-              </button>
-              <button onclick="filterAdminSession('T3')" id="adminPill_T3" class="px-2.5 py-1 rounded-lg text-xs font-bold border ease-smooth bg-white text-slate-700 border-slate-300 hover:bg-slate-50">
-                Sesi RBT Tingkatan 3 (3S1 & 3S2) [<span id="adminCountT3">0</span> Murid]
-              </button>
-              <button onclick="filterAdminSession('ALL')" id="adminPill_ALL" class="px-2.5 py-1 rounded-lg text-xs font-bold border ease-smooth bg-white text-slate-700 border-slate-300 hover:bg-slate-50">
-                Semua Sesi [<span id="adminCountAll">0</span>]
-              </button>
+            <!-- BUTANG PIL KUMPULAN SESI DI DASHBOARD (Urutan mengikut hari semasa) -->
+            <div class="flex flex-wrap gap-1.5" id="adminSessionPillsContainer">
+              <!-- Dijana mengikut tarikh hari semasa -->
             </div>
           </div>
 
@@ -500,10 +478,10 @@
   </main>
 
   <!-- ======================================================== -->
-  <!-- MODAL SEMAKAN GURU                                       -->
+  <!-- MODAL SEMAKAN GURU (DENGAN SKEMA JAWAPAN TEPAT & LENGKAP) -->
   <!-- ======================================================== -->
   <div id="reviewModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-3 no-print">
-    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col overflow-hidden ease-smooth">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[92vh] flex flex-col overflow-hidden ease-smooth">
       
       <div class="p-3.5 bg-indigo-900 text-white flex justify-between items-center">
         <div>
@@ -521,43 +499,52 @@
       <div class="p-4 overflow-y-auto space-y-4 text-xs">
         <div class="grid grid-cols-2 gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
           <div>
-            <span class="text-slate-500 block text-[11px]">Skor Objektif:</span>
+            <span class="text-slate-500 block text-[11px]">Skor Bahagian A (Objektif):</span>
             <span class="text-base font-black text-indigo-700" id="modalObjScore">0 / 10</span>
           </div>
           <div>
-            <span class="text-slate-500 block text-[11px]">Status Semasa:</span>
+            <span class="text-slate-500 block text-[11px]">Status Tugasan:</span>
             <span class="text-xs font-bold text-amber-600" id="modalReviewStatus">Belum Disemak</span>
           </div>
         </div>
 
+        <!-- 10 Soalan Objektif dengan Skema Tepat -->
         <div>
-          <h4 class="font-bold text-slate-800 text-xs mb-1.5 border-b pb-1">Semakan 10 Soalan Objektif</h4>
+          <h4 class="font-bold text-slate-800 text-xs mb-1.5 border-b pb-1 flex justify-between items-center">
+            <span>Semakan Bahagian A: 10 Soalan Objektif</span>
+            <span class="text-[10px] text-slate-400 font-normal">Disemak Automatik</span>
+          </h4>
           <div id="modalObjDetail" class="space-y-1.5"></div>
         </div>
 
+        <!-- 5 Soalan Subjektif dengan SKEMA JAWAPAN TEPAT & PECAHAN MARKAH -->
         <div>
-          <h4 class="font-bold text-slate-800 text-xs mb-1.5 border-b pb-1">Semakan 5 Soalan Subjektif</h4>
-          <div id="modalSubjDetail" class="space-y-2.5"></div>
+          <h4 class="font-bold text-slate-800 text-xs mb-1.5 border-b pb-1 flex justify-between items-center">
+            <span>Semakan Bahagian B: 5 Soalan Subjektif</span>
+            <span class="text-[10px] text-indigo-600 font-bold">Lengkap Bersama Skema Jawapan Tepat</span>
+          </h4>
+          <div id="modalSubjDetail" class="space-y-3"></div>
         </div>
 
+        <!-- Ruangan Pemberian Markah & Ulasan Guru -->
         <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-3 space-y-2.5">
           <div class="flex justify-between items-center">
-            <span class="font-bold text-indigo-950 text-xs">Pemarkahan Subjektif</span>
+            <span class="font-bold text-indigo-950 text-xs">Pemarkahan Bahagian B</span>
             <div class="flex items-center gap-1.5">
-              <span class="text-[11px] text-indigo-800">Cadangan: <strong id="suggestedMarkBadge" class="bg-amber-200 px-1.5 py-0.5 rounded text-amber-950">0 / 20</strong></span>
-              <button type="button" onclick="applySuggestedScore()" class="px-2 py-0.5 bg-indigo-600 text-white text-[10px] font-bold rounded">
-                Guna
+              <span class="text-[11px] text-indigo-800">Cadangan Sistem: <strong id="suggestedMarkBadge" class="bg-amber-200 px-1.5 py-0.5 rounded text-amber-950 font-black">0 / 20</strong></span>
+              <button type="button" onclick="applySuggestedScore()" class="px-2 py-0.5 bg-indigo-600 text-white text-[10px] font-bold rounded hover:bg-indigo-700">
+                Guna Cadangan
               </button>
             </div>
           </div>
 
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block text-[10px] font-bold text-slate-700 mb-0.5">Markah Subjektif (/20)</label>
+              <label class="block text-[10px] font-bold text-slate-700 mb-0.5">Jumlah Markah Subjektif (/20)</label>
               <input type="number" id="inputSubjMark" min="0" max="20" class="w-full px-2.5 py-1 rounded-lg border border-slate-300 font-black text-xs text-indigo-900" />
             </div>
             <div>
-              <label class="block text-[10px] font-bold text-slate-700 mb-0.5">Status Semakan</label>
+              <label class="block text-[10px] font-bold text-slate-700 mb-0.5">Kemas Kini Status</label>
               <select id="selectMarkStatus" class="w-full px-2.5 py-1 rounded-lg border border-slate-300 text-xs font-bold">
                 <option value="Telah Disemak">Telah Disemak</option>
                 <option value="Telah Disemak (Lewat)">Telah Disemak (Lewat)</option>
@@ -569,12 +556,12 @@
 
           <div>
             <div class="flex justify-between items-center mb-1">
-              <label class="text-[10px] font-bold text-slate-800">Ulasan Komprehensif Guru:</label>
+              <label class="text-[10px] font-bold text-slate-800">Ulasan Komprehensif Guru (Berdasarkan Jawapan Murid):</label>
               <button type="button" onclick="regenerateComprehensiveComment()" class="text-[10px] font-bold text-indigo-700 hover:underline">
                 Jana Semula
               </button>
             </div>
-            <textarea id="inputTeacherComment" rows="4" class="w-full p-2 rounded-lg border border-slate-300 text-xs text-slate-800 leading-relaxed"></textarea>
+            <textarea id="inputTeacherComment" rows="5" class="w-full p-2 rounded-lg border border-slate-300 text-xs text-slate-800 leading-relaxed font-sans"></textarea>
           </div>
         </div>
       </div>
@@ -705,29 +692,30 @@
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxrPzsXB7xn8U4vI6LdCZQojLdmQRYOEqXL0mjAS_g-NwXNUR8Nj4x7W4yt5OH_Qh3GSQ/exec";
 
-    // Konfigurasi Sesi: Kini T2 mempunyai DUA KELAS (2S1 dan 2S2)
     const SESSIONS_CONFIG = {
-      "T2_SESI_ESOK": {
-        subject: "RBT Tingkatan 2",
-        classOptions: ["2S1", "2S2"],
-        defaultClass: "2S1",
-        sessionName: "Sesi 8.00 pagi - 9.00 pagi (Jumaat, 9 Okt 2026)",
-        deadlineHour: 15,
-        deadlineMinute: 0,
-        deadlineDate: "2026-10-09"
-      },
       "T3_SESI_HARI_INI": {
         subject: "RBT Tingkatan 3",
         classOptions: ["3S1", "3S2"],
         defaultClass: "3S2",
         sessionName: "Sesi 10.30 pagi - 11.30 pagi (Khamis, 8 Okt 2026)",
+        shortName: "Sesi T3 (3S1 & 3S2)",
         deadlineHour: 17,
         deadlineMinute: 0,
         deadlineDate: "2026-10-08"
+      },
+      "T2_SESI_ESOK": {
+        subject: "RBT Tingkatan 2",
+        classOptions: ["2S1", "2S2"],
+        defaultClass: "2S1",
+        sessionName: "Sesi 8.00 pagi - 9.00 pagi (Jumaat, 9 Okt 2026)",
+        shortName: "Sesi T2 (2S1 & 2S2)",
+        deadlineHour: 15,
+        deadlineMinute: 0,
+        deadlineDate: "2026-10-09"
       }
     };
 
-    /* BANK SOALAN TINGKATAN 2 */
+    /* BANK SOALAN TINGKATAN 2 (DENGAN SKEMA JAWAPAN TEPAT & PECAHAN MARKAH) */
     const questionsData_T2 = {
       objective: [
         { id: 1, question: "Apakah maksud kaedah penyelesaian masalah inventif dalam proses reka bentuk?", graphic: null, options: ["A. Kaedah menghasilkan produk tanpa sebarang lakaran idea awal.", "B. Kaedah menyelesaikan masalah yang mempunyai kesan sampingan tanpa menjejaskan fungsi lain.", "C. Proses mengurangkan kos produk dengan menggunakan bahan terpakai semata-mata.", "D. Kaedah membuat rekaan produk berasaskan perisian komputer secara automatik."], answer: 1 },
@@ -749,15 +737,58 @@
         { id: 5, question: "Terangkan bagaimana kitaran simbiosis akuaponik berfungsi di antara Ikan, Bakteria, dan Tanaman air bagi mengekalkan keseimbangan ekosistem.", hint: "Sisa ikan -> bakteria tukar ke nitrat -> baja tanaman -> air bersih ke ikan." }
       ],
       rubrics: [
-        { id: 1, maxMark: 4, keywords: ["konvensional", "moden", "masa", "lama", "cepat", "kemahiran", "mesin", "tangan"] },
-        { id: 2, maxMark: 4, keywords: ["gear", "rantai", "takal", "tali sawat", "gandar", "kuasa", "putar", "pindah"] },
-        { id: 3, maxMark: 4, keywords: ["3a", "3 ampere", "i = v / r", "12 / 4", "arus"] },
-        { id: 4, maxMark: 4, keywords: ["memproses", "kawalan", "penderia", "sensor", "suis", "led", "buzzer", "motor"] },
-        { id: 5, maxMark: 4, keywords: ["sisa", "ikan", "bakteria", "ammonia", "nitrat", "tanaman", "baja", "bersih", "kitaran"] }
+        { 
+          id: 1, 
+          maxMark: 4, 
+          keywords: ["konvensional", "moden", "masa", "lama", "lambat", "cepat", "pantas", "kemahiran", "mesin", "tangan"],
+          exactScheme: `• Masa Penghasilan [2 Markah]:
+  - Konvensional: Mengambil masa yang lama / lambat disiapkan [1m].
+  - Moden: Mengambil masa yang singkat / pantas disiapkan [1m].
+• Kemahiran Tenaga Kerja [2 Markah]:
+  - Konvensional: Memerlukan kemahiran tangan yang tinggi dan pengalaman individu [1m].
+  - Moden: Hanya memerlukan pengendali mengawal mesin / perisian komputer [1m].`
+        },
+        { 
+          id: 2, 
+          maxMark: 4, 
+          keywords: ["gear", "rantai", "takal", "tali sawat", "gandar", "kuasa", "putar", "pindah"],
+          exactScheme: `• Pilihan 1 - Basikal [4 Markah]:
+  1. Rantai [1m]: Memindahkan kuasa putaran dari gear pengayuh ke roda belakang [1m].
+  2. Gear / Gegancu [1m]: Mengubah kelajuan dan tork putaran roda [1m].
+• Pilihan 2 - Pengisar Makanan (Blender) [4 Markah]:
+  1. Takal & Tali Sawat [1m]: Menghubungkan motor elektrik ke bilah pemotong [1m].
+  2. Gear Taji [1m]: Memindahkan kuasa putaran motor pada kelajuan tinggi [1m].`
+        },
+        { 
+          id: 3, 
+          maxMark: 4, 
+          keywords: ["3a", "3 ampere", "i = v / r", "12 / 4", "arus", "12v"],
+          exactScheme: `• Formula [1 Markah]: I = V / R
+• Penggantian Nilai [1 Markah]: I = 12 V / 4 Ω
+• Jawapan Akhir [2 Markah]: I = 3 A (atau 3 Ampere) [Nilai 3: 1m, Unit A: 1m]`
+        },
+        { 
+          id: 4, 
+          maxMark: 4, 
+          keywords: ["memproses", "kawalan", "penderia", "sensor", "suis", "led", "buzzer", "motor"],
+          exactScheme: `• Fungsi Papan Mikropengawal [2 Markah]:
+  - Menerima isyarat input, memproses data mengikut atur cara yang dimuat naik, dan mengawal tindakan peranti output [2m].
+• Contoh Peranti Input [1 Markah] (Mana-mana 2): Penderia LDR / Penderia Suhu / Penderia Inframerah / Butang Tekan [1m].
+• Contoh Peranti Output [1 Markah] (Mana-mana 2): LED / Pembaz (Buzzer) / Motor Servo / Geganti [1m].`
+        },
+        { 
+          id: 5, 
+          maxMark: 4, 
+          keywords: ["sisa", "ikan", "bakteria", "ammonia", "nitrat", "tanaman", "baja", "bersih", "kitaran"],
+          exactScheme: `• Ikan [1 Markah]: Menghasilkan sisa buangan (ammonia) dan sisa makanan yang larut dalam air [1m].
+• Bakteria [1 Markah]: Menukar dan menguraikan ammonia berbahaya kepada sebatian nitrat yang bermanfaat [1m].
+• Tanaman [1 Markah]: Menyerap nutrien nitrat sebagai baja semula jadi untuk tumbesaran [1m].
+• Kitaran Air [1 Markah]: Akar tanaman menapis air dan menyalurkan air yang bersih & selamat kembali ke tangki ikan [1m].`
+        }
       ]
     };
 
-    /* BANK SOALAN TINGKATAN 3 */
+    /* BANK SOALAN TINGKATAN 3 (DENGAN SKEMA JAWAPAN TEPAT & PECAHAN MARKAH) */
     const questionsData_T3 = {
       objective: [
         { id: 1, question: "Apakah takrifan yang paling tepat bagi reka bentuk mekatronik?", graphic: null, options: ["A. Gabungan sistem mekanikal dan elektrik semata-mata.", "B. Aplikasi reka bentuk industri dalam menghasilkan perabot moden.", "C. Integrasi disiplin ilmu mekanikal, elektrik, elektronik, serta kawalan dan pengaturcaraan.", "D. Penggunaan komputer untuk melukis pelan struktur bangunan."], answer: 2 },
@@ -779,24 +810,72 @@
         { id: 5, question: "Cikgu Zainal meminta murid mereka bentuk peranti amaran banjir mekatronik. Cadangkan penderia yang sesuai dan terangkan bagaimana sistem tersebut beroperasi apabila paras air meningkat.", hint: "Penderia aras air, mikropengawal, buzzer & LED." }
       ],
       rubrics: [
-        { id: 1, maxMark: 4, keywords: ["mekanikal", "elektrik", "elektronik", "kawalan", "pengaturcaraan"] },
-        { id: 2, maxMark: 4, keywords: ["input", "penderia", "sensor", "proses", "mikropengawal", "output", "motor", "penggerak"] },
-        { id: 3, maxMark: 4, keywords: ["makmal", "terkawal", "parameter", "sebenar", "lapangan", "lokasi"] },
-        { id: 4, maxMark: 4, keywords: ["rupa bentuk", "fungsi", "kefungsian", "ergonomik", "bahan", "keselamatan", "kos"] },
-        { id: 5, maxMark: 4, keywords: ["aras air", "water level", "ultrasonik", "mikropengawal", "buzzer", "led", "lampu", "bunyi", "amaran"] }
+        { 
+          id: 1, 
+          maxMark: 4, 
+          keywords: ["mekanikal", "elektrik", "elektronik", "kawalan", "pengaturcaraan"],
+          exactScheme: `• 4 Elemen Teras Mekatronik [4 Markah (1m setiap satu)]:
+  1. Sistem Mekanikal [1m]
+  2. Sistem Elektrik [1m]
+  3. Sistem Elektronik [1m]
+  4. Sistem Kawalan dan Pengaturcaraan [1m]`
+        },
+        { 
+          id: 2, 
+          maxMark: 4, 
+          keywords: ["input", "penderia", "sensor", "proses", "mikropengawal", "output", "motor", "penggerak"],
+          exactScheme: `• Contoh: Kereta Kawalan Jauh / Mesin Basuh [4 Markah]:
+  1. Blok Input [1m]: Menerima isyarat atau arahan kawalan (cth: penderia inframerah / panel butang) [1m].
+  2. Blok Proses [2m]: Mikropengawal memproses data isyarat input berpandukan perisian atur cara [2m].
+  3. Blok Output [1m]: Penggerak (cth: motor DC / pam air) menjalankan tindakan fizikal [1m].`
+        },
+        { 
+          id: 3, 
+          maxMark: 4, 
+          keywords: ["makmal", "terkawal", "parameter", "sebenar", "lapangan", "lokasi"],
+          exactScheme: `• Ujian Makmal (Laboratory Test) [2 Markah]:
+  - Dijalankan di dalam persekitaran tertutup / makmal dengan parameter yang dikawal sepenuhnya (cth: suhu, cahaya, getaran) [2m].
+• Ujian Parameter (Field Test) [2 Markah]:
+  - Dijalankan di tapak atau situasi persekitaran sebenar di mana produk tersebut akan digunakan oleh pengguna harian [2m].`
+        },
+        { 
+          id: 4, 
+          maxMark: 4, 
+          keywords: ["rupa bentuk", "fungsi", "kefungsian", "ergonomik", "bahan", "keselamatan", "kos"],
+          exactScheme: `• 3 Kriteria Analisis Lakaran [4 Markah]:
+  - Menyenaraikan mana-mana TIGA (3) kriteria berikut [3m (1m setiap satu)]:
+    1. Daya tarikan rupa bentuk / visual
+    2. Kefungsian produk
+    3. Ciri ergonomik & keselesaan
+    4. Kesesuaian bahan yang digunakan
+    5. Ciri keselamatan pengguna
+    6. Kos dan kebolehlaksanaan
+  - Memberi penjelasan ringkas bagi salah satu kriteria [1m].`
+        },
+        { 
+          id: 5, 
+          maxMark: 4, 
+          keywords: ["aras air", "water level", "ultrasonik", "mikropengawal", "buzzer", "led", "lampu", "bunyi", "amaran"],
+          exactScheme: `• Penderia yang Sesuai [1 Markah]: Penderia Aras Air (Water Level Sensor) / Penderia Ultrasonik [1m].
+• Operasi Sistem Mekatronik [3 Markah]:
+  1. Penderia mengesan kenaikan paras air melebihi had selamat dan menghantar isyarat input ke mikropengawal [1m].
+  2. Mikropengawal memproses isyarat dan menghantar arahan elektrik ke bahagian output [1m].
+  3. Bahagian output membunyikan pembaz (buzzer) serta menyalakan lampu amaran LED merah untuk memberi amaran kepada penduduk [1m].`
+        }
       ]
     };
 
     let currentStudent = { name: "", class: "", subject: "", sessionKey: "" };
-    let currentSessionKey = "T2_SESI_ESOK";
+    let currentSessionKey = "T3_SESI_HARI_INI"; // Default dinamik ke hari semasa
     let isAdminLoggedIn = false;
     let cachedSheetSubmissions = [];
     let sessionReleaseState = { T3: false, T2: false };
     let selectedStudentIndex = null;
-    let activeSubSessionFilter = "T2";
-    let activeAdminSessionFilter = "T2";
+    let activeSubSessionFilter = "T3";
+    let activeAdminSessionFilter = "T3";
+    let activeSyncPromise = null;
 
-    /* TOAST STATUS SEGERAK (TIDAK MENYEKAT SKRIN) */
+    /* TOAST STATUS SEGERAK */
     function showToast(text) {
       const toast = document.getElementById('syncToast');
       const toastText = document.getElementById('syncToastText');
@@ -805,7 +884,7 @@
         toast.classList.remove('opacity-0', 'pointer-events-none');
         setTimeout(() => {
           toast.classList.add('opacity-0', 'pointer-events-none');
-        }, 2200);
+        }, 2000);
       }
     }
 
@@ -829,26 +908,34 @@
 
     /* SEGERAK LATAR BELAKANG PANTAS */
     async function syncDataFast(isAdmin = false) {
+      if (activeSyncPromise) return activeSyncPromise;
       showToast("Menyegerak data...");
-      try {
-        const url = isAdmin ? `${SCRIPT_URL}?pass=adminzainal&_t=${Date.now()}` : `${SCRIPT_URL}?_t=${Date.now()}`;
-        const res = await fetch(url);
-        const json = await res.json();
 
-        if (json && json.status === "success" && Array.isArray(json.data)) {
-          cachedSheetSubmissions = json.data;
-          if (json.releaseStatus) {
-            sessionReleaseState = json.releaseStatus;
+      activeSyncPromise = (async () => {
+        try {
+          const url = isAdmin ? `${SCRIPT_URL}?pass=adminzainal&_t=${Date.now()}` : `${SCRIPT_URL}?_t=${Date.now()}`;
+          const res = await fetch(url);
+          const json = await res.json();
+
+          if (json && json.status === "success" && Array.isArray(json.data)) {
+            cachedSheetSubmissions = json.data;
+            if (json.releaseStatus) {
+              sessionReleaseState = json.releaseStatus;
+            }
+
+            const key = isAdmin ? 'semekar_admin_cache' : 'semekar_public_cache';
+            localStorage.setItem(key, JSON.stringify(cachedSheetSubmissions));
+            localStorage.setItem('semekar_release_state', JSON.stringify(sessionReleaseState));
+            showToast("Data terkini disegerak ✓");
           }
-
-          const key = isAdmin ? 'semekar_admin_cache' : 'semekar_public_cache';
-          localStorage.setItem(key, JSON.stringify(cachedSheetSubmissions));
-          localStorage.setItem('semekar_release_state', JSON.stringify(sessionReleaseState));
-          showToast("Data terkini disegerak ✓");
+        } catch (e) {
+          console.warn("Segerak latar belakang gagal:", e);
+        } finally {
+          activeSyncPromise = null;
         }
-      } catch (e) {
-        console.warn("Segerak latar belakang gagal:", e);
-      }
+      })();
+
+      return activeSyncPromise;
     }
 
     /* PENGURUSAN TAB NAVIGASI */
@@ -886,17 +973,130 @@
       }
     }
 
-    /* PEMILIHAN SESI AUTO (ESOK VS HARI INI) */
-    function detectDefaultSession() {
+    /* ==========================================================
+       PENGESANAN DINAMIK SESI HARI SEMASA (KEUTAMAAN PENUH)
+    ========================================================== */
+    function getTodayActiveSessionKey() {
       const now = new Date();
-      const esokDate = new Date("2026-10-09T00:00:00");
-      currentSessionKey = (now >= esokDate) ? "T2_SESI_ESOK" : "T3_SESI_HARI_INI";
+      // Format YYYY-MM-DD
+      const yyyy = now.getFullYear();
+      const mm = String(now.getMonth() + 1).padStart(2, '0');
+      const dd = String(now.getDate()).padStart(2, '0');
+      const todayStr = `${yyyy}-${mm}-${dd}`;
+
+      // Sekiranya tarikh hari ini 9 Okt 2026 atau seterusnya -> Utamakan Sesi Tingkatan 2
+      if (todayStr >= "2026-10-09") {
+        return "T2_SESI_ESOK";
+      } else {
+        // Hari ini (8 Okt 2026) -> Utamakan Sesi Tingkatan 3
+        return "T3_SESI_HARI_INI";
+      }
+    }
+
+    function initSessionPriorities() {
+      const activeKey = getTodayActiveSessionKey();
+      currentSessionKey = activeKey;
+      
+      const isTodayT2 = (activeKey === "T2_SESI_ESOK");
+      activeSubSessionFilter = isTodayT2 ? "T2" : "T3";
+      activeAdminSessionFilter = isTodayT2 ? "T2" : "T3";
+
+      // 1. Kemas kini Dropdown Latihan
+      const regSubj = document.getElementById('regSubjectSelect');
+      if (isTodayT2) {
+        regSubj.innerHTML = `
+          <option value="RBT Tingkatan 2" selected>⭐ RBT Tingkatan 2 (SESI HARI INI: 2S1 & 2S2)</option>
+          <option value="RBT Tingkatan 3">RBT Tingkatan 3 (Sesi Terdahulu: 3S1 & 3S2)</option>
+        `;
+      } else {
+        regSubj.innerHTML = `
+          <option value="RBT Tingkatan 3" selected>⭐ RBT Tingkatan 3 (SESI HARI INI: 3S1 & 3S2)</option>
+          <option value="RBT Tingkatan 2">RBT Tingkatan 2 (Sesi Esok: 2S1 & 2S2)</option>
+        `;
+      }
       applySessionToRegistrationUI();
+
+      // 2. Kemas kini Dropdown Semak Keputusan
+      const lookupSubj = document.getElementById('lookupSubject');
+      if (isTodayT2) {
+        lookupSubj.innerHTML = `
+          <option value="RBT Tingkatan 2" selected>⭐ RBT Tingkatan 2 (Sesi Hari Ini)</option>
+          <option value="RBT Tingkatan 3">RBT Tingkatan 3 (Sesi Terdahulu)</option>
+        `;
+      } else {
+        lookupSubj.innerHTML = `
+          <option value="RBT Tingkatan 3" selected>⭐ RBT Tingkatan 3 (Sesi Hari Ini)</option>
+          <option value="RBT Tingkatan 2">RBT Tingkatan 2 (Sesi Esok)</option>
+        `;
+      }
+
+      // 3. Kemas kini Butang Sesi di Halaman Penghantaran
+      renderSessionPillsUI(isTodayT2);
+
+      // 4. Kemas kini Butang Sesi di Dashboard Guru
+      renderAdminSessionPillsUI(isTodayT2);
+    }
+
+    function renderSessionPillsUI(isTodayT2) {
+      const container = document.getElementById('subSessionPills');
+      if (isTodayT2) {
+        container.innerHTML = `
+          <button onclick="filterSubmissionsBySession('T2')" id="pill_T2" class="sub-pill px-3 py-1 rounded-lg text-xs font-bold border ease-smooth bg-indigo-600 text-white border-indigo-700">
+            ⭐ Sesi Hari Ini: RBT T2 (2S1 & 2S2) [<span id="countPillT2">0</span>]
+          </button>
+          <button onclick="filterSubmissionsBySession('T3')" id="pill_T3" class="sub-pill px-3 py-1 rounded-lg text-xs font-bold border ease-smooth bg-white text-slate-700 border-slate-300 hover:bg-slate-50">
+            Sesi RBT T3 (3S1 & 3S2) [<span id="countPillT3">0</span>]
+          </button>
+          <button onclick="filterSubmissionsBySession('ALL')" id="pill_ALL" class="sub-pill px-3 py-1 rounded-lg text-xs font-bold border ease-smooth bg-white text-slate-700 border-slate-300 hover:bg-slate-50">
+            Semua Sesi [<span id="countPillAll">0</span>]
+          </button>
+        `;
+      } else {
+        container.innerHTML = `
+          <button onclick="filterSubmissionsBySession('T3')" id="pill_T3" class="sub-pill px-3 py-1 rounded-lg text-xs font-bold border ease-smooth bg-indigo-600 text-white border-indigo-700">
+            ⭐ Sesi Hari Ini: RBT T3 (3S1 & 3S2) [<span id="countPillT3">0</span>]
+          </button>
+          <button onclick="filterSubmissionsBySession('T2')" id="pill_T2" class="sub-pill px-3 py-1 rounded-lg text-xs font-bold border ease-smooth bg-white text-slate-700 border-slate-300 hover:bg-slate-50">
+            Sesi RBT T2 (2S1 & 2S2) [<span id="countPillT2">0</span>]
+          </button>
+          <button onclick="filterSubmissionsBySession('ALL')" id="pill_ALL" class="sub-pill px-3 py-1 rounded-lg text-xs font-bold border ease-smooth bg-white text-slate-700 border-slate-300 hover:bg-slate-50">
+            Semua Sesi [<span id="countPillAll">0</span>]
+          </button>
+        `;
+      }
+    }
+
+    function renderAdminSessionPillsUI(isTodayT2) {
+      const container = document.getElementById('adminSessionPillsContainer');
+      if (isTodayT2) {
+        container.innerHTML = `
+          <button onclick="filterAdminSession('T2')" id="adminPill_T2" class="px-2.5 py-1 rounded-lg text-xs font-bold border ease-smooth bg-indigo-600 text-white border-indigo-700">
+            ⭐ Sesi Hari Ini: RBT T2 (2S1 & 2S2) [<span id="adminCountT2">0</span>]
+          </button>
+          <button onclick="filterAdminSession('T3')" id="adminPill_T3" class="px-2.5 py-1 rounded-lg text-xs font-bold border ease-smooth bg-white text-slate-700 border-slate-300 hover:bg-slate-50">
+            Sesi RBT T3 (3S1 & 3S2) [<span id="adminCountT3">0</span>]
+          </button>
+          <button onclick="filterAdminSession('ALL')" id="adminPill_ALL" class="px-2.5 py-1 rounded-lg text-xs font-bold border ease-smooth bg-white text-slate-700 border-slate-300 hover:bg-slate-50">
+            Semua Sesi [<span id="adminCountAll">0</span>]
+          </button>
+        `;
+      } else {
+        container.innerHTML = `
+          <button onclick="filterAdminSession('T3')" id="adminPill_T3" class="px-2.5 py-1 rounded-lg text-xs font-bold border ease-smooth bg-indigo-600 text-white border-indigo-700">
+            ⭐ Sesi Hari Ini: RBT T3 (3S1 & 3S2) [<span id="adminCountT3">0</span>]
+          </button>
+          <button onclick="filterAdminSession('T2')" id="adminPill_T2" class="px-2.5 py-1 rounded-lg text-xs font-bold border ease-smooth bg-white text-slate-700 border-slate-300 hover:bg-slate-50">
+            Sesi RBT T2 (2S1 & 2S2) [<span id="adminCountT2">0</span>]
+          </button>
+          <button onclick="filterAdminSession('ALL')" id="adminPill_ALL" class="px-2.5 py-1 rounded-lg text-xs font-bold border ease-smooth bg-white text-slate-700 border-slate-300 hover:bg-slate-50">
+            Semua Sesi [<span id="adminCountAll">0</span>]
+          </button>
+        `;
+      }
     }
 
     function applySessionToRegistrationUI() {
       const config = SESSIONS_CONFIG[currentSessionKey];
-      document.getElementById('regSubjectSelect').value = config.subject;
       updateClassOptionsForSubject(config.subject, config.defaultClass);
       updateSessionDropdownOptions(currentSessionKey);
       updateBannerUI();
@@ -904,22 +1104,20 @@
 
     function onRegSubjectChange() {
       const subj = document.getElementById('regSubjectSelect').value;
-      currentSessionKey = (subj === "RBT Tingkatan 2") ? "T2_SESI_ESOK" : "T3_SESI_HARI_INI";
+      currentSessionKey = (subj.indexOf("Tingkatan 2") !== -1) ? "T2_SESI_ESOK" : "T3_SESI_HARI_INI";
       applySessionToRegistrationUI();
     }
 
     function onRegSessionChange() {
       currentSessionKey = document.getElementById('regSessionSelect').value;
       const config = SESSIONS_CONFIG[currentSessionKey];
-      document.getElementById('regSubjectSelect').value = config.subject;
       updateClassOptionsForSubject(config.subject, config.defaultClass);
       updateBannerUI();
     }
 
     function updateClassOptionsForSubject(subject, selectedClass) {
       const classSelect = document.getElementById('regClassSelect');
-      if (subject === "RBT Tingkatan 2") {
-        // KINI DUA KELAS UNTUK TINGKATAN 2: 2S1 & 2S2
+      if (subject.indexOf("Tingkatan 2") !== -1) {
         classSelect.innerHTML = `
           <option value="2S1" ${selectedClass === "2S1" ? "selected" : ""}>2S1 (Tingkatan 2)</option>
           <option value="2S2" ${selectedClass === "2S2" ? "selected" : ""}>2S2 (Tingkatan 2)</option>
@@ -934,23 +1132,25 @@
 
     function updateSessionDropdownOptions(selectedKey) {
       const sessionSelect = document.getElementById('regSessionSelect');
+      const isT2 = (selectedKey === "T2_SESI_ESOK");
+      
       sessionSelect.innerHTML = `
-        <option value="T2_SESI_ESOK" ${selectedKey === "T2_SESI_ESOK" ? "selected" : ""}>Sesi 8.00 pagi - 9.00 pagi (Jumaat, 9 Okt 2026) - Kelas 2S1 & 2S2 [Tamat 3:00 PTG]</option>
-        <option value="T3_SESI_HARI_INI" ${selectedKey === "T3_SESI_HARI_INI" ? "selected" : ""}>Sesi 10.30 pagi - 11.30 pagi (Khamis, 8 Okt 2026) - Kelas 3S1 & 3S2 [Tamat 5:00 PTG]</option>
+        <option value="T3_SESI_HARI_INI" ${!isT2 ? "selected" : ""}>Sesi 10.30 pagi - 11.30 pagi (Khamis, 8 Okt) - Kelas 3S1 & 3S2 [Tamat 5:00 PTG]</option>
+        <option value="T2_SESI_ESOK" ${isT2 ? "selected" : ""}>Sesi 8.00 pagi - 9.00 pagi (Jumaat, 9 Okt) - Kelas 2S1 & 2S2 [Tamat 3:00 PTG]</option>
       `;
 
       const note = document.getElementById('regSessionNote');
-      if (selectedKey === "T2_SESI_ESOK") {
-        note.innerHTML = `Sesi Esok: <strong>8.00 pg - 9.00 pg</strong> &bull; Had hantar: <strong>Jam 3.00 petang</strong>`;
-        document.getElementById('regSessionBadge').innerText = "Sesi 2S1 & 2S2 (Jumaat, 9 Okt)";
+      if (isT2) {
+        note.innerHTML = `Sesi Jumaat: <strong>8.00 pg - 9.00 pg</strong> &bull; Had hantar: <strong>Jam 3.00 petang</strong>`;
+        document.getElementById('regSessionBadge').innerText = "Sesi 2S1 & 2S2 (9 Okt)";
       } else {
-        note.innerHTML = `Sesi Terdahulu: <strong>10.30 pg - 11.30 pg</strong> &bull; Had hantar: <strong>Jam 5.00 petang</strong>`;
-        document.getElementById('regSessionBadge').innerText = "Sesi 3S1/3S2 (Khamis, 8 Okt)";
+        note.innerHTML = `Sesi Khamis: <strong>10.30 pg - 11.30 pg</strong> &bull; Had hantar: <strong>Jam 5.00 petang</strong>`;
+        document.getElementById('regSessionBadge').innerText = "Sesi 3S1 & 3S2 (8 Okt)";
       }
     }
 
     function getSessionDeadline(sessionKey) {
-      const config = SESSIONS_CONFIG[sessionKey] || SESSIONS_CONFIG["T2_SESI_ESOK"];
+      const config = SESSIONS_CONFIG[sessionKey] || SESSIONS_CONFIG["T3_SESI_HARI_INI"];
       const d = new Date(config.deadlineDate + "T00:00:00");
       d.setHours(config.deadlineHour, config.deadlineMinute, 0, 0);
       return d;
@@ -964,7 +1164,7 @@
       const deadline = getSessionDeadline(currentSessionKey);
       const diff = deadline - new Date();
       const isLate = diff <= 0;
-      const config = SESSIONS_CONFIG[currentSessionKey] || SESSIONS_CONFIG["T2_SESI_ESOK"];
+      const config = SESSIONS_CONFIG[currentSessionKey] || SESSIONS_CONFIG["T3_SESI_HARI_INI"];
       const targetStr = (config.deadlineHour === 15) ? "3:00 PETANG" : "5:00 PETANG";
 
       const banner = document.getElementById('deadlineBanner');
@@ -1195,10 +1395,12 @@
       activeSubSessionFilter = pill;
       ['T2', 'T3', 'ALL'].forEach(p => {
         const btn = document.getElementById(`pill_${p}`);
-        if (p === pill) {
-          btn.className = "sub-pill px-3 py-1 rounded-lg text-xs font-bold border ease-smooth bg-indigo-600 text-white border-indigo-700";
-        } else {
-          btn.className = "sub-pill px-3 py-1 rounded-lg text-xs font-bold border ease-smooth bg-white text-slate-700 border-slate-300 hover:bg-slate-50";
+        if (btn) {
+          if (p === pill) {
+            btn.className = "sub-pill px-3 py-1 rounded-lg text-xs font-bold border ease-smooth bg-indigo-600 text-white border-indigo-700";
+          } else {
+            btn.className = "sub-pill px-3 py-1 rounded-lg text-xs font-bold border ease-smooth bg-white text-slate-700 border-slate-300 hover:bg-slate-50";
+          }
         }
       });
       renderPublicSubmissionsTable();
@@ -1212,9 +1414,12 @@
       const t3Count = cachedSheetSubmissions.filter(s => s.class === "3S1" || s.class === "3S2").length;
       const t2Count = cachedSheetSubmissions.filter(s => s.class === "2S1" || s.class === "2S2").length;
 
-      document.getElementById('countPillAll').innerText = total;
-      document.getElementById('countPillT3').innerText = t3Count;
-      document.getElementById('countPillT2').innerText = t2Count;
+      const cAll = document.getElementById('countPillAll');
+      const cT3 = document.getElementById('countPillT3');
+      const cT2 = document.getElementById('countPillT2');
+      if (cAll) cAll.innerText = total;
+      if (cT3) cT3.innerText = t3Count;
+      if (cT2) cT2.innerText = t2Count;
 
       let list = cachedSheetSubmissions;
 
@@ -1267,7 +1472,7 @@
       const subj = document.getElementById('lookupSubject').value;
       const classSelect = document.getElementById('lookupClass');
 
-      if (subj === "RBT Tingkatan 2") {
+      if (subj.indexOf("Tingkatan 2") !== -1) {
         classSelect.innerHTML = `
           <option value="2S1" selected>2S1 (Tingkatan 2)</option>
           <option value="2S2">2S2 (Tingkatan 2)</option>
@@ -1380,7 +1585,7 @@
                 <span class="${isCorrect ? 'text-emerald-700' : 'text-rose-600'}">${isCorrect ? '✓ Betul' : '✗ Salah'}</span>
               </div>
               <div class="text-slate-600 text-[11px]">Jawapan Anda: <span class="font-medium">${studentAnsText}</span></div>
-              ${!isCorrect ? `<div class="text-emerald-800 font-semibold text-[11px]">Skema: ${correctAnsText}</div>` : ''}
+              ${!isCorrect ? `<div class="text-emerald-800 font-semibold text-[11px]">Skema Tepat: ${correctAnsText}</div>` : ''}
             </div>
           `;
         });
@@ -1393,6 +1598,7 @@
                 <h4 class="font-black text-slate-800 text-sm mt-0.5">${found.name}</h4>
                 <p class="text-[11px] text-slate-500">${found.class} &bull; ${found.subject}</p>
               </div>
+              <!-- BUTANG DOWNLOAD / CETAK PDF -->
               <button onclick="downloadResultPdf(${selectedIdx})" class="px-3 py-1.5 bg-indigo-700 hover:bg-indigo-800 text-white rounded-xl text-xs font-black shadow ease-smooth">
                 📥 Muat Turun Slip PDF
               </button>
@@ -1429,7 +1635,9 @@
       }
     }
 
-    /* DASHBOARD GURU */
+    /* ==========================================================
+       DASHBOARD GURU: SESI SEMASA DIUTAMAKAN
+    ========================================================== */
     function loginAdmin() {
       const pass = document.getElementById('adminPassInput').value;
       const err = document.getElementById('adminLoginErr');
@@ -1475,9 +1683,13 @@
 
       const t3Count = cachedSheetSubmissions.filter(s => s.class === "3S1" || s.class === "3S2").length;
       const t2Count = cachedSheetSubmissions.filter(s => s.class === "2S1" || s.class === "2S2").length;
-      document.getElementById('adminCountT3').innerText = t3Count;
-      document.getElementById('adminCountT2').innerText = t2Count;
-      document.getElementById('adminCountAll').innerText = cachedSheetSubmissions.length;
+      
+      const elT3 = document.getElementById('adminCountT3');
+      const elT2 = document.getElementById('adminCountT2');
+      const elAll = document.getElementById('adminCountAll');
+      if (elT3) elT3.innerText = t3Count;
+      if (elT2) elT2.innerText = t2Count;
+      if (elAll) elAll.innerText = cachedSheetSubmissions.length;
     }
 
     async function fetchSheetData(force = false) {
@@ -1497,10 +1709,12 @@
       activeAdminSessionFilter = sessionPill;
       ['T2', 'T3', 'ALL'].forEach(p => {
         const btn = document.getElementById(`adminPill_${p}`);
-        if (p === sessionPill) {
-          btn.className = "px-2.5 py-1 rounded-lg text-xs font-bold border ease-smooth bg-indigo-600 text-white border-indigo-700";
-        } else {
-          btn.className = "px-2.5 py-1 rounded-lg text-xs font-bold border ease-smooth bg-white text-slate-700 border-slate-300 hover:bg-slate-50";
+        if (btn) {
+          if (p === sessionPill) {
+            btn.className = "px-2.5 py-1 rounded-lg text-xs font-bold border ease-smooth bg-indigo-600 text-white border-indigo-700";
+          } else {
+            btn.className = "px-2.5 py-1 rounded-lg text-xs font-bold border ease-smooth bg-white text-slate-700 border-slate-300 hover:bg-slate-50";
+          }
         }
       });
       renderTableRows();
@@ -1611,7 +1825,7 @@
 
       tbody.innerHTML = "";
       if (list.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="9" class="text-center py-5 text-slate-400">Tiada rekod murid bagi saringan ini.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9" class="text-center py-5 text-slate-400">Tiada rekod murid bagi saringan sesi ini.</td></tr>`;
         return;
       }
 
@@ -1629,7 +1843,9 @@
             <td class="px-3 py-1.5 font-bold text-slate-800">${sub.name}</td>
             <td class="px-3 py-1.5"><span class="px-2 py-0.5 rounded text-[10px] font-black ${classColor}">${sub.class}</span></td>
             <td class="px-3 py-1.5 text-slate-600">${sub.subject || "RBT"}</td>
+            <!-- MARKAH OBJEKTIF -->
             <td class="px-3 py-1.5 font-black text-indigo-900">${sub.objScore !== null ? sub.objScore + ' / 10' : '0 / 10'}</td>
+            <!-- MARKAH SUBJEKTIF -->
             <td class="px-3 py-1.5 font-black text-blue-900">${sub.subjMark !== null && sub.subjMark !== "" ? sub.subjMark + ' / 20' : '-'}</td>
             <td class="px-3 py-1.5">
               ${isLate ? '<span class="px-2 py-0.5 rounded text-[10px] font-black bg-rose-100 text-rose-800">Lewat</span>' : '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">Patuh Masa</span>'}
@@ -1645,7 +1861,9 @@
       });
     }
 
-    /* MODAL SEMAKAN GURU & JANA ULASAN */
+    /* ==========================================================
+       MODAL SEMAKAN GURU (SKEMA JAWAPAN TEPAT & PERINCIAN MARKAH)
+    ========================================================== */
     function buildComprehensiveFeedback(student, objScore, subjScore) {
       const isT2 = (student.class === "2S1" || student.class === "2S2" || (student.subject && student.subject.indexOf("Tingkatan 2") !== -1));
       let points = [];
@@ -1685,24 +1903,28 @@
       timingBadge.className = isLate ? "text-[9px] px-2 py-0.5 rounded-full font-black bg-rose-500 text-white" : "text-[9px] px-2 py-0.5 rounded-full font-bold bg-emerald-500 text-white";
       timingBadge.innerText = isLate ? "LEWAT" : "PATUH MASA";
 
+      // 1. Semakan Objektif (Dengan Skema Tepat)
       const objDetail = document.getElementById('modalObjDetail');
       objDetail.innerHTML = "";
       bank.objective.forEach((q, qIdx) => {
         const studentAnsIdx = student.objAnswers ? student.objAnswers[qIdx] : null;
         const isCorrect = (studentAnsIdx === q.answer);
         const ansText = (studentAnsIdx !== null && studentAnsIdx !== undefined) ? q.options[studentAnsIdx] : "Tiada jawapan";
+        const correctText = q.options[q.answer];
 
         objDetail.innerHTML += `
-          <div class="p-1.5 rounded border ${isCorrect ? 'border-emerald-200 bg-emerald-50/50' : 'border-rose-200 bg-rose-50/50'} text-xs">
+          <div class="p-2 rounded-lg border ${isCorrect ? 'border-emerald-200 bg-emerald-50/50' : 'border-rose-200 bg-rose-50/50'} text-xs space-y-0.5">
             <div class="flex justify-between font-bold">
               <span>S${qIdx + 1}. ${q.question}</span>
-              <span class="${isCorrect ? 'text-emerald-700' : 'text-rose-700'}">${isCorrect ? '✓' : '✗'}</span>
+              <span class="${isCorrect ? 'text-emerald-700' : 'text-rose-700'}">${isCorrect ? '✓ [1m]' : '✗ [0m]'}</span>
             </div>
-            <div class="text-slate-600 text-[10px]">Jawapan Murid: ${ansText}</div>
+            <div class="text-slate-600 text-[11px]">Jawapan Murid: <span class="font-semibold">${ansText}</span></div>
+            ${!isCorrect ? `<div class="text-emerald-800 font-bold text-[11px] bg-emerald-100/60 p-1 rounded mt-0.5">Skema Jawapan Tepat: ${correctText}</div>` : ''}
           </div>
         `;
       });
 
+      // 2. Semakan Subjektif (Dengan SKEMA JAWAPAN TEPAT & PERINCIAN MARKAH)
       const subjDetail = document.getElementById('modalSubjDetail');
       subjDetail.innerHTML = "";
       let suggestedTotal = 0;
@@ -1721,12 +1943,38 @@
         suggestedTotal += qMark;
 
         subjDetail.innerHTML += `
-          <div class="p-2.5 rounded-xl border border-slate-200 bg-slate-50 text-xs space-y-1">
-            <div class="font-bold text-slate-800">S${qIdx + 1}. ${q.question}</div>
-            <div class="p-1.5 bg-white rounded border border-slate-300 text-slate-800 whitespace-pre-wrap">${rawText}</div>
-            <div class="flex justify-between items-center text-[10px] text-slate-500">
-              <span>Kata kunci: ${count}</span>
-              <span>Cadangan: <strong>${qMark}/${rubric.maxMark}m</strong></span>
+          <div class="p-3 rounded-xl border border-slate-200 bg-slate-50 text-xs space-y-2">
+            <div class="flex justify-between items-start gap-2">
+              <div class="font-bold text-slate-800 text-xs">S${qIdx + 1}. ${q.question}</div>
+              <span class="px-2 py-0.5 bg-indigo-100 text-indigo-800 rounded font-black text-[10px] whitespace-nowrap">Markah Penuh: ${rubric.maxMark}m</span>
+            </div>
+
+            <!-- Jawapan Murid -->
+            <div class="bg-white p-2.5 rounded-lg border border-slate-300">
+              <span class="text-[10px] font-bold text-slate-400 uppercase block mb-0.5">Jawapan Murid:</span>
+              <div class="text-slate-800 whitespace-pre-wrap leading-relaxed">${rawText}</div>
+            </div>
+
+            <!-- SKEMA JAWAPAN TEPAT & RUBRIK PERMARKAHAN -->
+            <div class="bg-emerald-50/80 border border-emerald-300 p-2.5 rounded-lg text-emerald-950 space-y-1">
+              <div class="font-black text-[10px] uppercase text-emerald-900 flex items-center gap-1">
+                <span>📋 Skema Jawapan Tepat & Perincian Markah:</span>
+              </div>
+              <div class="font-mono text-[11px] leading-relaxed whitespace-pre-wrap text-emerald-900">${rubric.exactScheme}</div>
+            </div>
+
+            <!-- Pemberian Markah Pantas -->
+            <div class="flex justify-between items-center pt-1 border-t border-slate-200">
+              <span class="text-[10px] text-slate-500">Kata kunci dikesan: <strong>${count}</strong> (Cadangan: <strong>${qMark}/${rubric.maxMark}m</strong>)</span>
+              <div class="flex items-center gap-1">
+                <span class="text-[10px] text-slate-600 font-bold mr-1">Beri Markah:</span>
+                ${[0, 1, 2, 3, 4].map(num => `
+                  <button type="button" onclick="setSubjScoreManual(${qIdx},${num})" id="qBtn_${qIdx}_${num}" 
+                          class="q-score-btn-${qIdx} w-5 h-5 rounded text-[10px] font-bold border transition${num === qMark ? 'bg-indigo-600 text-white border-indigo-700' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'}">
+                    ${num}
+                  </button>
+                `).join('')}
+              </div>
             </div>
           </div>
         `;
@@ -1742,6 +1990,25 @@
       document.getElementById('inputTeacherComment').value = existingComment || buildComprehensiveFeedback(student, student.objScore || 0, curMark);
 
       document.getElementById('reviewModal').classList.remove('hidden');
+    }
+
+    function setSubjScoreManual(questionIdx, score) {
+      document.querySelectorAll(`.q-score-btn-${questionIdx}`).forEach(btn => {
+        btn.className = `q-score-btn-${questionIdx} w-5 h-5 rounded text-[10px] font-bold border bg-white text-slate-700 border-slate-300 hover:bg-slate-100`;
+      });
+      const activeBtn = document.getElementById(`qBtn_${questionIdx}_${score}`);
+      if (activeBtn) {
+        activeBtn.className = `q-score-btn-${questionIdx} w-5 h-5 rounded text-[10px] font-bold border bg-indigo-600 text-white border-indigo-700 shadow-sm`;
+      }
+
+      let currentTotal = 0;
+      for (let i = 0; i < 5; i++) {
+        const selectedBtn = document.querySelector(`.q-score-btn-${i}.bg-indigo-600`);
+        if (selectedBtn) {
+          currentTotal += parseInt(selectedBtn.innerText);
+        }
+      }
+      document.getElementById('inputSubjMark').value = currentTotal;
     }
 
     function applySuggestedScore() {
@@ -1789,7 +2056,7 @@
         student.reviewStatus = status;
         student.teacherComment = comment;
 
-        alert("Semakan berjaya disimpan!");
+        alert("Semakan dan markah berjaya disimpan ke dalam Google Sheet!");
         closeReviewModal();
         renderTableRows();
       } catch (err) {
@@ -1846,7 +2113,7 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       loadFastLocalCache(false);
-      detectDefaultSession();
+      initSessionPriorities();
       syncDataFast(false);
     });
   </script>
