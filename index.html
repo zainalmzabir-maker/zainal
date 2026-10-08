@@ -53,14 +53,17 @@
           <p class="text-xs text-indigo-200">SMK SEMEKAR &bull; zainal.semekar.com</p>
         </div>
       </div>
-      <nav class="flex items-center space-x-2 mt-2 sm:mt-0">
-        <button id="navStudentBtn" onclick="switchTab('student')" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-indigo-700 text-white flex items-center gap-1.5">
+      <nav class="flex items-center space-x-1.5 sm:space-x-2 mt-2 sm:mt-0">
+        <button id="navStudentBtn" onclick="switchTab('student')" class="px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-indigo-700 text-white flex items-center gap-1.5">
           <i class="fa-solid fa-book-open"></i> Latihan
         </button>
-        <button id="navStatusBtn" onclick="switchTab('status')" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-transparent text-indigo-200 hover:bg-indigo-800 hover:text-white flex items-center gap-1.5">
+        <button id="navSubmissionsBtn" onclick="switchTab('submissions')" class="px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-transparent text-indigo-200 hover:bg-indigo-800 hover:text-white flex items-center gap-1.5">
+          <i class="fa-solid fa-clipboard-check"></i> Penghantaran
+        </button>
+        <button id="navStatusBtn" onclick="switchTab('status')" class="px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-transparent text-indigo-200 hover:bg-indigo-800 hover:text-white flex items-center gap-1.5">
           <i class="fa-solid fa-square-poll-vertical"></i> Semak Keputusan
         </button>
-        <button id="navAdminBtn" onclick="switchTab('admin')" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-transparent text-indigo-200 hover:bg-indigo-800 hover:text-white flex items-center gap-1.5">
+        <button id="navAdminBtn" onclick="switchTab('admin')" class="px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-transparent text-indigo-200 hover:bg-indigo-800 hover:text-white flex items-center gap-1.5">
           <i class="fa-solid fa-gauge-high"></i> Dashboard
         </button>
       </nav>
@@ -226,8 +229,8 @@
         </div>
 
         <div class="flex flex-col sm:flex-row gap-2 justify-center pt-2">
-          <button onclick="switchTab('status')" class="px-4 py-2.5 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-700 transition">
-            Ke Laman Semak Keputusan
+          <button onclick="switchTab('submissions')" class="px-4 py-2.5 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-700 transition flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-clipboard-check"></i> Lihat Senarai Penghantaran
           </button>
           <button onclick="resetRegistration()" class="px-4 py-2.5 bg-slate-100 text-slate-700 rounded-xl text-xs font-semibold hover:bg-slate-200 transition">
             Kembali
@@ -237,10 +240,109 @@
 
     </div>
 
-    <!-- ========================================== -->
-    <!-- BAHAGIAN 2: SEMAK STATUS KEPUTUSAN (MURID) -->
-    <!-- (DROPDOWN SAHAJA & NOTA SEMAKAN GURU)      -->
-    <!-- ========================================== -->
+    <!-- ======================================================== -->
+    <!-- BAHAGIAN 2: HALAMAN PENGHANTARAN (SENARAI TELAH HANTAR)  -->
+    <!-- ======================================================== -->
+    <div id="submissionsSection" class="hidden fade-in space-y-6">
+      <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-6">
+        
+        <!-- Header Page Penghantaran -->
+        <div class="flex flex-wrap justify-between items-center gap-4 border-b border-slate-200 pb-5">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-700 flex items-center justify-center text-2xl font-bold border border-indigo-100">
+              <i class="fa-solid fa-clipboard-check"></i>
+            </div>
+            <div>
+              <h2 class="text-xl sm:text-2xl font-extrabold text-slate-800">Senarai Penghantaran Murid</h2>
+              <p class="text-xs sm:text-sm text-slate-500">Rekod murid yang telah menghantar Tugasan RBT Tingkatan 3 mengikut kelas.</p>
+            </div>
+          </div>
+          <button onclick="loadPublicSubmissions()" id="publicRefreshBtn" class="px-3.5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold rounded-xl flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-rotate"></i> Muat Semula Senarai
+          </button>
+        </div>
+
+        <!-- 3 Kad Ringkasan Penghantaran Murid -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
+            <div>
+              <span class="text-[11px] text-slate-500 font-semibold block uppercase">Jumlah Penghantaran</span>
+              <span class="text-2xl font-black text-slate-800" id="pubTotalCount">0</span>
+            </div>
+            <i class="fa-solid fa-users text-2xl text-slate-300"></i>
+          </div>
+          <div class="bg-blue-50/60 p-4 rounded-xl border border-blue-200 flex items-center justify-between">
+            <div>
+              <span class="text-[11px] text-blue-700 font-semibold block uppercase">Kelas 3S1</span>
+              <span class="text-2xl font-black text-blue-800" id="pub3S1Count">0</span>
+            </div>
+            <i class="fa-solid fa-chalkboard-user text-2xl text-blue-300"></i>
+          </div>
+          <div class="bg-purple-50/60 p-4 rounded-xl border border-purple-200 flex items-center justify-between">
+            <div>
+              <span class="text-[11px] text-purple-700 font-semibold block uppercase">Kelas 3S2</span>
+              <span class="text-2xl font-black text-purple-800" id="pub3S2Count">0</span>
+            </div>
+            <i class="fa-solid fa-chalkboard-user text-2xl text-purple-300"></i>
+          </div>
+        </div>
+
+        <!-- Bar Carian & Saringan Kelas -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Tapis Mengikut Kelas:</label>
+            <select id="pubClassFilter" onchange="renderPublicSubmissionsTable()" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs font-bold text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="ALL">Semua Kelas (3S1 & 3S2)</option>
+              <option value="3S1">Kelas 3S1 Sahaja</option>
+              <option value="3S2">Kelas 3S2 Sahaja</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Cari Nama Murid:</label>
+            <div class="relative">
+              <input type="text" id="pubSearchInput" oninput="renderPublicSubmissionsTable()" placeholder="Taip nama murid untuk mencari..."
+                     class="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-300 text-xs font-medium text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 uppercase" />
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                <i class="fa-solid fa-magnifying-glass text-xs"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Jadual Penghantaran Murid (Nama, Kelas, Matapelajaran) -->
+        <div class="overflow-x-auto rounded-xl border border-slate-200">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-slate-100 text-slate-700 text-xs uppercase font-bold border-b border-slate-200">
+              <tr>
+                <th class="px-4 py-3 w-12 text-center">#</th>
+                <th class="px-4 py-3">Nama Murid</th>
+                <th class="px-4 py-3">Kelas</th>
+                <th class="px-4 py-3">Mata Pelajaran</th>
+                <th class="px-4 py-3">Masa Penghantaran</th>
+                <th class="px-4 py-3 text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody id="publicSubmissionsTableBody" class="divide-y divide-slate-100 text-slate-700 bg-white">
+              <tr>
+                <td colspan="6" class="text-center py-8 text-slate-400">
+                  <i class="fa-solid fa-spinner fa-spin text-lg mb-2 block"></i>
+                  Sedang memuat turun senarai penghantaran dari Google Sheets...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="text-xs text-slate-400 italic text-center">
+          * Nota: Senarai di atas disegerakkan terus daripada pangkalan data Google Sheets rasmi Kelas Cikgu Zainal.
+        </p>
+      </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- BAHAGIAN 3: SEMAK STATUS KEPUTUSAN (MURID)               -->
+    <!-- (DROPDOWN SAHAJA & NOTA SEMAKAN GURU)                    -->
+    <!-- ======================================================== -->
     <div id="statusSection" class="hidden fade-in space-y-6">
       <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 max-w-xl mx-auto">
         <div class="text-center space-y-2 mb-6">
@@ -294,7 +396,7 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- BAHAGIAN 3: DASHBOARD GURU (CIKGU ZAINAL)  -->
+    <!-- BAHAGIAN 4: DASHBOARD GURU (CIKGU ZAINAL)  -->
     <!-- ========================================== -->
     <div id="adminSection" class="hidden fade-in space-y-6">
 
@@ -631,7 +733,7 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- FOOTER (DIKEMAS KINI KE 'WebApp Cikgu Enal')-->
+  <!-- FOOTER (WebApp Cikgu Enal)                 -->
   <!-- ========================================== -->
   <footer class="bg-slate-900 text-slate-400 py-6 text-xs text-center border-t border-slate-800 no-print">
     <div class="max-w-6xl mx-auto px-4 flex flex-col items-center justify-center space-y-2">
@@ -644,7 +746,7 @@
     </div>
   </footer>
 
-  <!-- SCRIPT APLIKASI WEB & LOGIK DROPDOWN KEPUTUSAN -->
+  <!-- SCRIPT APLIKASI WEB & LOGIK SISTEM -->
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxrPzsXB7xn8U4vI6LdCZQojLdmQRYOEqXL0mjAS_g-NwXNUR8Nj4x7W4yt5OH_Qh3GSQ/exec";
 
@@ -755,28 +857,35 @@
     let cachedSheetSubmissions = [];
     let selectedStudentIndex = null;
 
+    /* PENGURUSAN TAB NAVIGASI */
     function switchTab(tab) {
       const sSec = document.getElementById('studentSection');
+      const subSec = document.getElementById('submissionsSection');
       const stSec = document.getElementById('statusSection');
       const aSec = document.getElementById('adminSection');
+
       const sBtn = document.getElementById('navStudentBtn');
+      const subBtn = document.getElementById('navSubmissionsBtn');
       const stBtn = document.getElementById('navStatusBtn');
       const aBtn = document.getElementById('navAdminBtn');
 
-      [sBtn, stBtn, aBtn].forEach(b => b.className = "px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-transparent text-indigo-200 hover:bg-indigo-800 hover:text-white flex items-center gap-1.5");
-      [sSec, stSec, aSec].forEach(s => s.classList.add('hidden'));
+      [sBtn, subBtn, stBtn, aBtn].forEach(b => b.className = "px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-transparent text-indigo-200 hover:bg-indigo-800 hover:text-white flex items-center gap-1.5");
+      [sSec, subSec, stSec, aSec].forEach(s => s.classList.add('hidden'));
 
       if (tab === 'student') {
         sSec.classList.remove('hidden');
-        sBtn.className = "px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-indigo-700 text-white flex items-center gap-1.5";
+        sBtn.className = "px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-indigo-700 text-white flex items-center gap-1.5";
+      } else if (tab === 'submissions') {
+        subSec.classList.remove('hidden');
+        subBtn.className = "px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-indigo-700 text-white flex items-center gap-1.5";
+        loadPublicSubmissions();
       } else if (tab === 'status') {
         stSec.classList.remove('hidden');
-        stBtn.className = "px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-indigo-700 text-white flex items-center gap-1.5";
-        // Muat turun data terkini untuk mengisi dropdown murid secara automatik
+        stBtn.className = "px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-indigo-700 text-white flex items-center gap-1.5";
         ensureDataLoadedForLookup();
       } else {
         aSec.classList.remove('hidden');
-        aBtn.className = "px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-indigo-700 text-white flex items-center gap-1.5";
+        aBtn.className = "px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-indigo-700 text-white flex items-center gap-1.5";
         if (isAdminLoggedIn) showAdminPanel(); else showAdminLogin();
       }
     }
@@ -946,6 +1055,112 @@
     }
 
     /* ==========================================================
+       LOGIK HALAMAN BAHARU: SENARAI PENGHANTARAN
+    ========================================================== */
+    async function loadPublicSubmissions() {
+      const tbody = document.getElementById('publicSubmissionsTableBody');
+      const refBtn = document.getElementById('publicRefreshBtn');
+
+      if (refBtn) {
+        refBtn.disabled = true;
+        refBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Mengemas kini...`;
+      }
+
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6" class="text-center py-8 text-slate-400">
+            <i class="fa-solid fa-spinner fa-spin text-lg mb-2 block text-indigo-600"></i>
+            Sedang mengambil senarai murid yang telah menghantar dari Google Sheets...
+          </td>
+        </tr>
+      `;
+
+      try {
+        const response = await fetch(SCRIPT_URL);
+        const result = await response.json();
+        cachedSheetSubmissions = result.data || [];
+        renderPublicSubmissionsTable();
+      } catch (e) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="text-center py-6 text-rose-500 font-semibold">
+              <i class="fa-solid fa-triangle-exclamation mb-1 block"></i>
+              Gagal memuat turun data dari Google Sheets. Sila pastikan sambungan internet anda aktif.
+            </td>
+          </tr>
+        `;
+        console.error("Gagal muat data Google Sheet:", e);
+      }
+
+      if (refBtn) {
+        refBtn.disabled = false;
+        refBtn.innerHTML = `<i class="fa-solid fa-rotate"></i> Muat Semula Senarai`;
+      }
+    }
+
+    function renderPublicSubmissionsTable() {
+      const tbody = document.getElementById('publicSubmissionsTableBody');
+      const classFilter = document.getElementById('pubClassFilter').value;
+      const searchKeyword = (document.getElementById('pubSearchInput').value || "").trim().toUpperCase();
+
+      // Kemas kini kad metrik
+      const total = cachedSheetSubmissions.length;
+      const count3S1 = cachedSheetSubmissions.filter(s => s.class === "3S1").length;
+      const count3S2 = cachedSheetSubmissions.filter(s => s.class === "3S2").length;
+
+      document.getElementById('pubTotalCount').innerText = total;
+      document.getElementById('pub3S1Count').innerText = count3S1;
+      document.getElementById('pub3S2Count').innerText = count3S2;
+
+      let list = cachedSheetSubmissions;
+
+      // Saringan Kelas
+      if (classFilter !== "ALL") {
+        list = list.filter(s => s.class === classFilter);
+      }
+
+      // Saringan Carian Nama
+      if (searchKeyword) {
+        list = list.filter(s => s.name.toUpperCase().indexOf(searchKeyword) !== -1);
+      }
+
+      tbody.innerHTML = "";
+
+      if (list.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="text-center py-8 text-slate-400">
+              <i class="fa-solid fa-folder-open text-2xl mb-1 block text-slate-300"></i>
+              Tiada rekod murid dijumpai untuk saringan ini.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      list.forEach((sub, idx) => {
+        const isLate = sub.isLate || sub.timestamp.indexOf("LEWAT") !== -1 || (sub.reviewStatus && sub.reviewStatus.indexOf("Lewat") !== -1);
+        const classBadgeColor = sub.class === "3S1" ? "bg-blue-100 text-blue-800" : "bg-purple-100 text-purple-800";
+        const cleanTime = sub.timestamp.replace(" [LEWAT]", "");
+
+        tbody.innerHTML += `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="px-4 py-3 text-center font-bold text-slate-400 text-xs">${idx + 1}</td>
+            <td class="px-4 py-3 font-extrabold text-slate-800 text-sm tracking-tight">${sub.name}</td>
+            <td class="px-4 py-3">
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-bold ${classBadgeColor}">${sub.class}</span>
+            </td>
+            <td class="px-4 py-3 text-xs font-semibold text-slate-600">${sub.subject || "RBT Tingkatan 3"}</td>
+            <td class="px-4 py-3 text-xs font-mono text-slate-600">${cleanTime}</td>
+            <td class="px-4 py-3 text-center">
+              ${isLate ? '<span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-rose-100 text-rose-800 border border-rose-300">LEWAT</span>' : '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">TEPAT MASA</span>'}
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    /* ==========================================================
        LOGIK SEMAK KEPUTUSAN (DROPDOWN SAHAJA & NOTA SEMAKAN)
     ========================================================== */
     async function ensureDataLoadedForLookup() {
@@ -976,7 +1191,6 @@
         return;
       }
 
-      // Tapis senarai murid bagi kelas yang dipilih
       const filtered = cachedSheetSubmissions.filter(s => s.class === selectedClass);
 
       if (filtered.length === 0) {
@@ -1010,12 +1224,10 @@
 
       container.classList.remove('hidden');
 
-      // SEMAK STATUS: JIKA BELUM DISEMAK GURU, JAWAPAN & MARKAH DIKUNCI
       const isReviewed = found.reviewStatus && found.reviewStatus.indexOf("Telah Disemak") !== -1;
       const isLate = found.isLate || found.timestamp.indexOf("LEWAT") !== -1 || (found.reviewStatus && found.reviewStatus.indexOf("Lewat") !== -1);
 
       if (!isReviewed) {
-        // PAPARAN KUNCI (BELUM DISEMAK)
         container.innerHTML = `
           <div class="p-5 bg-amber-50 border-2 border-amber-300 rounded-2xl text-center space-y-3.5 shadow-sm animate-scale">
             <div class="w-14 h-14 bg-amber-100 text-amber-700 rounded-2xl flex items-center justify-center mx-auto text-2xl font-bold border border-amber-200">
@@ -1040,7 +1252,6 @@
           </div>
         `;
       } else {
-        // TELAH DISEMAK: PAPAR KEPUTUSAN PENUH & CETAK SLIP PDF
         const objScore = parseInt(found.objScore) || 0;
         const subjScore = parseInt(found.subjMark) || 0;
         const totalScore = objScore + subjScore;
@@ -1172,7 +1383,7 @@
       refBtn.innerHTML = `<i class="fa-solid fa-rotate"></i> Muat Semula Data Sheet`;
     }
 
-    /* RENDER JADUAL DENGAN TAPISAN KELAS & STATUS LEWAT */
+    /* RENDER JADUAL DENGAN TAPISAN KELAS & STATUS LEWAT DI DASHBOARD */
     function renderTableRows() {
       const tbody = document.getElementById('studentSubmissionsTable');
       const classFilter = document.getElementById('adminClassFilter').value;
