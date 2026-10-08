@@ -12,9 +12,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   
   <style>
-    /* Fon Sistem Asli Pantas (0ms muat turun) */
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-    .fade-in { animation: fadeIn 0.12s ease-out; }
+    .fade-in { animation: fadeIn 0.15s ease-out; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
     /* Format Cetakan PDF Rasmi A4 */
@@ -39,6 +38,27 @@
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased">
 
   <!-- ========================================== -->
+  <!-- MODAL DIALOG MENUNGGU DATA (LOADING MODAL) -->
+  <!-- ========================================== -->
+  <div id="loadingModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center space-y-4 animate-scale">
+      <div class="w-14 h-14 mx-auto rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-2xl font-black">
+        <svg class="animate-spin h-7 w-7 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+        </svg>
+      </div>
+      <div>
+        <h3 class="text-base font-black text-slate-800" id="loadingModalTitle">Menghubungi Google Sheets...</h3>
+        <p class="text-xs text-slate-500 mt-1" id="loadingModalDesc">Sila tunggu sebentar sementara sistem memuat turun data rekod murid.</p>
+      </div>
+      <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+        <div class="bg-indigo-600 h-1.5 rounded-full animate-pulse w-3/4 mx-auto"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
   <!-- NAVBAR RINGAN                              -->
   <!-- ========================================== -->
   <header class="bg-indigo-900 text-white shadow sticky top-0 z-40 no-print">
@@ -46,7 +66,7 @@
       <div class="flex items-center space-x-2.5">
         <div class="w-9 h-9 rounded-xl bg-white/10 p-1 flex items-center justify-center border border-white/20">
           <img src="logo.png" alt="Logo" class="max-w-full max-h-full object-contain"
-               onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-full h-full bg-amber-400 text-indigo-950 font-black rounded flex items-center justify-center text-xs\'>ZA</div>';">
+               onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-full h-full bg-amber-400 text-indigo-950 font-black rounded flex items-center justify-center text-xs\'>SEMEKAR</div>';">
         </div>
         <div>
           <h1 class="text-sm sm:text-base font-extrabold tracking-tight">PORTAL KELAS CIKGU ZAINAL</h1>
@@ -91,7 +111,7 @@
         </div>
       </div>
 
-      <!-- Borang Pendaftaran (Hierarki Sesi) -->
+      <!-- Borang Pendaftaran -->
       <div id="regBox" class="bg-white rounded-2xl p-5 sm:p-7 shadow-sm border border-slate-200">
         <div class="max-w-xl mx-auto text-center space-y-1.5">
           <div class="w-14 h-14 mx-auto p-1 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center mb-1">
@@ -208,7 +228,7 @@
         </div>
 
         <div class="bg-amber-50 border border-amber-200 p-3 rounded-xl text-left text-xs text-amber-900 leading-relaxed">
-          <strong>Peringatan Semakan:</strong> Keputusan dikunci sementara bagi mengelakkan murid lain meniru. Sila semak semula selepas Cikgu Zainal melepaskan keputusan.
+          <strong>Peringatan Semakan:</strong> Keputusan dikunci sementara bagi mengelakkan murid lain meniru. Sila semak semula selepas Cikgu Zainal melepaskan keputusan bagi sesi ini.
         </div>
 
         <div class="flex gap-2 justify-center pt-1">
@@ -225,7 +245,6 @@
 
     <!-- ======================================================== -->
     <!-- BAHAGIAN 2: HALAMAN PENGHANTARAN (MENGIKUT SESI)        -->
-    <!-- STATUS WAKTU: 'Patuh Masa' ATAU 'Lewat'                  -->
     <!-- ======================================================== -->
     <div id="submissionsSection" class="hidden fade-in space-y-4">
       <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-200 space-y-3.5">
@@ -272,7 +291,7 @@
               </tr>
             </thead>
             <tbody id="publicSubmissionsTableBody" class="divide-y divide-slate-100 bg-white">
-              <tr><td colspan="6" class="text-center py-5 text-slate-400">Memuat senarai...</td></tr>
+              <tr><td colspan="6" class="text-center py-5 text-slate-400">Sedang memuat turun data...</td></tr>
             </tbody>
           </table>
         </div>
@@ -317,7 +336,7 @@
 
     <!-- ======================================================== -->
     <!-- BAHAGIAN 4: DASHBOARD GURU (CIKGU ZAINAL)                -->
-    <!-- SENARAI DIKUMPUL MENGIKUT SESI & MARKAH SENTIASA TEPAT   -->
+    <!-- DUA SUIS PELEPASAN BERASINGAN (SESI T3 & SESI T2)        -->
     <!-- ======================================================== -->
     <div id="adminSection" class="hidden fade-in space-y-4">
 
@@ -343,9 +362,9 @@
           <div>
             <h2 class="text-lg font-black text-slate-800 flex items-center gap-2">
               <span>Dashboard Cikgu Zainal</span>
-              <span class="text-[9px] bg-emerald-100 text-emerald-800 font-black px-2 py-0.5 rounded-full">Google Sheet Live</span>
+              <span class="text-[9px] bg-emerald-100 text-emerald-800 font-black px-2 py-0.5 rounded-full">Google Sheet</span>
             </h2>
-            <p class="text-[11px] text-slate-500">Semakan tugasan murid & kawalan pelepasan keputusan.</p>
+            <p class="text-[11px] text-slate-500">Semakan tugasan murid & kawalan pelepasan keputusan mengikut sesi.</p>
           </div>
           <div class="flex items-center gap-2">
             <button onclick="fetchSheetData(true)" id="refreshBtn" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold rounded-lg transition">
@@ -357,22 +376,49 @@
           </div>
         </div>
 
-        <!-- SUIS KAWALAN PELEPASAN KEPUTUSAN KEPADA MURID (TERHUBUNG KE SEL K2 SHEET) -->
-        <div id="releaseControlCard" class="rounded-2xl p-3.5 border shadow-sm flex flex-wrap items-center justify-between gap-3 bg-amber-50 border-amber-300">
-          <div>
-            <div class="flex items-center gap-2">
-              <span class="text-xs font-black uppercase text-slate-700">Status Pelepasan Keputusan:</span>
-              <span id="releaseStatusBadge" class="px-2 py-0.5 rounded-full text-xs font-black bg-amber-200 text-amber-900">
+        <!-- ======================================================== -->
+        <!-- DUA KAD SUIS KAWALAN PELEPASAN BERASINGAN (T3 & T2)      -->
+        <!-- ======================================================== -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          
+          <!-- SUIS 1: SESI TINGKATAN 3 (3S1 & 3S2) -->
+          <div id="releaseCard_T3" class="rounded-2xl p-4 border shadow-sm space-y-2.5 bg-amber-50 border-amber-300">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="text-[10px] font-black uppercase tracking-wider text-slate-500">Sesi RBT Tingkatan 3</span>
+                <h4 class="text-sm font-black text-slate-800">Kelas 3S1 & 3S2 (8 Okt 2026)</h4>
+              </div>
+              <span id="badgeRelease_T3" class="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-200 text-amber-900">
                 DIKUNCI (SULIT)
               </span>
             </div>
-            <p id="releaseStatusDesc" class="text-xs text-slate-600 mt-0.5">
-              Keputusan dikunci daripada murid bagi mengelakkan meniru. Cikgu boleh menyemak markah dengan bebas di sini.
+            <p id="descRelease_T3" class="text-[11px] text-slate-600 leading-relaxed">
+              Murid Tingkatan 3 tidak dapat melihat markah/skema selagi butang ini belum dilepaskan.
             </p>
+            <button onclick="toggleSessionRelease('T3')" id="btnRelease_T3" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow transition">
+              Lepaskan Keputusan Sesi T3
+            </button>
           </div>
-          <button onclick="toggleResultsRelease()" id="btnToggleRelease" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow transition">
-            Lepaskan Keputusan Kepada Murid
-          </button>
+
+          <!-- SUIS 2: SESI TINGKATAN 2 (2S2) -->
+          <div id="releaseCard_T2" class="rounded-2xl p-4 border shadow-sm space-y-2.5 bg-amber-50 border-amber-300">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="text-[10px] font-black uppercase tracking-wider text-slate-500">Sesi RBT Tingkatan 2</span>
+                <h4 class="text-sm font-black text-slate-800">Kelas 2S2 (9 Okt 2026 - Esok)</h4>
+              </div>
+              <span id="badgeRelease_T2" class="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-200 text-amber-900">
+                DIKUNCI (SULIT)
+              </span>
+            </div>
+            <p id="descRelease_T2" class="text-[11px] text-slate-600 leading-relaxed">
+              Murid kelas 2S2 tidak dapat melihat keputusan/skema sebelum atau semasa latihan berjalan.
+            </p>
+            <button onclick="toggleSessionRelease('T2')" id="btnRelease_T2" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow transition">
+              Lepaskan Keputusan Sesi T2
+            </button>
+          </div>
+
         </div>
 
         <!-- 4 Kad Metrik Ringkasan -->
@@ -445,7 +491,7 @@
                 </tr>
               </thead>
               <tbody id="studentSubmissionsTable" class="divide-y divide-slate-100">
-                <tr><td colspan="9" class="text-center py-5 text-slate-400">Memuat data...</td></tr>
+                <tr><td colspan="9" class="text-center py-5 text-slate-400">Sedang memuat data...</td></tr>
               </tbody>
             </table>
           </div>
@@ -659,7 +705,7 @@
     </div>
   </footer>
 
-  <!-- SCRIPT UTAMA RINGAN DENGAN SWR -->
+  <!-- SCRIPT UTAMA -->
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxrPzsXB7xn8U4vI6LdCZQojLdmQRYOEqXL0mjAS_g-NwXNUR8Nj4x7W4yt5OH_Qh3GSQ/exec";
 
@@ -748,57 +794,52 @@
     let currentSessionKey = "T2_SESI_ESOK";
     let isAdminLoggedIn = false;
     let cachedSheetSubmissions = [];
-    let isResultsReleased = false;
+    let sessionReleaseState = { T3: false, T2: false };
     let selectedStudentIndex = null;
     let activeSubSessionFilter = "T3";
     let activeAdminSessionFilter = "T3";
-    let activeSyncPromise = null;
 
     /* ==========================================================
-       PENYELARASAN DATA PANTAS (SWR PATTERN & DEDUPLICATION)
+       PENGURUSAN DIALOG MENUNGGU (LOADING MODAL)
     ========================================================== */
-    function loadLocalCache(isAdmin = false) {
-      const key = isAdmin ? 'semekar_admin_cache' : 'semekar_public_cache';
-      const raw = localStorage.getItem(key);
-      if (raw) {
-        try {
-          const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            cachedSheetSubmissions = parsed;
-          }
-        } catch(e){}
-      }
-      const rel = localStorage.getItem('semekar_release_state');
-      if (rel !== null) {
-        isResultsReleased = (rel === "true");
+    function showLoadingDialog(title, desc) {
+      const modal = document.getElementById('loadingModal');
+      if (modal) {
+        document.getElementById('loadingModalTitle').innerText = title || "Menghubungi Google Sheets...";
+        document.getElementById('loadingModalDesc').innerText = desc || "Sila tunggu sebentar sementara data diproses.";
+        modal.classList.remove('hidden');
       }
     }
 
-    async function syncDataFast(isAdmin = false) {
-      if (activeSyncPromise) return activeSyncPromise;
+    function hideLoadingDialog() {
+      const modal = document.getElementById('loadingModal');
+      if (modal) modal.classList.add('hidden');
+    }
 
-      activeSyncPromise = (async () => {
-        try {
-          const url = isAdmin ? `${SCRIPT_URL}?pass=adminzainal&_t=${Date.now()}` : `${SCRIPT_URL}?_t=${Date.now()}`;
-          const res = await fetch(url);
-          const json = await res.json();
+    /* ==========================================================
+       PENYELARASAN DATA DARI GOOGLE SHEET
+    ========================================================== */
+    async function syncDataFast(isAdmin = false, showDialog = false) {
+      if (showDialog) {
+        showLoadingDialog("Memuat Turun Data Rekod...", "Sedang menyegerakkan senarai murid dari Google Sheets Cikgu Zainal.");
+      }
 
-          if (json && json.status === "success" && Array.isArray(json.data)) {
-            cachedSheetSubmissions = json.data;
-            isResultsReleased = (json.isReleased === true);
+      try {
+        const url = isAdmin ? `${SCRIPT_URL}?pass=adminzainal&_t=${Date.now()}` : `${SCRIPT_URL}?_t=${Date.now()}`;
+        const res = await fetch(url);
+        const json = await res.json();
 
-            const key = isAdmin ? 'semekar_admin_cache' : 'semekar_public_cache';
-            localStorage.setItem(key, JSON.stringify(cachedSheetSubmissions));
-            localStorage.setItem('semekar_release_state', isResultsReleased ? "true" : "false");
+        if (json && json.status === "success" && Array.isArray(json.data)) {
+          cachedSheetSubmissions = json.data;
+          if (json.releaseStatus) {
+            sessionReleaseState = json.releaseStatus;
           }
-        } catch (e) {
-          console.warn("Segerak latar belakang gagal, guna data sedia ada:", e);
-        } finally {
-          activeSyncPromise = null;
         }
-      })();
-
-      return activeSyncPromise;
+      } catch (e) {
+        console.warn("Gagal menyegerak latar belakang:", e);
+      } finally {
+        if (showDialog) hideLoadingDialog();
+      }
     }
 
     /* ==========================================================
@@ -1041,7 +1082,7 @@
       subjContainer.innerHTML = "";
       bank.subjective.forEach((q, index) => {
         subjContainer.innerHTML += `
-          <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+          <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
             <div class="flex items-start gap-2">
               <span class="font-black text-blue-800 text-[11px] bg-blue-100 px-1.5 py-0.5 rounded">S${index + 1}</span>
               <div>
@@ -1086,9 +1127,7 @@
 
       if (!confirm("Adakah anda pasti mahu menghantar tugasan sekarang?")) return;
 
-      const submitBtn = document.getElementById('submitBtn');
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = `Menyimpan ke Google Sheet...`;
+      showLoadingDialog("Menghantar Tugasan...", "Sedang menyimpan jawapan anda ke dalam Google Sheets Cikgu Zainal.");
 
       const now = new Date();
       const timestamp = now.toLocaleDateString('ms-MY') + ' ' + now.toLocaleTimeString('ms-MY');
@@ -1110,7 +1149,9 @@
           body: JSON.stringify({ action: "SUBMIT_EXERCISE", data: submissionData })
         });
       } catch (err) {
-        console.warn("Hantar ke Sheet:", err);
+        console.warn("Ralat hantar:", err);
+      } finally {
+        hideLoadingDialog();
       }
 
       document.getElementById('quizBox').classList.add('hidden');
@@ -1127,27 +1168,17 @@
         timingBadge.innerText = "Patuh Masa";
       }
 
-      submitBtn.disabled = false;
-      submitBtn.innerHTML = `<span id="submitBtnText">Hantar Tugasan ke Google Sheet</span>`;
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     /* ==========================================================
        HALAMAN PENGHANTARAN: KELOMPOK MENGIKUT SESI
-       STATUS WAKTU: 'Patuh Masa' ATAU 'Lewat'
     ========================================================== */
     async function loadPublicSubmissions(force = false) {
-      // 1. Tunjuk data tempatan terus (0ms)
-      renderPublicSubmissionsTable();
-
-      // 2. Segerak di latar belakang
-      if (force || cachedSheetSubmissions.length === 0) {
-        const refBtn = document.getElementById('publicRefreshBtn');
-        if (refBtn) { refBtn.disabled = true; refBtn.innerText = "Memuat..."; }
-        await syncDataFast(false);
-        renderPublicSubmissionsTable();
-        if (refBtn) { refBtn.disabled = false; refBtn.innerText = "Muat Semula"; }
+      if (cachedSheetSubmissions.length === 0 || force) {
+        await syncDataFast(false, true);
       }
+      renderPublicSubmissionsTable();
     }
 
     function filterSubmissionsBySession(pill) {
@@ -1217,9 +1248,10 @@
        SEMAK KEPUTUSAN & DOWNLOAD SLIP PDF
     ========================================================== */
     async function ensureDataLoadedForLookup() {
+      if (cachedSheetSubmissions.length === 0) {
+        await syncDataFast(false, true);
+      }
       onLookupSubjectChange();
-      await syncDataFast(false);
-      onLookupFilterChange();
     }
 
     function onLookupSubjectChange() {
@@ -1283,8 +1315,10 @@
       const isT2 = (found.class === "2S2" || (found.subject && found.subject.indexOf("Tingkatan 2") !== -1));
       const bank = isT2 ? questionsData_T2 : questionsData_T3;
 
-      // KAWALAN SULIT (ANTI-TIRU):
-      if (!isResultsReleased) {
+      // SEMAK PELEPASAN SESI KHUSUS (T3 vs T2)
+      const isThisSessionReleased = isT2 ? sessionReleaseState.T2 : sessionReleaseState.T3;
+
+      if (!isThisSessionReleased) {
         container.innerHTML = `
           <div class="p-4 bg-amber-50 border-2 border-amber-300 rounded-2xl text-center space-y-2.5">
             <div class="w-10 h-10 bg-amber-200 text-amber-900 rounded-full flex items-center justify-center mx-auto text-lg font-black">
@@ -1292,20 +1326,21 @@
             </div>
             <div>
               <span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-200 text-amber-900">
-                Keputusan Dikunci (Sulit)
+                Sesi ${isT2 ? 'Tingkatan 2' : 'Tingkatan 3'} Belum Dilepaskan
               </span>
               <h4 class="font-black text-slate-800 text-sm mt-1">${found.name}</h4>
               <p class="text-[11px] text-slate-600">Kelas: ${found.class} &bull; ${found.subject}</p>
             </div>
             <div class="p-2.5 bg-white rounded-xl border border-amber-200 text-[11px] text-amber-950 leading-relaxed text-left">
               <strong>Pemberitahuan Guru:</strong><br>
-              Tugasan anda telah direkodkan. Cikgu Zainal sedang menyemak jawapan semua murid. Bagi menjamin integriti, <strong>markah dan skema jawapan belum dilepaskan</strong>. Sila tunggu pengumuman rasmi guru.
+              Tugasan anda telah direkodkan. Cikgu Zainal belum melepaskan keputusan bagi sesi ${isT2 ? 'RBT Tingkatan 2' : 'RBT Tingkatan 3'} bagi mengelakkan murid lain daripada meniru. Sila tunggu pengumuman rasmi daripada guru.
             </div>
           </div>
         `;
         return;
       }
 
+      // JIKA SESI INI TELAH DILEPASKAN
       if (!isReviewed) {
         container.innerHTML = `
           <div class="p-4 bg-slate-50 border border-slate-300 rounded-2xl text-center space-y-1.5">
@@ -1346,7 +1381,6 @@
                 <h4 class="font-black text-slate-800 text-sm mt-0.5">${found.name}</h4>
                 <p class="text-[11px] text-slate-500">${found.class} &bull; ${found.subject}</p>
               </div>
-              <!-- BUTANG DOWNLOAD / CETAK PDF -->
               <button onclick="downloadResultPdf(${selectedIdx})" class="px-3 py-1.5 bg-indigo-700 hover:bg-indigo-800 text-white rounded-xl text-xs font-black shadow transition">
                 📥 Muat Turun Slip PDF
               </button>
@@ -1384,8 +1418,8 @@
     }
 
     /* ==========================================================
-       DASHBOARD GURU: PENGELOMPOKAN SESI & MARKAH LENGKAP
-    ========================================================= */
+       DASHBOARD GURU: DUA SUIS PELEPASAN & MARKAH LENGKAP
+    ========================================================== */
     function loginAdmin() {
       const pass = document.getElementById('adminPassInput').value;
       const err = document.getElementById('adminLoginErr');
@@ -1413,14 +1447,6 @@
     function showAdminPanel() {
       document.getElementById('adminLoginBox').classList.add('hidden');
       document.getElementById('adminPanelBox').classList.remove('hidden');
-      
-      // Paparkan data tempatan terus dahulu
-      loadLocalCache(true);
-      updateDashboardCounts();
-      renderTableRows();
-      updateReleaseControlUI();
-
-      // Segerak di latar belakang
       fetchSheetData(true);
     }
 
@@ -1439,16 +1465,10 @@
     }
 
     async function fetchSheetData(force = false) {
-      const refBtn = document.getElementById('refreshBtn');
-      if (refBtn) { refBtn.disabled = true; refBtn.innerText = "Memuat..."; }
-
-      await syncDataFast(true);
-
+      await syncDataFast(true, force);
       updateDashboardCounts();
       updateReleaseControlUI();
       renderTableRows();
-
-      if (refBtn) { refBtn.disabled = false; refBtn.innerText = "Muat Semula"; }
     }
 
     function filterAdminSession(sessionPill) {
@@ -1465,56 +1485,84 @@
     }
 
     function updateReleaseControlUI() {
-      const card = document.getElementById('releaseControlCard');
-      const badge = document.getElementById('releaseStatusBadge');
-      const desc = document.getElementById('releaseStatusDesc');
-      const btn = document.getElementById('btnToggleRelease');
+      // 1. Suis Sesi T3
+      const cardT3 = document.getElementById('releaseCard_T3');
+      const badgeT3 = document.getElementById('badgeRelease_T3');
+      const descT3 = document.getElementById('descRelease_T3');
+      const btnT3 = document.getElementById('btnRelease_T3');
 
-      if (isResultsReleased) {
-        card.className = "rounded-2xl p-3.5 border shadow-sm flex flex-wrap items-center justify-between gap-3 bg-emerald-50 border-emerald-300";
-        badge.className = "px-2 py-0.5 rounded-full text-xs font-black bg-emerald-200 text-emerald-900";
-        badge.innerText = "TELAH DILEPASKAN KEPADA MURID";
-        desc.innerHTML = "Semua murid kini <strong>boleh melihat markah dan memuat turun slip PDF</strong> di portal.";
-        btn.className = "px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-black text-xs rounded-xl shadow transition";
-        btn.innerText = "Kunci Semula Keputusan";
+      if (sessionReleaseState.T3) {
+        cardT3.className = "rounded-2xl p-4 border shadow-sm space-y-2.5 bg-emerald-50 border-emerald-300";
+        badgeT3.className = "px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-200 text-emerald-900";
+        badgeT3.innerText = "DILEPASKAN";
+        descT3.innerHTML = "Murid <strong>Tingkatan 3 (3S1 & 3S2)</strong> kini boleh melihat markah & slip PDF masing-masing.";
+        btnT3.className = "w-full py-2 bg-rose-600 hover:bg-rose-700 text-white font-black text-xs rounded-xl shadow transition";
+        btnT3.innerText = "Kunci Semula Sesi T3";
       } else {
-        card.className = "rounded-2xl p-3.5 border shadow-sm flex flex-wrap items-center justify-between gap-3 bg-amber-50 border-amber-300";
-        badge.className = "px-2 py-0.5 rounded-full text-xs font-black bg-amber-200 text-amber-900";
-        badge.innerText = "DIKUNCI (SULIT)";
-        desc.innerText = "Keputusan dikunci daripada murid bagi mengelakkan meniru. Cikgu boleh menyemak markah dengan bebas di sini.";
-        btn.className = "px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow transition";
-        btn.innerText = "Lepaskan Keputusan Kepada Murid";
+        cardT3.className = "rounded-2xl p-4 border shadow-sm space-y-2.5 bg-amber-50 border-amber-300";
+        badgeT3.className = "px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-200 text-amber-900";
+        badgeT3.innerText = "DIKUNCI (SULIT)";
+        descT3.innerText = "Murid Tingkatan 3 tidak dapat melihat markah/skema selagi butang ini belum ditekan.";
+        btnT3.className = "w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow transition";
+        btnT3.innerText = "Lepaskan Keputusan Sesi T3";
+      }
+
+      // 2. Suis Sesi T2
+      const cardT2 = document.getElementById('releaseCard_T2');
+      const badgeT2 = document.getElementById('badgeRelease_T2');
+      const descT2 = document.getElementById('descRelease_T2');
+      const btnT2 = document.getElementById('btnRelease_T2');
+
+      if (sessionReleaseState.T2) {
+        cardT2.className = "rounded-2xl p-4 border shadow-sm space-y-2.5 bg-emerald-50 border-emerald-300";
+        badgeT2.className = "px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-200 text-emerald-900";
+        badgeT2.innerText = "DILEPASKAN";
+        descT2.innerHTML = "Murid <strong>Tingkatan 2 (2S2)</strong> kini boleh melihat markah & slip PDF masing-masing.";
+        btnT2.className = "w-full py-2 bg-rose-600 hover:bg-rose-700 text-white font-black text-xs rounded-xl shadow transition";
+        btnT2.innerText = "Kunci Semula Sesi T2";
+      } else {
+        cardT2.className = "rounded-2xl p-4 border shadow-sm space-y-2.5 bg-amber-50 border-amber-300";
+        badgeT2.className = "px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-200 text-amber-900";
+        badgeT2.innerText = "DIKUNCI (SULIT)";
+        descT2.innerText = "Murid kelas 2S2 tidak dapat melihat keputusan sebelum/semasa latihan berjalan esok.";
+        btnT2.className = "w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow transition";
+        btnT2.innerText = "Lepaskan Keputusan Sesi T2";
       }
     }
 
-    async function toggleResultsRelease() {
-      const willRelease = !isResultsReleased;
-      const msg = willRelease 
-        ? "MELEPASKAN KEPUTUSAN:\nMurid akan dapat melihat markah dan memuat turun slip PDF masing-masing serta-merta. Teruskan?" 
-        : "KUNCI SEMULA KEPUTUSAN:\nMurid tidak lagi dapat melihat markah dan skema. Teruskan?";
+    async function toggleSessionRelease(sessionCode) {
+      const isCurrentlyReleased = (sessionCode === "T3") ? sessionReleaseState.T3 : sessionReleaseState.T2;
+      const willRelease = !isCurrentlyReleased;
+      const sessionLabel = (sessionCode === "T3") ? "Sesi RBT Tingkatan 3 (3S1 & 3S2)" : "Sesi RBT Tingkatan 2 (2S2)";
 
-      if (!confirm(msg)) return;
+      const confirmMsg = willRelease
+        ? `Adakah anda pasti mahu MELEPASKAN keputusan bagi ${sessionLabel}? Murid sesi ini akan dapat melihat markah & slip PDF serta-merta.`
+        : `Adakah anda pasti mahu MENGUNCI SEMULA keputusan bagi ${sessionLabel}?`;
 
-      const btn = document.getElementById('btnToggleRelease');
-      btn.disabled = true;
-      btn.innerText = "Menyimpan ke Sel K2...";
+      if (!confirm(confirmMsg)) return;
+
+      showLoadingDialog("Mengemas kini Pelepasan...", `Sedang mengemas kini status ${sessionLabel} ke Google Sheet.`);
 
       try {
         await fetch(SCRIPT_URL, {
           method: 'POST',
-          body: JSON.stringify({ action: "TOGGLE_RELEASE", isReleased: willRelease })
+          body: JSON.stringify({
+            action: "TOGGLE_RELEASE_SESSION",
+            session: sessionCode,
+            isReleased: willRelease
+          })
         });
 
-        isResultsReleased = willRelease;
-        localStorage.setItem('semekar_release_state', willRelease ? "true" : "false");
+        if (sessionCode === "T3") sessionReleaseState.T3 = willRelease;
+        if (sessionCode === "T2") sessionReleaseState.T2 = willRelease;
+
         updateReleaseControlUI();
-        alert(willRelease ? "Keputusan berjaya dilepaskan kepada murid!" : "Keputusan telah dikunci semula.");
+        alert(`Status pelepasan ${sessionLabel} berjaya dikemas kini!`);
       } catch (e) {
         alert("Ralat mengemas kini: " + e);
+      } finally {
+        hideLoadingDialog();
       }
-
-      btn.disabled = false;
-      updateReleaseControlUI();
     }
 
     function renderTableRows() {
@@ -1524,7 +1572,6 @@
 
       let list = cachedSheetSubmissions;
 
-      // Saringan Pengelompokan Sesi
       if (activeAdminSessionFilter === "T3") {
         list = list.filter(s => s.class === "3S1" || s.class === "3S2");
       } else if (activeAdminSessionFilter === "T2") {
@@ -1561,9 +1608,9 @@
             <td class="px-3 py-1.5 font-bold text-slate-800">${sub.name}</td>
             <td class="px-3 py-1.5"><span class="px-2 py-0.5 rounded text-[10px] font-black ${classColor}">${sub.class}</span></td>
             <td class="px-3 py-1.5 text-slate-600">${sub.subject || "RBT"}</td>
-            <!-- MARKAH OBJEKTIF -->
+            <!-- MARKAH OBJEKTIF PENUH -->
             <td class="px-3 py-1.5 font-black text-indigo-900">${sub.objScore !== null ? sub.objScore + ' / 10' : '0 / 10'}</td>
-            <!-- MARKAH SUBJEKTIF -->
+            <!-- MARKAH SUBJEKTIF PENUH -->
             <td class="px-3 py-1.5 font-black text-blue-900">${sub.subjMark !== null && sub.subjMark !== "" ? sub.subjMark + ' / 20' : '-'}</td>
             <td class="px-3 py-1.5">
               ${isLate ? '<span class="px-2 py-0.5 rounded text-[10px] font-black bg-rose-100 text-rose-800">Lewat</span>' : '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">Patuh Masa</span>'}
@@ -1700,14 +1747,12 @@
     async function saveReviewToSheet() {
       if (selectedStudentIndex === null) return;
       const student = cachedSheetSubmissions[selectedStudentIndex];
-      const saveBtn = document.getElementById('saveReviewBtn');
 
       const mark = document.getElementById('inputSubjMark').value || "-";
       const status = document.getElementById('selectMarkStatus').value;
       const comment = document.getElementById('inputTeacherComment').value;
 
-      saveBtn.disabled = true;
-      saveBtn.innerText = "Menyimpan...";
+      showLoadingDialog("Menyimpan Semakan...", "Sedang mengemas kini markah & ulasan murid ke dalam Google Sheet.");
 
       try {
         await fetch(SCRIPT_URL, {
@@ -1730,10 +1775,9 @@
         renderTableRows();
       } catch (err) {
         alert("Ralat menyimpan: " + err);
+      } finally {
+        hideLoadingDialog();
       }
-
-      saveBtn.disabled = false;
-      saveBtn.innerText = "Simpan ke Sheet";
     }
 
     /* ==========================================================
@@ -1783,9 +1827,8 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-      loadLocalCache(false);
       detectDefaultSession();
-      syncDataFast(false);
+      syncDataFast(false, true);
     });
   </script>
 </body>
