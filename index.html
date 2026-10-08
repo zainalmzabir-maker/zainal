@@ -253,7 +253,7 @@
             </div>
             <div>
               <h2 class="text-xl sm:text-2xl font-extrabold text-slate-800">Senarai Penghantaran Murid</h2>
-              <p class="text-xs sm:text-sm text-slate-500">SMK Kamarul Ariffin &bull; Rekod Tugasan RBT Tingkatan 3 mengikut kelas.</p>
+              <p class="text-xs sm:text-sm text-slate-500">SMK Kamarul Ariffin (SEMEKAR) &bull; Rekod Tugasan RBT Tingkatan 3 mengikut kelas.</p>
             </div>
           </div>
           <button onclick="loadPublicSubmissions()" id="publicRefreshBtn" class="px-3.5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold rounded-xl flex items-center gap-1.5 transition">
@@ -427,7 +427,7 @@
                   <i class="fa-solid fa-check"></i> Google Sheet Tersambung
                 </span>
               </h2>
-              <p class="text-sm text-slate-500 mt-0.5">SMK Kamarul Ariffin &bull; Pemantauan & Semakan Latihan RBT Kelas 3S1 & 3S2</p>
+              <p class="text-sm text-slate-500 mt-0.5">SMK Kamarul Ariffin (SEMEKAR) &bull; Pemantauan & Semakan Latihan RBT Kelas 3S1 & 3S2</p>
             </div>
           </div>
           <div class="flex items-center gap-2">
@@ -560,7 +560,7 @@
   </main>
 
   <!-- ======================================================== -->
-  <!-- MODAL SEMAKAN PINTAR GURU (CIKGU ZAINAL)                 -->
+  <!-- MODAL SEMAKAN PINTAR GURU DENGAN ULASAN KOMPREHENSIF     -->
   <!-- ======================================================== -->
   <div id="reviewModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 no-print">
     <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[92vh] flex flex-col overflow-hidden">
@@ -610,7 +610,7 @@
           <div id="modalSubjDetail" class="space-y-4"></div>
         </div>
 
-        <!-- Ruangan Markah Subjektif & Ulasan Pintar -->
+        <!-- Ruangan Markah Subjektif & Enjin Ulasan Komprehensif Pintar -->
         <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 space-y-3">
           <div class="flex flex-wrap justify-between items-center gap-2">
             <h5 class="font-bold text-indigo-950 text-sm">Pemarkahan & Pengesahan Cikgu Zainal</h5>
@@ -639,24 +639,38 @@
             </div>
           </div>
 
+          <!-- Bahagian Enjin Ulasan Komprehensif Berdasarkan Jawapan Murid -->
           <div>
-            <label class="block text-xs font-semibold text-slate-700 mb-1.5">Ulasan Pantas (Klik untuk tambah):</label>
-            <div class="flex flex-wrap gap-1.5 mb-2">
-              <button type="button" onclick="appendQuickComment('Tahniah, jawapan huraian sangat lengkap dan tepat! ⭐')" class="px-2.5 py-1 bg-white hover:bg-emerald-50 text-emerald-800 border border-emerald-300 rounded-full text-[11px] font-medium transition">
-                + Sangat Tepat ⭐
-              </button>
-              <button type="button" onclick="appendQuickComment('Jawapan memuaskan. Sila perkemaskan istilah teknikal mekatronik.')" class="px-2.5 py-1 bg-white hover:bg-blue-50 text-blue-800 border border-blue-300 rounded-full text-[11px] font-medium transition">
-                + Perlu Kemas Istilah
-              </button>
-              <button type="button" onclick="appendQuickComment('Kurang huraian pada bahagian komponen proses dan output.')" class="px-2.5 py-1 bg-white hover:bg-amber-50 text-amber-800 border border-amber-300 rounded-full text-[11px] font-medium transition">
-                + Kurang Huraian
-              </button>
-              <button type="button" onclick="appendQuickComment('Sila rujuk semula skema bab reka bentuk mekatronik.')" class="px-2.5 py-1 bg-white hover:bg-rose-50 text-rose-800 border border-rose-300 rounded-full text-[11px] font-medium transition">
-                + Rujuk Semula Skema
+            <div class="flex flex-wrap justify-between items-center mb-1.5 gap-2">
+              <label class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                <i class="fa-solid fa-comment-dots text-indigo-600"></i>
+                <span>Ulasan Komprehensif Guru (Dijana Khas Mengikut Hasil Kerja Murid):</span>
+              </label>
+              <button type="button" onclick="regenerateComprehensiveComment()" class="text-[11px] font-bold px-2.5 py-1 bg-white hover:bg-indigo-100 text-indigo-800 border border-indigo-300 rounded-lg shadow-sm flex items-center gap-1 transition">
+                <i class="fa-solid fa-wand-magic-sparkles text-amber-500"></i>
+                <span>Jana Semula Ulasan</span>
               </button>
             </div>
-            <textarea id="inputTeacherComment" rows="2" placeholder="Tulis ulasan pembetulan untuk murid..." 
-                      class="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xs"></textarea>
+
+            <!-- Templat Tambahan 1-Klik jika guru ingin tambah ayat pantas -->
+            <div class="flex flex-wrap gap-1.5 mb-2">
+              <span class="text-[10px] text-slate-500 self-center font-semibold">Tambah Catatan:</span>
+              <button type="button" onclick="appendQuickComment('⭐ Pencapaian cemerlang dalam pentaksiran ini!')" class="px-2 py-0.5 bg-white hover:bg-emerald-50 text-emerald-800 border border-emerald-300 rounded-full text-[10px] font-medium transition">
+                + Cemerlang ⭐
+              </button>
+              <button type="button" onclick="appendQuickComment('📌 Sila buat pembetulan pada soalan subjektif yang bertanda kurang memuaskan.')" class="px-2 py-0.5 bg-white hover:bg-amber-50 text-amber-800 border border-amber-300 rounded-full text-[10px] font-medium transition">
+                + Buat Pembetulan
+              </button>
+              <button type="button" onclick="appendQuickComment('💡 Tingkatkan kefahaman dengan merujuk buku teks RBT m/s 15-28.')" class="px-2 py-0.5 bg-white hover:bg-blue-50 text-blue-800 border border-blue-300 rounded-full text-[10px] font-medium transition">
+                + Rujukan Buku Teks
+              </button>
+            </div>
+
+            <textarea id="inputTeacherComment" rows="6" placeholder="Ulasan guru sedang dijana secara automatik..." 
+                      class="w-full p-3 rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xs font-sans leading-relaxed text-slate-800 shadow-sm"></textarea>
+            <p class="text-[10px] text-slate-500 italic mt-1">
+              * Ulasan ini akan dicetak secara automatik ke dalam Slip Keputusan PDF murid.
+            </p>
           </div>
         </div>
       </div>
@@ -756,8 +770,8 @@
       </div>
 
       <div class="border border-slate-300 p-4 rounded bg-slate-50 mb-8">
-        <h4 class="font-bold text-xs uppercase mb-1 text-slate-700">Ulasan / Maklum Balas Cikgu Zainal:</h4>
-        <p class="text-sm italic text-slate-800" id="slipTeacherComment">-</p>
+        <h4 class="font-bold text-xs uppercase mb-1 text-slate-700">Ulasan & Maklum Balas Komprehensif Guru:</h4>
+        <p class="text-xs leading-relaxed text-slate-800 whitespace-pre-wrap font-sans" id="slipTeacherComment">-</p>
       </div>
 
       <div class="grid grid-cols-2 gap-8 pt-6 border-t border-slate-300 text-xs">
@@ -789,7 +803,7 @@
     </div>
   </footer>
 
-  <!-- SCRIPT APLIKASI WEB & LOGIK SISTEM -->
+  <!-- SCRIPT APLIKASI WEB, PENJANA ULASAN PINTAR & LOGIK SISTEM -->
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxrPzsXB7xn8U4vI6LdCZQojLdmQRYOEqXL0mjAS_g-NwXNUR8Nj4x7W4yt5OH_Qh3GSQ/exec";
 
@@ -1400,9 +1414,11 @@
             </div>
 
             ${found.teacherComment ? `
-              <div class="p-3 bg-amber-50 rounded-lg border border-amber-200 text-xs">
-                <span class="font-bold text-amber-900 block mb-0.5"><i class="fa-solid fa-comment-dots"></i> Komen Cikgu Zainal:</span>
-                <p class="italic text-slate-700">${found.teacherComment}</p>
+              <div class="p-4 bg-amber-50 rounded-xl border border-amber-200 text-xs">
+                <span class="font-bold text-amber-950 block mb-1.5 uppercase tracking-wide">
+                  <i class="fa-solid fa-comment-dots text-amber-700"></i> Ulasan Komprehensif Cikgu Zainal:
+                </span>
+                <div class="text-slate-800 leading-relaxed whitespace-pre-wrap font-sans">${found.teacherComment}</div>
               </div>
             ` : ''}
 
@@ -1600,8 +1616,97 @@
     }
 
     /* ==========================================================
-       MODAL SEMAKAN PINTAR GURU DENGAN KATA KUNCI & RUBRIK
+       ENJIN PENJANA ULASAN KOMPREHENSIF PINTAR GURU
     ========================================================== */
+    function buildComprehensiveFeedback(student, objScore, subjScore) {
+      let sections = [];
+
+      // 1. Prestasi Bahagian A (Objektif)
+      let objText = "";
+      if (objScore >= 9) {
+        objText = `📌 Bahagian A (Objektif: ${objScore}/10):\nPenguasaan fakta teori, takrifan mekatronik dan pengetahuan am komponen berada pada tahap SANGAT CEMERLANG. Murid dapat membezakan fungsi mikropengawal, sensor, dan peralatan mekatronik dengan tepat.`;
+      } else if (objScore >= 7) {
+        objText = `📌 Bahagian A (Objektif: ${objScore}/10):\nPenguasaan konsep asas adalah BAIK. Terdapat sedikit kekeliruan minor pada soalan teknikal lanjutan yang memerlukan pembacaan yang lebih teliti.`;
+      } else if (objScore >= 5) {
+        objText = `📌 Bahagian A (Objektif: ${objScore}/10):\nTahap penguasaan MEMUASKAN. Disarankan mengulang kaji semula gambar rajah blok sistem mekatronik dan fungsi komponen mekanikal seperti gear.`;
+      } else {
+        objText = `📌 Bahagian A (Objektif: ${objScore}/10):\nPenguasaan fakta asas masih LEMAH. Murid dinasihatkan membuat latih tubi pengukuhan konsep mekatronik dan lakaran idea berpandukan buku teks KSSM Tingkatan 3.`;
+      }
+      sections.push(objText);
+
+      // 2. Analisis Terperinci Bahagian B (Subjektif) - Mengikut Jawapan Sebenar Murid
+      let subjPoints = [];
+      const answers = student.subjAnswers || [];
+
+      // Soalan 1: 4 Elemen Teras Mekatronik
+      const s1 = answers[0] || "";
+      const s1Found = ["mekanikal", "elektrik", "elektronik", "kawalan", "pengaturcaraan"].filter(k => new RegExp(k, 'i').test(s1));
+      if (s1Found.length >= 4) {
+        subjPoints.push("• S1 (Elemen Mekatronik): Sangat tepat dan lengkap. Berjaya menyenaraikan keempat-empat elemen teras mekatronik.");
+      } else if (s1Found.length >= 2) {
+        subjPoints.push(`• S1 (Elemen Mekatronik): Sederhana. Berjaya menyatakan elemen (${s1Found.join(", ")}), tetapi tertinggal elemen pelengkap.`);
+      } else {
+        subjPoints.push("• S1 (Elemen Mekatronik): Kurang tepat. Perlu menguasai 4 elemen teras iaitu Mekanikal, Elektrik, Elektronik dan Kawalan/Pengaturcaraan.");
+      }
+
+      // Soalan 2: Blok Input, Proses, Output
+      const s2 = answers[1] || "";
+      const hasInput = /input|sensor|penderia/i.test(s2);
+      const hasProcess = /proses|mikropengawal|microcontroller|pemproses/i.test(s2);
+      const hasOutput = /output|motor|penggerak|actuator/i.test(s2);
+      if (hasInput && hasProcess && hasOutput) {
+        subjPoints.push("• S2 (Rajah Blok Sistem): Huraian fungsi Input (penderia), Proses (mikropengawal), dan Output (penggerak) sangat jelas dan berstruktur.");
+      } else {
+        let missing = [];
+        if (!hasInput) missing.push("Input");
+        if (!hasProcess) missing.push("Proses");
+        if (!hasOutput) missing.push("Output");
+        subjPoints.push(`• S2 (Rajah Blok Sistem): Huraian masih umum. Perlu perincikan fungsi blok ${missing.join(" dan ")} secara spesifik.`);
+      }
+
+      // Soalan 3: Ujian Makmal vs Parameter
+      const s3 = answers[2] || "";
+      const hasMakmal = /makmal|terkawal|bilik/i.test(s3);
+      const hasParam = /parameter|sebenar|lapangan|situasi/i.test(s3);
+      if (hasMakmal && hasParam) {
+        subjPoints.push("• S3 (Ujian Kefungsian): Perbezaan antara Ujian Makmal (persekitaran terkawal) dan Ujian Parameter (situasi sebenar) dihuraikan dengan tepat.");
+      } else {
+        subjPoints.push("• S3 (Ujian Kefungsian): Perlu perjelaskan faktor perbezaan lokasi dan kawalan parameter bagi kedua-dua ujian tersebut.");
+      }
+
+      // Soalan 4: Kriteria Analisis Lakaran Idea
+      const s4 = answers[3] || "";
+      const s4Matches = ["rupa", "fungsi", "kefungsian", "ergonomik", "bahan", "selamat", "keselamatan", "kos", "tarikan"].filter(k => new RegExp(k, 'i').test(s4));
+      if (s4Matches.length >= 3) {
+        subjPoints.push("• S4 (Analisis Lakaran): Pemilihan kriteria analisis idea adalah relevan dan menepati kehendak reka bentuk produk.");
+      } else {
+        subjPoints.push("• S4 (Analisis Lakaran): Kriteria yang diberikan terhad. Sila gunakan kriteria standard seperti ergonomik, kefungsian, dan kekuatan bahan.");
+      }
+
+      // Soalan 5: Sistem Amaran Banjir
+      const s5 = answers[4] || "";
+      const hasSensor = /aras air|water level|ultrasonik|sensor|penderia/i.test(s5);
+      const hasActuator = /buzzer|penggera|led|lampu|bunyi|amaran/i.test(s5);
+      if (hasSensor && hasActuator) {
+        subjPoints.push("• S5 (Inovasi Amaran Banjir): Cadangan penderia dan logik operasi penggera amaran adalah kreatif, praktikal dan logik.");
+      } else {
+        subjPoints.push("• S5 (Inovasi Amaran Banjir): Cadangan peranti amaran banjir perlu menyatakan jenis sensor pengesan dan peranti output amaran secara spesifik.");
+      }
+
+      sections.push(`📌 Bahagian B (Subjektif: ${subjScore}/20):\n${subjPoints.join("\n")}`);
+
+      // 3. Status Waktu Penghantaran & Dorongan Guru
+      const isLate = student.isLate || (student.timestamp && student.timestamp.indexOf("LEWAT") !== -1) || (student.reviewStatus && student.reviewStatus.indexOf("Lewat") !== -1);
+      if (isLate) {
+        sections.push("⏱️ Disiplin & Pengurusan Masa:\nTugasan diterima selepas jam 5:00 petang (LEWAT). Komitmen murid menyiapkan tugasan dihargai, namun tingkatkan disiplin ketepatan masa untuk tugasan akan datang. Teruskan usaha gigih anda!");
+      } else {
+        sections.push("⏱️ Disiplin & Pengurusan Masa:\nSyabas diucapkan atas disiplin dan komitmen menghantar tugasan tepat pada masa sebelum jam 5:00 petang. Kekalkan kecemerlangan ini!");
+      }
+
+      return sections.join("\n\n");
+    }
+
+    /* HIGHLIGHT KATA KUNCI */
     function highlightKeywords(text, keywords) {
       if (!text || text === "(Tiada jawapan)") return `<span class="text-rose-500 italic">Tiada jawapan dihantar</span>`;
       let escapedText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -1613,6 +1718,7 @@
       return escapedText;
     }
 
+    /* BUKA MODAL SEMAKAN GURU */
     function openReviewModal(index) {
       selectedStudentIndex = index;
       const student = cachedSheetSubmissions[index];
@@ -1721,8 +1827,24 @@
       const statusSelect = document.getElementById('selectMarkStatus');
       statusSelect.value = isLate ? "Telah Disemak (Lewat)" : "Telah Disemak";
 
-      document.getElementById('inputTeacherComment').value = student.teacherComment || "";
+      // 3. JANA ULASAN KOMPREHENSIF SECARA TERUS JIKA BELUM ADA
+      const existingComment = student.teacherComment ? student.teacherComment.trim() : "";
+      if (existingComment) {
+        document.getElementById('inputTeacherComment').value = existingComment;
+      } else {
+        const generated = buildComprehensiveFeedback(student, student.objScore || 0, currentMark);
+        document.getElementById('inputTeacherComment').value = generated;
+      }
+
       document.getElementById('reviewModal').classList.remove('hidden');
+    }
+
+    function regenerateComprehensiveComment() {
+      if (selectedStudentIndex === null) return;
+      const student = cachedSheetSubmissions[selectedStudentIndex];
+      const subjMark = parseInt(document.getElementById('inputSubjMark').value) || 0;
+      const generated = buildComprehensiveFeedback(student, student.objScore || 0, subjMark);
+      document.getElementById('inputTeacherComment').value = generated;
     }
 
     function setSubjScoreManual(questionIdx, score) {
@@ -1755,7 +1877,7 @@
       if (commentInput.value.trim() === "") {
         commentInput.value = commentText;
       } else {
-        commentInput.value += " " + commentText;
+        commentInput.value += "\n" + commentText;
       }
     }
 
@@ -1793,7 +1915,7 @@
         student.reviewStatus = status;
         student.teacherComment = comment;
 
-        alert("Semakan berjaya dikemas kini ke dalam Google Sheet!");
+        alert("Semakan dan ulasan komprehensif berjaya disimpan ke dalam Google Sheet!");
         closeReviewModal();
         fetchSheetData();
       } catch (err) {
