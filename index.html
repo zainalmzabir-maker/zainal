@@ -87,8 +87,8 @@
             <i class="fa-solid fa-stopwatch"></i>
           </div>
           <div>
-            <h4 id="deadlineBannerTitle" class="font-extrabold text-sm sm:text-base">HAD MASA TUGASAN 1: 5:00 PETANG</h4>
-            <p id="deadlineBannerDesc" class="text-xs text-indigo-200">Penghantaran selepas jam 5:00 petang masih diterima dan akan ditandakan sebagai <strong>'Lewat'</strong>.</p>
+            <h4 id="deadlineBannerTitle" class="font-extrabold text-sm sm:text-base">SESI PEMBELAJARAN ATAS TALIAN</h4>
+            <p id="deadlineBannerDesc" class="text-xs text-indigo-200">Masa penghantaran dipantau secara langsung.</p>
           </div>
         </div>
         <div id="headerDeadlineBadge" class="px-3.5 py-1.5 bg-indigo-950 text-amber-300 font-mono font-bold text-xs rounded-xl shadow flex items-center gap-2 border border-indigo-700">
@@ -97,43 +97,56 @@
         </div>
       </div>
 
-      <!-- Pendaftaran Masuk Kelas (3S1 / 3S2) -->
+      <!-- Pendaftaran Masuk Kelas (Hierarki: Subjek -> Kelas -> Sesi) -->
       <div id="regBox" class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
         <div class="max-w-xl mx-auto text-center space-y-3">
           <div class="w-20 h-20 mx-auto p-2 rounded-2xl bg-slate-50 border border-slate-200 shadow-sm flex items-center justify-center mb-1">
             <img src="logo.png" alt="Logo SMK Kamarul Ariffin" class="max-w-full max-h-full object-contain"
                  onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'text-3xl text-indigo-700\'><i class=\'fa-solid fa-school\'></i></div>';">
           </div>
-          <span class="inline-block px-3 py-1 bg-indigo-100 text-indigo-800 text-xs font-semibold rounded-full uppercase tracking-wider">
-            Sesi Tugasan 1 &bull; RBT Tingkatan 3
+          <span class="inline-block px-3 py-1 bg-indigo-100 text-indigo-800 text-xs font-semibold rounded-full uppercase tracking-wider" id="regSessionBadge">
+            Sesi Kelas Atas Talian
           </span>
           <h2 class="text-2xl font-extrabold text-slate-800">Daftar Masuk Kelas</h2>
-          <p class="text-sm text-slate-500">Pilih kelas (3S1 atau 3S2) dan masukkan nama penuh anda untuk memulakan latihan.</p>
+          <p class="text-sm text-slate-500">Pilihan mata pelajaran & sesi ditetapkan secara automatik mengikut jadual kelas terkini. Anda juga boleh memilih sesi terdahulu secara manual.</p>
         </div>
 
         <div class="max-w-md mx-auto mt-6 space-y-4">
+          <!-- 1. Pilih Mata Pelajaran -->
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">Pilih Kelas</label>
-            <div class="relative">
-              <select id="classSelect" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-700 font-medium appearance-none">
-                <option value="" disabled selected>-- Sila Pilih Kelas --</option>
-                <option value="3S1">3S1 (Tingkatan 3)</option>
-                <option value="3S2">3S2 (Tingkatan 3)</option>
-              </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
-                <i class="fa-solid fa-chevron-down text-sm"></i>
-              </div>
-            </div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">1. Pilih Mata Pelajaran</label>
+            <select id="regSubjectSelect" onchange="onRegSubjectChange()" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-700 font-semibold text-sm">
+              <option value="RBT Tingkatan 2">Reka Bentuk dan Teknologi (RBT) Tingkatan 2</option>
+              <option value="RBT Tingkatan 3">Reka Bentuk dan Teknologi (RBT) Tingkatan 3</option>
+            </select>
           </div>
 
+          <!-- 2. Pilih Kelas -->
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">Nama Penuh Murid</label>
+            <label class="block text-xs font-bold text-slate-700 mb-1">2. Pilih Kelas</label>
+            <select id="regClassSelect" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-700 font-semibold text-sm">
+              <!-- Dijana secara dinamik berdasarkan subjek -->
+            </select>
+          </div>
+
+          <!-- 3. Pilih Sesi -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">3. Pilih Sesi Kelas</label>
+            <select id="regSessionSelect" onchange="onRegSessionChange()" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-700 font-semibold text-xs">
+              <!-- Dijana secara dinamik -->
+            </select>
+            <p id="regSessionNote" class="text-[11px] text-indigo-600 mt-1 font-medium"></p>
+          </div>
+
+          <!-- 4. Nama Penuh Murid -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">4. Nama Penuh Murid</label>
             <input type="text" id="studentNameInput" placeholder="Contoh: MUHAMMAD HAZIQ BIN AZMAN" 
-                   class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-700 uppercase" />
+                   class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-700 uppercase font-semibold text-sm" />
           </div>
 
           <button onclick="startExercise()" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md transition flex items-center justify-center gap-2">
-            <span>Daftar & Mula Menjawab</span>
+            <span>Daftar & Mula Menjawab Tugasan</span>
             <i class="fa-solid fa-arrow-right"></i>
           </button>
         </div>
@@ -148,11 +161,12 @@
                    onerror="this.onerror=null; this.parentElement.style.display='none';">
             </div>
             <div>
-              <div class="text-xs text-indigo-300 font-medium">MAKLUMAT MURID & TUGASAN</div>
+              <div class="text-xs text-indigo-300 font-medium uppercase tracking-wider">MAKLUMAT SESI & TUGASAN</div>
               <div class="text-lg font-bold" id="badgeStudentName">-</div>
               <div class="text-xs text-indigo-200 mt-0.5">
-                Kelas: <span class="font-semibold text-amber-300" id="badgeStudentClass">-</span> &bull; 
-                Mata Pelajaran: <span class="font-semibold text-amber-300">Reka Bentuk dan Teknologi (RBT) Tingkatan 3</span>
+                Kelas: <span class="font-bold text-amber-300" id="badgeStudentClass">-</span> &bull; 
+                Mata Pelajaran: <span class="font-bold text-amber-300" id="badgeStudentSubject">-</span> &bull; 
+                <span id="badgeStudentSession" class="text-indigo-200">-</span>
               </div>
             </div>
           </div>
@@ -163,7 +177,7 @@
               <span id="quizCountdownText">Memeriksa Masa...</span>
             </div>
             <button onclick="resetRegistration()" class="text-xs bg-indigo-800 hover:bg-indigo-700 px-3 py-1.5 rounded-lg border border-indigo-600">
-              Tukar Nama / Kelas
+              Tukar Sesi / Nama
             </button>
           </div>
         </div>
@@ -172,8 +186,8 @@
         <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-6">
           <div class="border-b border-slate-200 pb-4 flex items-center justify-between">
             <div>
-              <h3 class="text-xl font-bold text-slate-800">Bahagian A: 10 Soalan Objektif</h3>
-              <p class="text-sm text-slate-500">Pilih satu jawapan yang paling tepat bagi setiap soalan. (10 Markah)</p>
+              <h3 class="text-xl font-bold text-slate-800" id="objSectionTitle">Bahagian A: 10 Soalan Objektif</h3>
+              <p class="text-sm text-slate-500">Pilih satu jawapan yang paling tepat bagi setiap soalan berikut. (10 Markah)</p>
             </div>
             <span class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded-full">10 Soalan</span>
           </div>
@@ -184,8 +198,8 @@
         <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-6">
           <div class="border-b border-slate-200 pb-4 flex items-center justify-between">
             <div>
-              <h3 class="text-xl font-bold text-slate-800">Bahagian B: 5 Soalan Subjektif</h3>
-              <p class="text-sm text-slate-500">Tulis jawapan penerangan anda dengan jelas dan padat.</p>
+              <h3 class="text-xl font-bold text-slate-800" id="subjSectionTitle">Bahagian B: 5 Soalan Subjektif</h3>
+              <p class="text-sm text-slate-500">Tulis jawapan penerangan teknikal anda dengan jelas dan padat.</p>
             </div>
             <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-bold rounded-full">5 Soalan</span>
           </div>
@@ -196,7 +210,7 @@
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 text-center space-y-3">
           <div id="lateNoticeBox" class="hidden p-3.5 bg-rose-50 border border-rose-300 rounded-xl text-rose-800 text-xs font-semibold text-center">
             <i class="fa-solid fa-triangle-exclamation text-rose-600 text-sm"></i> 
-            Waktu sasaran 5:00 petang telah berlalu. Anda masih dibenarkan menghantar, namun tugasan anda akan direkodkan sebagai <strong>'LEWAT'</strong> dalam pangkalan data guru.
+            Waktu sasaran penghantaran sesi ini telah berlalu. Anda masih dibenarkan menghantar, namun tugasan anda akan direkodkan sebagai <strong>'LEWAT'</strong> dalam pangkalan data guru.
           </div>
           <button onclick="submitQuiz()" id="submitBtn" class="px-8 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2 mx-auto">
             <i class="fa-solid fa-paper-plane"></i>
@@ -225,7 +239,7 @@
             <i class="fa-solid fa-shield-halved"></i>
             <span>Status: Menunggu Semakan Guru</span>
           </div>
-          <p>Keputusan dan skema jawapan tidak dipaparkan sekarang demi integriti pentaksiran. Sila layari tab <strong>"Semak Keputusan"</strong> selepas Cikgu Zainal selesai memeriksa latihan anda.</p>
+          <p>Keputusan dan skema jawapan tidak dipaparkan sekarang demi integriti pentaksiran bilik darjah. Sila layari tab <strong>"Semak Keputusan"</strong> selepas Cikgu Zainal selesai memeriksa latihan anda.</p>
         </div>
 
         <div class="flex flex-col sm:flex-row gap-2 justify-center pt-2">
@@ -253,7 +267,7 @@
             </div>
             <div>
               <h2 class="text-xl sm:text-2xl font-extrabold text-slate-800">Senarai Penghantaran Murid</h2>
-              <p class="text-xs sm:text-sm text-slate-500">SMK Kamarul Ariffin (SEMEKAR) &bull; Rekod Tugasan RBT Tingkatan 3 mengikut kelas.</p>
+              <p class="text-xs sm:text-sm text-slate-500">SMK Kamarul Ariffin (SEMEKAR) &bull; Rekod Tugasan RBT Mengikut Kelas & Sesi.</p>
             </div>
           </div>
           <button onclick="loadPublicSubmissions()" id="publicRefreshBtn" class="px-3.5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold rounded-xl flex items-center gap-1.5 transition">
@@ -261,27 +275,34 @@
           </button>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 flex items-center justify-between">
             <div>
-              <span class="text-[11px] text-slate-500 font-semibold block uppercase">Jumlah Penghantaran</span>
-              <span class="text-2xl font-black text-slate-800" id="pubTotalCount">0</span>
+              <span class="text-[10px] text-slate-500 font-semibold block uppercase">Jumlah</span>
+              <span class="text-xl font-black text-slate-800" id="pubTotalCount">0</span>
             </div>
-            <i class="fa-solid fa-users text-2xl text-slate-300"></i>
+            <i class="fa-solid fa-users text-xl text-slate-300"></i>
           </div>
-          <div class="bg-blue-50/60 p-4 rounded-xl border border-blue-200 flex items-center justify-between">
+          <div class="bg-amber-50/60 p-3.5 rounded-xl border border-amber-200 flex items-center justify-between">
             <div>
-              <span class="text-[11px] text-blue-700 font-semibold block uppercase">Kelas 3S1</span>
-              <span class="text-2xl font-black text-blue-800" id="pub3S1Count">0</span>
+              <span class="text-[10px] text-amber-700 font-semibold block uppercase">Kelas 2S2</span>
+              <span class="text-xl font-black text-amber-800" id="pub2S2Count">0</span>
             </div>
-            <i class="fa-solid fa-chalkboard-user text-2xl text-blue-300"></i>
+            <i class="fa-solid fa-chalkboard-user text-xl text-amber-300"></i>
           </div>
-          <div class="bg-purple-50/60 p-4 rounded-xl border border-purple-200 flex items-center justify-between">
+          <div class="bg-blue-50/60 p-3.5 rounded-xl border border-blue-200 flex items-center justify-between">
             <div>
-              <span class="text-[11px] text-purple-700 font-semibold block uppercase">Kelas 3S2</span>
-              <span class="text-2xl font-black text-purple-800" id="pub3S2Count">0</span>
+              <span class="text-[10px] text-blue-700 font-semibold block uppercase">Kelas 3S1</span>
+              <span class="text-xl font-black text-blue-800" id="pub3S1Count">0</span>
             </div>
-            <i class="fa-solid fa-chalkboard-user text-2xl text-purple-300"></i>
+            <i class="fa-solid fa-chalkboard-user text-xl text-blue-300"></i>
+          </div>
+          <div class="bg-purple-50/60 p-3.5 rounded-xl border border-purple-200 flex items-center justify-between">
+            <div>
+              <span class="text-[10px] text-purple-700 font-semibold block uppercase">Kelas 3S2</span>
+              <span class="text-xl font-black text-purple-800" id="pub3S2Count">0</span>
+            </div>
+            <i class="fa-solid fa-chalkboard-user text-xl text-purple-300"></i>
           </div>
         </div>
 
@@ -289,9 +310,10 @@
           <div>
             <label class="block text-xs font-bold text-slate-600 mb-1">Tapis Mengikut Kelas:</label>
             <select id="pubClassFilter" onchange="renderPublicSubmissionsTable()" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs font-bold text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
-              <option value="ALL">Semua Kelas (3S1 & 3S2)</option>
-              <option value="3S1">Kelas 3S1 Sahaja</option>
-              <option value="3S2">Kelas 3S2 Sahaja</option>
+              <option value="ALL">Semua Kelas (2S2, 3S1, 3S2)</option>
+              <option value="2S2">Kelas 2S2 Sahaja (Tingkatan 2)</option>
+              <option value="3S1">Kelas 3S1 Sahaja (Tingkatan 3)</option>
+              <option value="3S2">Kelas 3S2 Sahaja (Tingkatan 3)</option>
             </select>
           </div>
           <div>
@@ -333,7 +355,7 @@
 
     <!-- ======================================================== -->
     <!-- BAHAGIAN 3: SEMAK STATUS KEPUTUSAN (MURID)               -->
-    <!-- (DROPDOWN SAHAJA & KAWALAN PELEPASAN OLEH GURU)          -->
+    <!-- (DROPDOWN HIERARKI: SUBJEK -> KELAS -> NAMA MURID)       -->
     <!-- ======================================================== -->
     <div id="statusSection" class="hidden fade-in space-y-6">
       <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 max-w-xl mx-auto">
@@ -355,18 +377,17 @@
 
         <div class="space-y-4">
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">1. Pilih Kelas</label>
-            <select id="lookupClass" onchange="onLookupFilterChange()" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-slate-700">
-              <option value="" disabled selected>-- Sila Pilih Kelas --</option>
-              <option value="3S1">3S1 (Tingkatan 3)</option>
-              <option value="3S2">3S2 (Tingkatan 3)</option>
+            <label class="block text-xs font-bold text-slate-700 mb-1">1. Pilih Mata Pelajaran</label>
+            <select id="lookupSubject" onchange="onLookupSubjectChange()" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-slate-700">
+              <option value="RBT Tingkatan 2">Reka Bentuk dan Teknologi (RBT) Tingkatan 2</option>
+              <option value="RBT Tingkatan 3">Reka Bentuk dan Teknologi (RBT) Tingkatan 3</option>
             </select>
           </div>
 
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">2. Pilih Mata Pelajaran</label>
-            <select id="lookupSubject" onchange="onLookupFilterChange()" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-slate-700">
-              <option value="RBT Tingkatan 3" selected>Reka Bentuk dan Teknologi (RBT) Tingkatan 3</option>
+            <label class="block text-xs font-bold text-slate-700 mb-1">2. Pilih Kelas</label>
+            <select id="lookupClass" onchange="onLookupFilterChange()" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-slate-700">
+              <!-- Dijana mengikut subjek -->
             </select>
           </div>
 
@@ -427,7 +448,7 @@
                   <i class="fa-solid fa-check"></i> Google Sheet Tersambung
                 </span>
               </h2>
-              <p class="text-sm text-slate-500 mt-0.5">SMK Kamarul Ariffin (SEMEKAR) &bull; Pemantauan & Semakan Latihan RBT Kelas 3S1 & 3S2</p>
+              <p class="text-sm text-slate-500 mt-0.5">SMK Kamarul Ariffin (SEMEKAR) &bull; Pengurusan Latihan RBT Tingkatan 2 & 3</p>
             </div>
           </div>
           <div class="flex items-center gap-2">
@@ -440,9 +461,7 @@
           </div>
         </div>
 
-        <!-- ======================================================== -->
-        <!-- PANEL KAWALAN: SUIS PELEPASAN KEPUTUSAN KEPADA MURID      -->
-        <!-- ======================================================== -->
+        <!-- PANEL KAWALAN: SUIS PELEPASAN KEPUTUSAN KEPADA MURID -->
         <div id="releaseControlCard" class="rounded-2xl p-5 border shadow-sm flex flex-wrap items-center justify-between gap-4 transition-all bg-amber-50/70 border-amber-300">
           <div class="flex items-center gap-3.5">
             <div id="releaseControlIcon" class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl font-bold bg-amber-100 text-amber-700">
@@ -476,8 +495,8 @@
               <i class="fa-solid fa-users"></i>
             </div>
             <div>
-              <div class="text-[11px] text-slate-500 font-medium">Kelas / Subjek</div>
-              <div class="text-sm font-bold text-slate-800">3S1 & 3S2 &bull; RBT 3</div>
+              <div class="text-[11px] text-slate-500 font-medium">Kelas Aktif</div>
+              <div class="text-sm font-bold text-slate-800">2S2, 3S1, 3S2</div>
             </div>
           </div>
           <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3">
@@ -514,7 +533,7 @@
           <div class="p-5 border-b border-slate-200 flex flex-wrap justify-between items-center gap-3">
             <div>
               <h3 class="text-lg font-bold text-slate-800">Senarai Tugasan Murid untuk Disemak</h3>
-              <p class="text-xs text-slate-500">Klik butang <strong>"Semak & Nilai"</strong> untuk mula menyemak jawapan objektif & subjektif murid.</p>
+              <p class="text-xs text-slate-500">Klik <strong>"Semak & Nilai"</strong> untuk menilai jawapan objektif & subjektif murid mengikut silibus.</p>
             </div>
             
             <div class="flex flex-wrap items-center gap-2">
@@ -526,8 +545,9 @@
 
               <select id="adminClassFilter" onchange="renderTableRows()" class="px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-bold text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 <option value="ALL">Semua Kelas</option>
-                <option value="3S1">Kelas 3S1</option>
-                <option value="3S2">Kelas 3S2</option>
+                <option value="2S2">Kelas 2S2 (Tingkatan 2)</option>
+                <option value="3S1">Kelas 3S1 (Tingkatan 3)</option>
+                <option value="3S2">Kelas 3S2 (Tingkatan 3)</option>
               </select>
             </div>
           </div>
@@ -540,14 +560,15 @@
                   <th class="px-4 py-3">Masa Hantar</th>
                   <th class="px-4 py-3">Nama Murid</th>
                   <th class="px-4 py-3">Kelas</th>
+                  <th class="px-4 py-3">Mata Pelajaran</th>
                   <th class="px-4 py-3">Objektif (/10)</th>
                   <th class="px-4 py-3">Subjektif (/20)</th>
-                  <th class="px-4 py-3">Status Semakan</th>
+                  <th class="px-4 py-3">Status</th>
                   <th class="px-4 py-3 text-center">Tindakan</th>
                 </tr>
               </thead>
               <tbody id="studentSubmissionsTable" class="divide-y divide-slate-100 text-slate-700">
-                <tr><td colspan="8" class="text-center py-6 text-slate-400">Sedang menarik data langsung dari Google Sheets...</td></tr>
+                <tr><td colspan="9" class="text-center py-6 text-slate-400">Sedang menarik data langsung dari Google Sheets...</td></tr>
               </tbody>
             </table>
           </div>
@@ -576,7 +597,7 @@
               <h3 class="text-lg font-bold" id="modalStudentName">-</h3>
               <span id="modalTimingBadge" class="text-[10px] px-2 py-0.5 rounded-full font-bold"></span>
             </div>
-            <p class="text-xs text-indigo-200" id="modalStudentMeta">Kelas: - &bull; RBT Tingkatan 3</p>
+            <p class="text-xs text-indigo-200" id="modalStudentMeta">Kelas: - &bull; RBT</p>
           </div>
         </div>
         <button onclick="closeReviewModal()" class="text-indigo-200 hover:text-white text-xl">
@@ -639,7 +660,6 @@
             </div>
           </div>
 
-          <!-- Bahagian Enjin Ulasan Komprehensif Berdasarkan Jawapan Murid -->
           <div>
             <div class="flex flex-wrap justify-between items-center mb-1.5 gap-2">
               <label class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
@@ -652,25 +672,8 @@
               </button>
             </div>
 
-            <!-- Templat Tambahan 1-Klik jika guru ingin tambah ayat pantas -->
-            <div class="flex flex-wrap gap-1.5 mb-2">
-              <span class="text-[10px] text-slate-500 self-center font-semibold">Tambah Catatan:</span>
-              <button type="button" onclick="appendQuickComment('⭐ Pencapaian cemerlang dalam pentaksiran ini!')" class="px-2 py-0.5 bg-white hover:bg-emerald-50 text-emerald-800 border border-emerald-300 rounded-full text-[10px] font-medium transition">
-                + Cemerlang ⭐
-              </button>
-              <button type="button" onclick="appendQuickComment('📌 Sila buat pembetulan pada soalan subjektif yang bertanda kurang memuaskan.')" class="px-2 py-0.5 bg-white hover:bg-amber-50 text-amber-800 border border-amber-300 rounded-full text-[10px] font-medium transition">
-                + Buat Pembetulan
-              </button>
-              <button type="button" onclick="appendQuickComment('💡 Tingkatkan kefahaman dengan merujuk buku teks RBT m/s 15-28.')" class="px-2 py-0.5 bg-white hover:bg-blue-50 text-blue-800 border border-blue-300 rounded-full text-[10px] font-medium transition">
-                + Rujukan Buku Teks
-              </button>
-            </div>
-
             <textarea id="inputTeacherComment" rows="6" placeholder="Ulasan guru sedang dijana secara automatik..." 
                       class="w-full p-3 rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xs font-sans leading-relaxed text-slate-800 shadow-sm"></textarea>
-            <p class="text-[10px] text-slate-500 italic mt-1">
-              * Ulasan ini akan dicetak secara automatik ke dalam Slip Keputusan PDF murid.
-            </p>
           </div>
         </div>
       </div>
@@ -709,7 +712,7 @@
       </div>
 
       <div class="text-center my-4">
-        <h3 class="text-lg font-bold uppercase underline">SLIP KEPUTUSAN LATIHAN RBT TINGKATAN 3</h3>
+        <h3 class="text-lg font-bold uppercase underline">SLIP KEPUTUSAN LATIHAN RBT</h3>
       </div>
 
       <table class="w-full text-sm mb-6 border border-slate-300">
@@ -723,7 +726,7 @@
         </tr>
         <tr class="border-b">
           <td class="p-2 font-bold bg-slate-100">Mata Pelajaran:</td>
-          <td class="p-2">Reka Bentuk dan Teknologi (KSSM Tingkatan 3)</td>
+          <td class="p-2" id="slipSubjectName">Reka Bentuk dan Teknologi</td>
         </tr>
         <tr class="border-b">
           <td class="p-2 font-bold bg-slate-100">Tarikh & Masa Penghantaran:</td>
@@ -803,28 +806,424 @@
     </div>
   </footer>
 
-  <!-- SCRIPT APLIKASI WEB, PENJANA ULASAN PINTAR & LOGIK SISTEM -->
+  <!-- SCRIPT APLIKASI WEB, BANK SOALAN BERGRAFIK & LOGIK SISTEM -->
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxrPzsXB7xn8U4vI6LdCZQojLdmQRYOEqXL0mjAS_g-NwXNUR8Nj4x7W4yt5OH_Qh3GSQ/exec";
 
     /* ==========================================================
-       PENGIRAAN & KAWALAN HAD MASA (5:00 PETANG HARI INI)
+       KONFIGURASI SESI KELAS & BANK SOALAN
     ========================================================== */
-    function getTodayDeadline() {
-      const d = new Date();
-      d.setHours(17, 0, 0, 0);
+    const SESSIONS_CONFIG = {
+      "T2_SESI_ESOK": {
+        subject: "RBT Tingkatan 2",
+        classOptions: ["2S2"],
+        defaultClass: "2S2",
+        sessionName: "Sesi 8.00 pagi - 9.00 pagi (Jumaat, 9 Okt 2026)",
+        deadlineHour: 15, // 3:00 Petang
+        deadlineMinute: 0,
+        deadlineDate: "2026-10-09"
+      },
+      "T3_SESI_HARI_INI": {
+        subject: "RBT Tingkatan 3",
+        classOptions: ["3S1", "3S2"],
+        defaultClass: "3S2",
+        sessionName: "Sesi 10.30 pagi - 11.30 pagi (Khamis, 8 Okt 2026)",
+        deadlineHour: 17, // 5:00 Petang
+        deadlineMinute: 0,
+        deadlineDate: "2026-10-08"
+      }
+    };
+
+    /* BANK SOALAN RBT TINGKATAN 2 (DENGAN GRAFIK TEKNIKAL SVG) */
+    const questionsData_T2 = {
+      objective: [
+        {
+          id: 1,
+          question: "Apakah maksud kaedah penyelesaian masalah inventif dalam proses reka bentuk?",
+          graphic: null,
+          options: [
+            "A. Kaedah menghasilkan produk tanpa sebarang lakaran idea awal.",
+            "B. Kaedah menyelesaikan masalah yang mempunyai kesan sampingan tanpa menjejaskan fungsi lain.",
+            "C. Proses mengurangkan kos produk dengan menggunakan bahan terpakai semata-mata.",
+            "D. Kaedah membuat rekaan produk berasaskan perisian komputer secara automatik."
+          ],
+          answer: 1
+        },
+        {
+          id: 2,
+          question: "Antara berikut, yang manakah merupakan kelebihan utama kaedah pembuatan moden berbanding kaedah konvensional?",
+          graphic: null,
+          options: [
+            "A. Memerlukan masa yang lebih lama untuk menyiapkan satu produk",
+            "B. Bergantung sepenuhnya kepada kemahiran individu pembuat",
+            "C. Menghasilkan produk yang seragam dengan kuantiti yang banyak dalam masa yang singkat",
+            "D. Kos permulaan peralatan yang jauh lebih murah daripada alatan tangan biasa"
+          ],
+          answer: 2
+        },
+        {
+          id: 3,
+          question: "Rajah di bawah menunjukkan proses pembuatan produk menggunakan kaedah tuangan. Bahagian bertanda 'X' berfungsi untuk menuangkan cecair bahan pembuatan ke dalam rongga acuan. Apakah nama bahagian tersebut?",
+          graphic: `
+            <div class="my-3 p-3 bg-white rounded-xl border border-slate-200 flex flex-col items-center">
+              <svg viewBox="0 0 320 160" class="w-full max-w-xs h-auto">
+                <rect x="30" y="20" width="260" height="120" rx="10" fill="#e2e8f0" stroke="#475569" stroke-width="2"/>
+                <!-- Cavity -->
+                <path d="M 100 60 L 220 60 L 200 120 L 120 120 Z" fill="#94a3b8" stroke="#334155" stroke-width="2"/>
+                <!-- Pouring Basin / Sprue 'X' -->
+                <path d="M 140 20 L 180 20 L 170 60 L 150 60 Z" fill="#f59e0b" stroke="#b45309" stroke-width="2"/>
+                <!-- Labels -->
+                <text x="160" y="42" font-family="sans-serif" font-weight="bold" font-size="14" fill="#ffffff" text-anchor="middle">X</text>
+                <text x="160" y="95" font-family="sans-serif" font-weight="bold" font-size="11" fill="#1e293b" text-anchor="middle">Rongga Acuan (Cavity)</text>
+                <text x="50" y="38" font-family="sans-serif" font-size="10" fill="#475569">Tuang Pasir</text>
+              </svg>
+              <span class="text-[11px] text-slate-500 font-semibold mt-1">Rajah 1: Keratan Rentas Acuan Tuangan</span>
+            </div>
+          `,
+          options: [
+            "A. Rongga acuan (Cavity)",
+            "B. Liang tuang / Corong tuangan (Sprue)",
+            "C. Teras dalaman (Core)",
+            "D. Penyejuk udara (Chiller)"
+          ],
+          answer: 1
+        },
+        {
+          id: 4,
+          question: "Antara komponen mekanikal berikut, yang manakah berfungsi untuk memindahkan kuasa antara dua aci yang selari menggunakan geseran?",
+          graphic: null,
+          options: [
+            "A. Tali sawat dan takal (Belt & Pulley)",
+            "B. Gear serong (Bevel gear)",
+            "C. Pautan (Linkage)",
+            "D. Aci sesondol (Camshaft)"
+          ],
+          answer: 0
+        },
+        {
+          id: 5,
+          question: "Rajah di bawah menunjukkan sistem gear pada sebuah peranti mekanikal. Jika gear pemacu A berputar mengikut arah jam, bagaimanakah arah putaran bagi gear dipacu B?",
+          graphic: `
+            <div class="my-3 p-3 bg-white rounded-xl border border-slate-200 flex flex-col items-center">
+              <svg viewBox="0 0 320 140" class="w-full max-w-xs h-auto">
+                <!-- Gear A -->
+                <circle cx="100" cy="70" r="45" fill="#c7d2fe" stroke="#3730a3" stroke-width="3" stroke-dasharray="6,4"/>
+                <circle cx="100" cy="70" r="12" fill="#3730a3"/>
+                <text x="100" y="74" fill="#ffffff" font-size="11" font-weight="bold" text-anchor="middle">A</text>
+                <!-- Rotation A (Clockwise) -->
+                <path d="M 80 20 A 45 45 0 0 1 125 22" fill="none" stroke="#ef4444" stroke-width="3" marker-end="url(#arrow)"/>
+                <text x="100" y="15" fill="#ef4444" font-size="9" font-weight="bold" text-anchor="middle">Arah Jam</text>
+                <!-- Gear B -->
+                <circle cx="190" cy="70" r="35" fill="#fed7aa" stroke="#c2410c" stroke-width="3" stroke-dasharray="6,4"/>
+                <circle cx="190" cy="70" r="10" fill="#c2410c"/>
+                <text x="190" y="74" fill="#ffffff" font-size="11" font-weight="bold" text-anchor="middle">B</text>
+                <text x="190" y="125" fill="#c2410c" font-size="10" font-weight="bold" text-anchor="middle">Gear Dipacu B</text>
+              </svg>
+              <span class="text-[11px] text-slate-500 font-semibold mt-1">Rajah 2: Gandingan Dua Gear Taji</span>
+            </div>
+          `,
+          options: [
+            "A. Mengikut arah jam",
+            "B. Melawan arah jam",
+            "C. Berputar secara berselang-seli",
+            "D. Tidak berputar langsung"
+          ],
+          answer: 1
+        },
+        {
+          id: 6,
+          question: "Berdasarkan Hukum Ohm (V = I x R), jika nilai voltan ialah 9V dan rintangan litar ialah 3 Ohm, berapakah nilai arus (I) yang mengalir?",
+          graphic: null,
+          options: [
+            "A. 0.33 A",
+            "B. 3.0 A",
+            "C. 12.0 A",
+            "D. 27.0 A"
+          ],
+          answer: 1
+        },
+        {
+          id: 7,
+          question: "Rajah di bawah menunjukkan litar asas mikropengawal yang mengawal nyalaan sebuah LED. Apakah fungsi perintang R1 yang disambung secara siri dengan LED?",
+          graphic: `
+            <div class="my-3 p-3 bg-white rounded-xl border border-slate-200 flex flex-col items-center">
+              <svg viewBox="0 0 320 140" class="w-full max-w-xs h-auto">
+                <!-- Microcontroller Box -->
+                <rect x="20" y="30" width="70" height="80" rx="6" fill="#1e293b" stroke="#0f172a" stroke-width="2"/>
+                <text x="55" y="65" fill="#f8fafc" font-size="10" font-weight="bold" text-anchor="middle">Pin D13</text>
+                <text x="55" y="85" fill="#94a3b8" font-size="9" text-anchor="middle">GND</text>
+                <!-- Wire -->
+                <path d="M 90 60 L 140 60" fill="none" stroke="#2563eb" stroke-width="2"/>
+                <!-- Resistor R1 -->
+                <rect x="140" y="54" width="40" height="12" fill="#fef08a" stroke="#ca8a04" stroke-width="1.5"/>
+                <text x="160" y="63" fill="#854d0e" font-size="9" font-weight="bold" text-anchor="middle">R1</text>
+                <!-- Wire to LED -->
+                <path d="M 180 60 L 220 60" fill="none" stroke="#2563eb" stroke-width="2"/>
+                <!-- LED Symbol -->
+                <polygon points="220,50 220,70 240,60" fill="#22c55e" stroke="#15803d" stroke-width="1.5"/>
+                <line x1="240" y1="50" x2="240" y2="70" stroke="#15803d" stroke-width="2"/>
+                <!-- Return Wire to GND -->
+                <path d="M 240 60 L 270 60 L 270 95 L 90 95" fill="none" stroke="#64748b" stroke-width="2"/>
+              </svg>
+              <span class="text-[11px] text-slate-500 font-semibold mt-1">Rajah 3: Litar Kawalan Output LED</span>
+            </div>
+          `,
+          options: [
+            "A. Meningkatkan kecerahan lampu LED semaksimum mungkin",
+            "B. Menghadkan pengaliran arus elektrik bagi melindungi LED daripada terbakar",
+            "C. Menukarkan arus terus kepada arus ulang-alik",
+            "D. Menyimpan cas elektrik untuk bekalan sandaran"
+          ],
+          answer: 1
+        },
+        {
+          id: 8,
+          question: "Antara peranti berikut, yang manakah berfungsi sebagai komponen INPUT kepada papan mikropengawal?",
+          graphic: null,
+          options: [
+            "A. Pembaz (Buzzer)",
+            "B. Motor servo",
+            "C. Penderia suhu (Temperature sensor)",
+            "D. Lampu Diod Pemancar Cahaya (LED)"
+          ],
+          answer: 2
+        },
+        {
+          id: 9,
+          question: "Rajah di bawah menunjukkan reka bentuk satu sistem akuaponik. Sistem ini menggunakan 'Loceng Sifon (Bell Siphon)' untuk mengalirkan air keluar secara automatik apabila paras air telah penuh. Apakah nama sistem akuaponik ini?",
+          graphic: `
+            <div class="my-3 p-3 bg-white rounded-xl border border-slate-200 flex flex-col items-center">
+              <svg viewBox="0 0 320 150" class="w-full max-w-xs h-auto">
+                <!-- Grow bed -->
+                <rect x="50" y="20" width="220" height="50" rx="6" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+                <!-- Plants -->
+                <circle cx="80" cy="20" r="10" fill="#22c55e"/>
+                <circle cx="130" cy="20" r="10" fill="#22c55e"/>
+                <circle cx="180" cy="20" r="10" fill="#22c55e"/>
+                <!-- Bell Siphon -->
+                <rect x="220" y="25" width="24" height="40" fill="#bae6fd" stroke="#0284c7" stroke-width="1.5"/>
+                <text x="232" y="48" font-size="8" font-weight="bold" fill="#0369a1" text-anchor="middle">Sifon</text>
+                <!-- Fish Tank -->
+                <rect x="50" y="95" width="220" height="45" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+                <text x="160" y="122" font-size="11" font-weight="bold" fill="#1d4ed8" text-anchor="middle">Tangki Ikan</text>
+                <!-- Return Pipe -->
+                <line x1="232" y1="65" x2="232" y2="95" stroke="#0284c7" stroke-width="3"/>
+              </svg>
+              <span class="text-[11px] text-slate-500 font-semibold mt-1">Rajah 4: Sistem Akuaponik Bersifon</span>
+            </div>
+          `,
+          options: [
+            "A. Sistem Raft (Rakit Apung)",
+            "B. Sistem Ebb & Flow (Pasang Surut)",
+            "C. Sistem NFT (Nutrient Film Technique)",
+            "D. Sistem Aeroponik menegak"
+          ],
+          answer: 1
+        },
+        {
+          id: 10,
+          question: "Dalam reka bentuk makanan, apakah tujuan utama mengaplikasikan prinsip kontras warna dan tekstur pada susunan hidangan?",
+          graphic: null,
+          options: [
+            "A. Supaya makanan dapat disimpan lebih lama tanpa rosak",
+            "B. Menjadikan hidangan lebih menarik, membangkitkan selera, dan menonjolkan nilai estetika",
+            "C. Mengurangkan kuantiti bahan makanan yang digunakan",
+            "D. Memastikan makanan masak dengan lebih cepat dan sekata"
+          ],
+          answer: 1
+        }
+      ],
+      subjective: [
+        {
+          id: 1,
+          question: "Bandingkan kaedah pembuatan konvensional dan kaedah pembuatan moden dari segi: (a) Masa penghasilan, dan (b) Kemahiran tenaga kerja.",
+          hint: "Bandingkan alatan tangan vs mesin/komputer."
+        },
+        {
+          id: 2,
+          question: "Berdasarkan produk basikal atau pengisar makanan (blender), namakan DUA (2) komponen mekanikal yang terlibat dan terangkan fungsi masing-masing.",
+          hint: "Contoh komponen: Gear, rantai, takal, tali sawat, gandar."
+        },
+        {
+          id: 3,
+          question: "Sebuah litar elektrik mempunyai bekalan voltan V = 12V dan rintangan R = 4 Ohm. Menggunakan formula Hukum Ohm (V = I x R), hitungkan nilai arus (I) yang mengalir.",
+          hint: "I = V / R."
+        },
+        {
+          id: 4,
+          question: "Huraikan fungsi papan mikropengawal (microcontroller board) dan senaraikan DUA (2) peranti input serta DUA (2) peranti output yang serasi dengannya.",
+          hint: "Pemprosesan isyarat, penderia (input) dan LED/Buzzer/Motor (output)."
+        },
+        {
+          id: 5,
+          question: "Terangkan bagaimana kitaran simbiosis akuaponik berfungsi di antara Ikan, Bakteria, dan Tanaman air bagi mengekalkan keseimbangan ekosistem.",
+          hint: "Sisa ikan -> ammonia ditukar oleh bakteria kepada nitrat -> baja tanaman -> air bersih kembali ke ikan."
+        }
+      ],
+      rubrics: [
+        {
+          id: 1,
+          maxMark: 4,
+          keywords: ["konvensional", "moden", "masa", "lama", "cepat", "kemahiran", "mesin", "tangan"],
+          sampleScheme: "Masa: Konvensional lambat/lama, moden cepat/pantas. Kemahiran: Konvensional perlu kemahiran tangan tinggi, moden dikendalikan mesin/program komputer."
+        },
+        {
+          id: 2,
+          maxMark: 4,
+          keywords: ["gear", "rantai", "takal", "tali sawat", "gandar", "kuasa", "putar", "pindah"],
+          sampleScheme: "Dua komponen: (1) Rantai & Gear - memindahkan kuasa putaran dari pengayuh ke roda belakang. (2) Takal & Tali sawat - memutarkan bilah pemotong pada motor."
+        },
+        {
+          id: 3,
+          maxMark: 4,
+          keywords: ["3a", "3 ampere", "i = v / r", "12 / 4", "arus"],
+          sampleScheme: "I = V / R -> I = 12V / 4Ω -> I = 3 Ampere (A). Tunjukkan jalan kerja lengkap."
+        },
+        {
+          id: 4,
+          maxMark: 4,
+          keywords: ["memproses", "kawalan", "penderia", "sensor", "suis", "led", "buzzer", "motor"],
+          sampleScheme: "Fungsi: Memproses isyarat input dan mengawal peranti output mengikut kod pengaturcaraan. Input: Penderia LDR/Suhu/Suis. Output: LED/Buzzer/Motor servo."
+        },
+        {
+          id: 5,
+          maxMark: 4,
+          keywords: ["sisa", "ikan", "bakteria", "ammonia", "nitrat", "tanaman", "baja", "bersih", "kitaran"],
+          sampleScheme: "Sisa kumuhan ikan (ammonia) diuraikan oleh bakteria kepada nitrat (nutrien). Tanaman menyerap nitrat sebagai baja dan menapis air kembali bersih untuk ikan."
+        }
+      ]
+    };
+
+    /* BANK SOALAN RBT TINGKATAN 3 (SESI TERDAHULU) */
+    const questionsData_T3 = {
+      objective: [
+        { id: 1, question: "Apakah takrifan yang paling tepat bagi reka bentuk mekatronik?", graphic: null, options: ["A. Gabungan sistem mekanikal dan elektrik semata-mata.", "B. Aplikasi reka bentuk industri dalam menghasilkan perabot moden.", "C. Integrasi disiplin ilmu mekanikal, elektrik, elektronik, serta kawalan dan pengaturcaraan.", "D. Penggunaan komputer untuk melukis pelan struktur bangunan."], answer: 2 },
+        { id: 2, question: "Antara berikut, yang manakah merupakan salah satu daripada EMPAT elemen utama mekatronik?", graphic: null, options: ["A. Sistem hidraulik tekanan tinggi", "B. Sistem kawalan dan pengaturcaraan", "C. Sistem aerodinamik kenderaan", "D. Sistem penyejukan cecair"], answer: 1 },
+        { id: 3, question: "Dalam gambar rajah blok sistem mekatronik, komponen mikropengawal (microcontroller) berfungsi di bahagian mana?", graphic: null, options: ["A. Input", "B. Proses", "C. Output", "D. Bekalan Kuasa"], answer: 1 },
+        { id: 4, question: "Apakah fungsi penderia inframerah (IR Sensor) pada sebuah pintu gelangsar automatik?", graphic: null, options: ["A. Membekalkan bekalan elektrik ke motor pemacu", "B. Mengunci pintu secara mekanikal pada waktu malam", "C. Mengesan pergerakan atau kehadiran objek/manusia sebagai isyarat input", "D. Memperlahankan pergerakan takal pintu secara fizikal"], answer: 2 },
+        { id: 5, question: "Antara produk berikut, yang manakah BUKAN produk mekatronik?", graphic: null, options: ["A. Mesin basuh automatik", "B. Kereta kawalan jauh (RC car)", "C. Palang keselamatan pintar", "D. Basikal manual bergear"], answer: 3 },
+        { id: 6, question: "Dalam fasa pembangunan produk, mengapakah borang Kajian Keperluan Pelanggan perlu disediakan?", graphic: null, options: ["A. Untuk menentukan harga jualan runcit di pasaran", "B. Untuk mengenal pasti masalah sebenar, keperluan, dan kehendak pengguna", "C. Untuk menggantikan proses lakaran perkembangan idea", "D. Untuk menguji ketahanan produk di makmal"], answer: 1 },
+        { id: 7, question: "Ujian parameter dijalankan untuk menilai kefungsian sesuatu produk. Di manakah ujian ini lazimnya dilakukan?", graphic: null, options: ["A. Di dalam bilik makmal yang terkawal suhunya sahaja", "B. Di atas kertas lakaran reka bentuk", "C. Di persekitaran atau situasi sebenar penggunaan produk", "D. Di bahagian pemasaran jualan produk"], answer: 2 },
+        { id: 8, question: "Apakah tujuan utama membuat lakaran perkembangan idea 3D dalam penghasilan produk?", graphic: null, options: ["A. Menggambarkan rupa bentuk, saiz, dan prinsip reka bentuk secara visual dan terperinci", "B. Supaya mikropengawal dapat diprogram secara terus", "C. Mengelakkan pembinaan model awal (mock-up)", "D. Menyenaraikan senarai pembekal bahan mentah secara rasmi"], answer: 0 },
+        { id: 9, question: "Apakah fungsi 'Gear' dalam komponen mekanikal bagi sesebuah produk mekatronik?", graphic: null, options: ["A. Membekalkan tenaga elektrik voltan tinggi", "B. Memindahkan kuasa, menukar kelajuan, dan mengubah arah pusingan", "C. Menukarkan isyarat gelombang kepada isyarat analog", "D. Menyimpan data pengaturcaraan cip secara kekal"], answer: 1 },
+        { id: 10, question: "Apakah perbezaan utama antara 'Model Olokan (Mock-up)' dan 'Prototaip'?", graphic: null, options: ["A. Mock-up mempunyai fungsi mekanikal sepenuhnya, manakala prototaip tidak berfungsi", "B. Mock-up hanya menunjukkan rupa bentuk luaran tanpa fungsi sebenar, manakala prototaip boleh berfungsi", "C. Mock-up diperbuat daripada besi keluli, manakala prototaip daripada polisterina", "D. Mock-up dibina selepas produk siap dijual secara komersial"], answer: 1 }
+      ],
+      subjective: [
+        { id: 1, question: "Nyatakan EMPAT (4) elemen teras yang disepadukan dalam mereka bentuk sistem mekatronik yang lengkap.", hint: "Kombinasi 4 disiplin teknologi kejuruteraan." },
+        { id: 2, question: "Berdasarkan contoh produk mekatronik (contohnya Kereta Kawalan Jauh atau Mesin Basuh Automatik), terangkan fungsi blok Input, Proses, dan Output.", hint: "Penderia (Input) -> Mikropengawal (Proses) -> Penggerak/Motor (Output)." },
+        { id: 3, question: "Huraikan perbezaan antara Ujian Makmal (Laboratory Test) dengan Ujian Parameter (Field Test) dalam penilaian kefungsian produk.", hint: "Bandingkan dari segi lokasi dan persekitaran ujian." },
+        { id: 4, question: "Senaraikan TIGA (3) kriteria penting yang dinilai semasa membuat analisis terhadap lakaran idea produk yang dipilih.", hint: "Contoh: Ketepatan bentuk, ergonomik, kesesuaian bahan." },
+        { id: 5, question: "Cikgu Zainal meminta murid mereka bentuk peranti amaran banjir mekatronik. Cadangkan penderia yang sesuai dan terangkan bagaimana sistem tersebut beroperasi apabila paras air meningkat.", hint: "Penderia aras air, mikropengawal, buzzer & LED." }
+      ],
+      rubrics: [
+        { id: 1, maxMark: 4, keywords: ["mekanikal", "elektrik", "elektronik", "kawalan", "pengaturcaraan"], sampleScheme: "4 Elemen Utama: Sistem Mekanikal, Sistem Elektrik, Sistem Elektronik, Sistem Kawalan & Pengaturcaraan." },
+        { id: 2, maxMark: 4, keywords: ["input", "penderia", "sensor", "proses", "mikropengawal", "output", "motor", "penggerak"], sampleScheme: "Input: Penderia kesan isyarat. Proses: Mikropengawal proses kod. Output: Penggerak buat tindakan fizikal." },
+        { id: 3, maxMark: 4, keywords: ["makmal", "terkawal", "parameter", "sebenar", "lapangan", "lokasi"], sampleScheme: "Ujian Makmal: Dalam bilik/makmal terkawal. Ujian Parameter: Situasi atau persekitaran sebenar produk." },
+        { id: 4, maxMark: 4, keywords: ["rupa bentuk", "fungsi", "kefungsian", "ergonomik", "bahan", "keselamatan", "kos"], sampleScheme: "Kriteria: Ergonomik, kefungsian, ketahanan bahan, keselamatan, daya tarikan rupa bentuk." },
+        { id: 5, maxMark: 4, keywords: ["aras air", "water level", "ultrasonik", "mikropengawal", "buzzer", "led", "lampu", "bunyi", "amaran"], sampleScheme: "Penderia aras air kesan air naik -> hantar isyarat ke mikropengawal -> aktifkan buzzer & LED amaran." }
+      ]
+    };
+
+    /* STATE SISTEM */
+    let currentStudent = { name: "", class: "", subject: "", sessionKey: "" };
+    let currentSessionKey = "T2_SESI_ESOK";
+    let isAdminLoggedIn = false;
+    let cachedSheetSubmissions = [];
+    let isResultsReleased = false;
+    let selectedStudentIndex = null;
+
+    /* ==========================================================
+       LOGIK PEMILIHAN AUTO (TARIKH ESOK VS HARI INI)
+    ========================================================== */
+    function detectDefaultSession() {
+      const now = new Date();
+      // Tarikh esok ialah 9 Oktober 2026 atau seterusnya
+      const esokDate = new Date("2026-10-09T00:00:00");
+
+      if (now >= esokDate) {
+        // AUTO DEFAULT KE TINGKATAN 2 (2S2)
+        currentSessionKey = "T2_SESI_ESOK";
+      } else {
+        // SEBELUM ESOK: DEFAULT KE TINGKATAN 3 (3S2)
+        currentSessionKey = "T3_SESI_HARI_INI";
+      }
+      applySessionToRegistrationUI();
+    }
+
+    function applySessionToRegistrationUI() {
+      const config = SESSIONS_CONFIG[currentSessionKey];
+      document.getElementById('regSubjectSelect').value = config.subject;
+      updateClassOptionsForSubject(config.subject, config.defaultClass);
+      updateSessionDropdownOptions(currentSessionKey);
+      updateBannerUI();
+    }
+
+    function onRegSubjectChange() {
+      const subj = document.getElementById('regSubjectSelect').value;
+      if (subj === "RBT Tingkatan 2") {
+        currentSessionKey = "T2_SESI_ESOK";
+      } else {
+        currentSessionKey = "T3_SESI_HARI_INI";
+      }
+      applySessionToRegistrationUI();
+    }
+
+    function onRegSessionChange() {
+      currentSessionKey = document.getElementById('regSessionSelect').value;
+      const config = SESSIONS_CONFIG[currentSessionKey];
+      document.getElementById('regSubjectSelect').value = config.subject;
+      updateClassOptionsForSubject(config.subject, config.defaultClass);
+      updateBannerUI();
+    }
+
+    function updateClassOptionsForSubject(subject, selectedClass) {
+      const classSelect = document.getElementById('regClassSelect');
+      classSelect.innerHTML = "";
+      if (subject === "RBT Tingkatan 2") {
+        classSelect.innerHTML = `<option value="2S2" selected>2S2 (Tingkatan 2)</option>`;
+      } else {
+        classSelect.innerHTML = `
+          <option value="3S1" ${selectedClass === "3S1" ? "selected" : ""}>3S1 (Tingkatan 3)</option>
+          <option value="3S2" ${selectedClass === "3S2" ? "selected" : ""}>3S2 (Tingkatan 3)</option>
+        `;
+      }
+    }
+
+    function updateSessionDropdownOptions(selectedKey) {
+      const sessionSelect = document.getElementById('regSessionSelect');
+      sessionSelect.innerHTML = `
+        <option value="T2_SESI_ESOK" ${selectedKey === "T2_SESI_ESOK" ? "selected" : ""}>Sesi 8.00 pagi - 9.00 pagi (Jumaat, 9 Okt 2026) - Kelas 2S2 [Tamat 3:00 PTG]</option>
+        <option value="T3_SESI_HARI_INI" ${selectedKey === "T3_SESI_HARI_INI" ? "selected" : ""}>Sesi 10.30 pagi - 11.30 pagi (Khamis, 8 Okt 2026) - Kelas 3S1 & 3S2 [Tamat 5:00 PTG]</option>
+      `;
+
+      const note = document.getElementById('regSessionNote');
+      if (selectedKey === "T2_SESI_ESOK") {
+        note.innerHTML = `<i class="fa-solid fa-clock"></i> Sesi Esok: <strong>8.00 pg - 9.00 pg</strong> &bull; Had masa hantar: <strong>Jam 3.00 petang</strong>`;
+        document.getElementById('regSessionBadge').innerText = "Sesi 2S2 (Jumaat, 9 Okt)";
+      } else {
+        note.innerHTML = `<i class="fa-solid fa-clock"></i> Sesi Terdahulu: <strong>10.30 pg - 11.30 pg</strong> &bull; Had masa hantar: <strong>Jam 5.00 petang</strong>`;
+        document.getElementById('regSessionBadge').innerText = "Sesi 3S1/3S2 (Khamis, 8 Okt)";
+      }
+    }
+
+    /* PENGIRAAN HAD MASA SESI */
+    function getSessionDeadline(sessionKey) {
+      const config = SESSIONS_CONFIG[sessionKey] || SESSIONS_CONFIG["T2_SESI_ESOK"];
+      const d = new Date(config.deadlineDate + "T00:00:00");
+      d.setHours(config.deadlineHour, config.deadlineMinute, 0, 0);
       return d;
     }
 
-    function isLateNow() {
-      return new Date() > getTodayDeadline();
+    function isLateForSession(sessionKey) {
+      return new Date() > getSessionDeadline(sessionKey);
     }
 
-    function updateDeadlineUI() {
-      const deadline = getTodayDeadline();
+    function updateBannerUI() {
+      const deadline = getSessionDeadline(currentSessionKey);
       const now = new Date();
       const diff = deadline - now;
       const isLate = diff <= 0;
+      const config = SESSIONS_CONFIG[currentSessionKey];
 
       const banner = document.getElementById('deadlineBanner');
       const bannerTitle = document.getElementById('deadlineBannerTitle');
@@ -837,6 +1236,8 @@
       const submitBtn = document.getElementById('submitBtn');
       const submitBtnText = document.getElementById('submitBtnText');
 
+      const targetHourStr = config.deadlineHour === 15 ? "3:00 PETANG" : "5:00 PETANG";
+
       if (isLate) {
         const overdueMs = Math.abs(diff);
         const oHours = Math.floor(overdueMs / (1000 * 60 * 60));
@@ -845,15 +1246,14 @@
 
         if (banner) {
           banner.className = "bg-gradient-to-r from-rose-700 to-rose-900 text-white rounded-2xl p-4 shadow-sm flex flex-wrap items-center justify-between gap-3 border border-rose-500 transition-all";
-          bannerTitle.innerText = "HAD MASA 5:00 PETANG TELAH BERLALU";
-          bannerDesc.innerHTML = "Penghantaran masih diterima tetapi akan direkodkan sebagai <span class='font-black underline bg-rose-950 px-1.5 py-0.5 rounded'>LEWAT</span>.";
+          bannerTitle.innerText = `${config.subject.toUpperCase()} - HAD MASA ${targetHourStr} TELAH BERLALU`;
+          bannerDesc.innerHTML = `Penghantaran masih diterima tetapi akan direkodkan sebagai <span class='font-black underline bg-rose-950 px-1.5 py-0.5 rounded'>LEWAT</span>.`;
         }
         if (countdownLabel) countdownLabel.innerText = "Lewat:";
         if (countdownText) countdownText.innerText = `${oHours}j ${oMins}m ${oSecs}s`;
 
         if (quizBadge) quizBadge.className = "bg-rose-500 text-white px-3.5 py-1.5 rounded-xl font-bold font-mono text-xs flex items-center gap-1.5 shadow";
         if (quizText) quizText.innerText = `LEWAT (${oHours}j ${oMins}m)`;
-
         if (lateNotice) lateNotice.classList.remove('hidden');
 
         if (submitBtn) {
@@ -866,12 +1266,16 @@
         const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const secs = Math.floor((diff % (1000 * 60)) / 1000);
 
+        if (banner) {
+          banner.className = "bg-gradient-to-r from-indigo-700 to-indigo-900 text-white rounded-2xl p-4 shadow-sm flex flex-wrap items-center justify-between gap-3 border border-indigo-600 transition-all";
+          bannerTitle.innerText = `${config.subject.toUpperCase()} - HAD MASA HANTAR: JAM ${targetHourStr}`;
+          bannerDesc.innerText = `Sesi ${config.sessionName}. Sila hantar sebelum jam ${targetHourStr}.`;
+        }
         if (countdownLabel) countdownLabel.innerText = "Baki:";
         if (countdownText) countdownText.innerText = `${hours}j ${mins}m ${secs}s`;
 
         if (quizBadge) quizBadge.className = "bg-amber-400 text-indigo-950 px-3.5 py-1.5 rounded-xl font-bold font-mono text-xs flex items-center gap-1.5 shadow";
         if (quizText) quizText.innerText = `Baki: ${hours}j ${mins}m ${secs}s`;
-
         if (lateNotice) lateNotice.classList.add('hidden');
 
         if (submitBtn) {
@@ -882,125 +1286,43 @@
       }
     }
 
-    setInterval(updateDeadlineUI, 1000);
-    window.addEventListener('DOMContentLoaded', updateDeadlineUI);
+    setInterval(updateBannerUI, 1000);
+    window.addEventListener('DOMContentLoaded', () => {
+      detectDefaultSession();
+    });
 
     /* ==========================================================
-       DATA SOALAN OBJEKTIF & SUBJEKTIF
+       MEMULAKAN LATIHAN & JANA SOALAN (BERDASARKAN SESI)
     ========================================================== */
-    const objectiveQuestions = [
-      { id: 1, question: "Apakah takrifan yang paling tepat bagi reka bentuk mekatronik?", options: ["A. Gabungan sistem mekanikal dan elektrik semata-mata.", "B. Aplikasi reka bentuk industri dalam menghasilkan perabot moden.", "C. Integrasi disiplin ilmu mekanikal, elektrik, elektronik, serta kawalan dan pengaturcaraan.", "D. Penggunaan komputer untuk melukis pelan struktur bangunan."], answer: 2 },
-      { id: 2, question: "Antara berikut, yang manakah merupakan salah satu daripada EMPAT elemen utama mekatronik?", options: ["A. Sistem hidraulik tekanan tinggi", "B. Sistem kawalan dan pengaturcaraan", "C. Sistem aerodinamik kenderaan", "D. Sistem penyejukan cecair"], answer: 1 },
-      { id: 3, question: "Dalam gambar rajah blok sistem mekatronik, komponen mikropengawal (microcontroller) berfungsi di bahagian mana?", options: ["A. Input", "B. Proses", "C. Output", "D. Bekalan Kuasa"], answer: 1 },
-      { id: 4, question: "Apakah fungsi penderia inframerah (IR Sensor) pada sebuah pintu gelangsar automatik?", options: ["A. Membekalkan bekalan elektrik ke motor pemacu", "B. Mengunci pintu secara mekanikal pada waktu malam", "C. Mengesan pergerakan atau kehadiran objek/manusia sebagai isyarat input", "D. Memperlahankan pergerakan takal pintu secara fizikal"], answer: 2 },
-      { id: 5, question: "Antara produk berikut, yang manakah BUKAN produk mekatronik?", options: ["A. Mesin basuh automatik", "B. Kereta kawalan jauh (RC car)", "C. Palang keselamatan pintar", "D. Basikal manual bergear"], answer: 3 },
-      { id: 6, question: "Dalam fasa pembangunan produk, mengapakah borang Kajian Keperluan Pelanggan perlu disediakan?", options: ["A. Untuk menentukan harga jualan runcit di pasaran", "B. Untuk mengenal pasti masalah sebenar, keperluan, dan kehendak pengguna", "C. Untuk menggantikan proses lakaran perkembangan idea", "D. Untuk menguji ketahanan produk di makmal"], answer: 1 },
-      { id: 7, question: "Ujian parameter dijalankan untuk menilai kefungsian sesuatu produk. Di manakah ujian ini lazimnya dilakukan?", options: ["A. Di dalam bilik makmal yang terkawal suhunya sahaja", "B. Di atas kertas lakaran reka bentuk", "C. Di persekitaran atau situasi sebenar penggunaan produk", "D. Di bahagian pemasaran jualan produk"], answer: 2 },
-      { id: 8, question: "Apakah tujuan utama membuat lakaran perkembangan idea 3D dalam penghasilan produk?", options: ["A. Menggambarkan rupa bentuk, saiz, dan prinsip reka bentuk secara visual dan terperinci", "B. Supaya mikropengawal dapat diprogram secara terus", "C. Mengelakkan pembinaan model awal (mock-up)", "D. Menyenaraikan senarai pembekal bahan mentah secara rasmi"], answer: 0 },
-      { id: 9, question: "Apakah fungsi 'Gear' dalam komponen mekanikal bagi sesebuah produk mekatronik?", options: ["A. Membekalkan tenaga elektrik voltan tinggi", "B. Memindahkan kuasa, menukar kelajuan, dan mengubah arah pusingan", "C. Menukarkan isyarat gelombang kepada isyarat analog", "D. Menyimpan data pengaturcaraan cip secara kekal"], answer: 1 },
-      { id: 10, question: "Apakah perbezaan utama antara 'Model Olokan (Mock-up)' dan 'Prototaip'?", options: ["A. Mock-up mempunyai fungsi mekanikal sepenuhnya, manakala prototaip tidak berfungsi", "B. Mock-up hanya menunjukkan rupa bentuk luaran tanpa fungsi sebenar, manakala prototaip boleh berfungsi", "C. Mock-up diperbuat daripada besi keluli, manakala prototaip daripada polisterina", "D. Mock-up dibina selepas produk siap dijual secara komersial"], answer: 1 }
-    ];
-
-    const subjectiveQuestions = [
-      { id: 1, question: "Nyatakan EMPAT (4) elemen teras yang disepadukan dalam mereka bentuk sistem mekatronik yang lengkap.", hint: "Kombinasi 4 disiplin teknologi kejuruteraan." },
-      { id: 2, question: "Berdasarkan contoh produk mekatronik (contohnya Kereta Kawalan Jauh atau Mesin Basuh Automatik), terangkan fungsi blok Input, Proses, dan Output.", hint: "Penderia (Input) -> Mikropengawal (Proses) -> Penggerak/Motor (Output)." },
-      { id: 3, question: "Huraikan perbezaan antara Ujian Makmal (Laboratory Test) dengan Ujian Parameter (Field Test) dalam penilaian kefungsian produk.", hint: "Bandingkan dari segi lokasi dan persekitaran ujian." },
-      { id: 4, question: "Senaraikan TIGA (3) kriteria penting yang dinilai semasa membuat analisis terhadap lakaran idea produk yang dipilih.", hint: "Contoh: Ketepatan bentuk, ergonomik, kesesuaian bahan." },
-      { id: 5, question: "Cikgu Zainal meminta murid mereka bentuk peranti amaran banjir mekatronik. Cadangkan penderia yang sesuai dan terangkan bagaimana sistem tersebut beroperasi apabila paras air meningkat.", hint: "Penderia aras air, mikropengawal, buzzer & LED." }
-    ];
-
-    /* RUBRIK DAN KATA KUNCI SUBJEKTIF */
-    const subjectiveRubrics = [
-      {
-        id: 1,
-        maxMark: 4,
-        keywords: ["mekanikal", "elektrik", "elektronik", "kawalan", "pengaturcaraan"],
-        sampleScheme: "4 Elemen Utama: 1. Sistem Mekanikal, 2. Sistem Elektrik, 3. Sistem Elektronik, 4. Sistem Kawalan dan Pengaturcaraan."
-      },
-      {
-        id: 2,
-        maxMark: 4,
-        keywords: ["input", "penderia", "sensor", "proses", "mikropengawal", "output", "motor", "penggerak"],
-        sampleScheme: "Input: Penderia kesan isyarat fizikal. Proses: Mikropengawal memproses data kod. Output: Penggerak (motor DC/servo) menghasilkan pergerakan."
-      },
-      {
-        id: 3,
-        maxMark: 4,
-        keywords: ["makmal", "terkawal", "parameter", "sebenar", "lapangan", "lokasi"],
-        sampleScheme: "Ujian Makmal: Dijalankan di tempat terkawal (makmal). Ujian Parameter: Dijalankan di persekitaran atau situasi penggunaan sebenar produk."
-      },
-      {
-        id: 4,
-        maxMark: 4,
-        keywords: ["rupa bentuk", "fungsi", "kefungsian", "ergonomik", "bahan", "keselamatan", "kos"],
-        sampleScheme: "Mana-mana 3: Daya tarikan rupa bentuk, kefungsian, ergonomik, kesesuaian bahan, faktor keselamatan, atau kos."
-      },
-      {
-        id: 5,
-        maxMark: 4,
-        keywords: ["aras air", "water level", "ultrasonik", "mikropengawal", "buzzer", "led", "lampu", "bunyi", "amaran"],
-        sampleScheme: "Penderia aras air/ultrasonik mengesan kenaikan paras air -> hantar isyarat ke mikropengawal -> mikropengawal membunyikan buzzer & menyalakan LED amaran."
-      }
-    ];
-
-    let currentStudent = { name: "", class: "" };
-    let isAdminLoggedIn = false;
-    let cachedSheetSubmissions = [];
-    let isResultsReleased = false;
-    let selectedStudentIndex = null;
-
-    /* PENGURUSAN TAB NAVIGASI */
-    function switchTab(tab) {
-      const sSec = document.getElementById('studentSection');
-      const subSec = document.getElementById('submissionsSection');
-      const stSec = document.getElementById('statusSection');
-      const aSec = document.getElementById('adminSection');
-
-      const sBtn = document.getElementById('navStudentBtn');
-      const subBtn = document.getElementById('navSubmissionsBtn');
-      const stBtn = document.getElementById('navStatusBtn');
-      const aBtn = document.getElementById('navAdminBtn');
-
-      [sBtn, subBtn, stBtn, aBtn].forEach(b => b.className = "px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-transparent text-indigo-200 hover:bg-indigo-800 hover:text-white flex items-center gap-1.5");
-      [sSec, subSec, stSec, aSec].forEach(s => s.classList.add('hidden'));
-
-      if (tab === 'student') {
-        sSec.classList.remove('hidden');
-        sBtn.className = "px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-indigo-700 text-white flex items-center gap-1.5";
-      } else if (tab === 'submissions') {
-        subSec.classList.remove('hidden');
-        subBtn.className = "px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-indigo-700 text-white flex items-center gap-1.5";
-        loadPublicSubmissions();
-      } else if (tab === 'status') {
-        stSec.classList.remove('hidden');
-        stBtn.className = "px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-indigo-700 text-white flex items-center gap-1.5";
-        ensureDataLoadedForLookup();
-      } else {
-        aSec.classList.remove('hidden');
-        aBtn.className = "px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-indigo-700 text-white flex items-center gap-1.5";
-        if (isAdminLoggedIn) showAdminPanel(); else showAdminLogin();
-      }
-    }
-
-    /* BAHAGIAN PENDAFTARAN & SOALAN MURID */
     function startExercise() {
-      const cls = document.getElementById('classSelect').value;
+      const cls = document.getElementById('regClassSelect').value;
+      const subj = document.getElementById('regSubjectSelect').value;
+      const sess = document.getElementById('regSessionSelect').value;
       const name = document.getElementById('studentNameInput').value.trim();
 
-      if (!cls) return alert("Sila pilih kelas terlebih dahulu (3S1 atau 3S2)!");
+      if (!cls) return alert("Sila pilih kelas terlebih dahulu!");
       if (!name) return alert("Sila isi nama penuh anda secara manual!");
 
-      currentStudent = { name: name.toUpperCase(), class: cls };
+      currentStudent = {
+        name: name.toUpperCase(),
+        class: cls,
+        subject: subj,
+        sessionKey: sess
+      };
+
+      const config = SESSIONS_CONFIG[sess];
 
       document.getElementById('badgeStudentName').innerText = currentStudent.name;
       document.getElementById('badgeStudentClass').innerText = currentStudent.class;
+      document.getElementById('badgeStudentSubject').innerText = currentStudent.subject;
+      document.getElementById('badgeStudentSession').innerText = config.sessionName;
 
       document.getElementById('regBox').classList.add('hidden');
       document.getElementById('resultBox').classList.add('hidden');
       document.getElementById('quizBox').classList.remove('hidden');
 
-      renderQuestions();
-      updateDeadlineUI();
+      renderQuestionsForSession(sess);
+      updateBannerUI();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -1011,10 +1333,17 @@
       document.getElementById('studentNameInput').value = "";
     }
 
-    function renderQuestions() {
+    function renderQuestionsForSession(sessionKey) {
+      const isT2 = sessionKey === "T2_SESI_ESOK";
+      const bank = isT2 ? questionsData_T2 : questionsData_T3;
+
+      document.getElementById('objSectionTitle').innerText = `Bahagian A: 10 Soalan Objektif (${bank.objective[0].question.indexOf('inventif') !== -1 ? 'RBT Tingkatan 2' : 'RBT Tingkatan 3'})`;
+      document.getElementById('subjSectionTitle').innerText = `Bahagian B: 5 Soalan Subjektif (${bank.objective[0].question.indexOf('inventif') !== -1 ? 'RBT Tingkatan 2' : 'RBT Tingkatan 3'})`;
+
+      // 1. Objektif
       const objContainer = document.getElementById('objectiveQuestionsList');
       objContainer.innerHTML = "";
-      objectiveQuestions.forEach((q, index) => {
+      bank.objective.forEach((q, index) => {
         let optHtml = "";
         q.options.forEach((opt, optIndex) => {
           optHtml += `
@@ -1029,16 +1358,20 @@
           <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
             <div class="flex items-start gap-2">
               <span class="font-bold text-indigo-800 text-sm bg-indigo-100 px-2 py-0.5 rounded-md">S${index + 1}</span>
-              <p class="font-semibold text-slate-800 text-sm leading-relaxed">${q.question}</p>
+              <div class="w-full">
+                <p class="font-semibold text-slate-800 text-sm leading-relaxed">${q.question}</p>
+                ${q.graphic ? q.graphic : ''}
+              </div>
             </div>
             <div class="grid grid-cols-1 gap-2 pt-1">${optHtml}</div>
           </div>
         `;
       });
 
+      // 2. Subjektif
       const subjContainer = document.getElementById('subjectiveQuestionsList');
       subjContainer.innerHTML = "";
-      subjectiveQuestions.forEach((q, index) => {
+      bank.subjective.forEach((q, index) => {
         subjContainer.innerHTML += `
           <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
             <div class="flex items-start gap-2">
@@ -1055,16 +1388,18 @@
       });
     }
 
-    /* PENGHANTARAN TERUS KE GOOGLE SHEET */
+    /* PENGHANTARAN JAWAPAN KE GOOGLE SHEET */
     async function submitQuiz() {
-      const isLate = isLateNow();
+      const isLate = isLateForSession(currentStudent.sessionKey);
+      const isT2 = currentStudent.sessionKey === "T2_SESI_ESOK";
+      const bank = isT2 ? questionsData_T2 : questionsData_T3;
 
       let objAnswers = [];
       let unansweredObj = 0;
       let calculatedObjScore = 0;
 
-      for (let i = 0; i < objectiveQuestions.length; i++) {
-        const q = objectiveQuestions[i];
+      for (let i = 0; i < bank.objective.length; i++) {
+        const q = bank.objective[i];
         const selected = document.querySelector(`input[name="q_obj_${q.id}"]:checked`);
         if (!selected) {
           unansweredObj++;
@@ -1078,21 +1413,24 @@
 
       let subjAnswers = [];
       let emptySubj = 0;
-      for (let i = 0; i < subjectiveQuestions.length; i++) {
-        const q = subjectiveQuestions[i];
+      for (let i = 0; i < bank.subjective.length; i++) {
+        const q = bank.subjective[i];
         const text = document.getElementById(`q_subj_${q.id}`).value.trim();
         if (!text) emptySubj++;
         subjAnswers.push(text || "(Tiada jawapan)");
       }
+
+      const config = SESSIONS_CONFIG[currentStudent.sessionKey];
+      const targetHourStr = config.deadlineHour === 15 ? "3:00 petang" : "5:00 petang";
 
       let confirmMsg = "";
       if (unansweredObj > 0 || emptySubj > 0) {
         confirmMsg = `Peringatan: Terdapat ${unansweredObj} soalan objektif dan ${emptySubj} soalan subjektif belum dijawab.\n`;
       }
       if (isLate) {
-        confirmMsg += `PERHATIAN: Masa 5:00 petang telah berlalu. Tugasan anda akan direkodkan sebagai 'LEWAT'. Teruskan hantar?`;
+        confirmMsg += `PERHATIAN: Masa sasaran jam ${targetHourStr} telah berlalu. Tugasan anda akan direkodkan sebagai 'LEWAT'. Teruskan hantar?`;
       } else {
-        confirmMsg += `Adakah anda pasti mahu menghantar tugasan sekarang?`;
+        confirmMsg += `Adakah anda pasti mahu menghantar tugasan sesi ${currentStudent.subject} sekarang?`;
       }
 
       if (!confirm(confirmMsg)) return;
@@ -1109,7 +1447,7 @@
         isLate: isLate,
         name: currentStudent.name,
         class: currentStudent.class,
-        subject: "RBT Tingkatan 3",
+        subject: currentStudent.subject,
         objScore: calculatedObjScore,
         objAnswers: objAnswers,
         subjAnswers: subjAnswers
@@ -1130,15 +1468,15 @@
       document.getElementById('quizBox').classList.add('hidden');
       document.getElementById('resultBox').classList.remove('hidden');
       document.getElementById('resName').innerText = currentStudent.name;
-      document.getElementById('resClassBadge').innerText = currentStudent.class;
+      document.getElementById('resClassBadge').innerText = `${currentStudent.class} • ${currentStudent.subject}`;
 
       const timingBadge = document.getElementById('resTimingBadge');
       if (isLate) {
         timingBadge.className = "px-3 py-1 rounded-full text-xs font-extrabold bg-rose-100 text-rose-800 border border-rose-300";
-        timingBadge.innerHTML = `<i class="fa-solid fa-clock-rotate-left"></i> Dihantar LEWAT (Selepas 5:00 PM)`;
+        timingBadge.innerHTML = `<i class="fa-solid fa-clock-rotate-left"></i> Dihantar LEWAT (Selepas ${targetHourStr})`;
       } else {
         timingBadge.className = "px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300";
-        timingBadge.innerHTML = `<i class="fa-solid fa-circle-check"></i> Tepat Pada Masa (Sebelum 5:00 PM)`;
+        timingBadge.innerHTML = `<i class="fa-solid fa-circle-check"></i> Tepat Pada Masa (Sebelum ${targetHourStr})`;
       }
 
       submitBtn.disabled = false;
@@ -1197,10 +1535,12 @@
       const searchKeyword = (document.getElementById('pubSearchInput').value || "").trim().toUpperCase();
 
       const total = cachedSheetSubmissions.length;
+      const count2S2 = cachedSheetSubmissions.filter(s => s.class === "2S2").length;
       const count3S1 = cachedSheetSubmissions.filter(s => s.class === "3S1").length;
       const count3S2 = cachedSheetSubmissions.filter(s => s.class === "3S2").length;
 
       document.getElementById('pubTotalCount').innerText = total;
+      document.getElementById('pub2S2Count').innerText = count2S2;
       document.getElementById('pub3S1Count').innerText = count3S1;
       document.getElementById('pub3S2Count').innerText = count3S2;
 
@@ -1230,7 +1570,10 @@
 
       list.forEach((sub, idx) => {
         const isLate = sub.isLate || sub.timestamp.indexOf("LEWAT") !== -1 || (sub.reviewStatus && sub.reviewStatus.indexOf("Lewat") !== -1);
-        const classBadgeColor = sub.class === "3S1" ? "bg-blue-100 text-blue-800" : "bg-purple-100 text-purple-800";
+        let classBadgeColor = "bg-blue-100 text-blue-800";
+        if (sub.class === "2S2") classBadgeColor = "bg-amber-100 text-amber-800";
+        else if (sub.class === "3S2") classBadgeColor = "bg-purple-100 text-purple-800";
+
         const cleanTime = sub.timestamp.replace(" [LEWAT]", "");
 
         tbody.innerHTML += `
@@ -1240,7 +1583,7 @@
             <td class="px-4 py-3">
               <span class="px-2.5 py-0.5 rounded-full text-xs font-bold ${classBadgeColor}">${sub.class}</span>
             </td>
-            <td class="px-4 py-3 text-xs font-semibold text-slate-600">${sub.subject || "RBT Tingkatan 3"}</td>
+            <td class="px-4 py-3 text-xs font-semibold text-slate-600">${sub.subject || "RBT"}</td>
             <td class="px-4 py-3 text-xs font-mono text-slate-600">${cleanTime}</td>
             <td class="px-4 py-3 text-center">
               ${isLate ? '<span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-rose-100 text-rose-800 border border-rose-300">LEWAT</span>' : '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">TEPAT MASA</span>'}
@@ -1251,7 +1594,7 @@
     }
 
     /* ==========================================================
-       SEMAK KEPUTUSAN: KAWALAN PELEPASAN & DROPDOWN MURID
+       SEMAK KEPUTUSAN: HIERARKI SUBJEK -> KELAS -> MURID
     ========================================================== */
     async function ensureDataLoadedForLookup() {
       const note = document.getElementById('lookupLoadingNote');
@@ -1265,11 +1608,27 @@
         console.error("Gagal muat data Google Sheet:", e);
       }
       if (note) note.classList.add('hidden');
+      onLookupSubjectChange();
+    }
+
+    function onLookupSubjectChange() {
+      const subj = document.getElementById('lookupSubject').value;
+      const classSelect = document.getElementById('lookupClass');
+
+      if (subj === "RBT Tingkatan 2") {
+        classSelect.innerHTML = `<option value="2S2" selected>2S2 (Tingkatan 2)</option>`;
+      } else {
+        classSelect.innerHTML = `
+          <option value="3S1">3S1 (Tingkatan 3)</option>
+          <option value="3S2" selected>3S2 (Tingkatan 3)</option>
+        `;
+      }
       onLookupFilterChange();
     }
 
     function onLookupFilterChange() {
       const selectedClass = document.getElementById('lookupClass').value;
+      const selectedSubj = document.getElementById('lookupSubject').value;
       const studentSelect = document.getElementById('lookupStudentSelect');
       const resultContainer = document.getElementById('lookupResultContainer');
 
@@ -1317,6 +1676,8 @@
 
       const isReviewed = found.reviewStatus && found.reviewStatus.indexOf("Telah Disemak") !== -1;
       const isLate = found.isLate || found.timestamp.indexOf("LEWAT") !== -1 || (found.reviewStatus && found.reviewStatus.indexOf("Lewat") !== -1);
+      const isT2 = found.class === "2S2" || (found.subject && found.subject.indexOf("Tingkatan 2") !== -1);
+      const bank = isT2 ? questionsData_T2 : questionsData_T3;
 
       if (!isResultsReleased) {
         container.innerHTML = `
@@ -1330,7 +1691,7 @@
               </span>
               <h4 class="font-extrabold text-slate-800 text-lg mt-2">${found.name}</h4>
               <p class="text-xs text-slate-600 mt-0.5">
-                Kelas: <strong>${found.class}</strong> &bull; Dihantar: <span class="font-mono">${found.timestamp}</span>
+                Kelas: <strong>${found.class}</strong> &bull; Subjek: <strong>${found.subject}</strong> &bull; Dihantar: <span class="font-mono">${found.timestamp}</span>
                 ${isLate ? '<span class="ml-1 px-2 py-0.5 bg-rose-100 text-rose-800 text-[10px] font-bold rounded-full">LEWAT</span>' : '<span class="ml-1 px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded-full">TEPAT MASA</span>'}
               </p>
             </div>
@@ -1364,7 +1725,7 @@
         const totalPercent = Math.round((totalScore / 30) * 100);
 
         let objReviewHtml = "";
-        objectiveQuestions.forEach((q, idx) => {
+        bank.objective.forEach((q, idx) => {
           const studentAnsIdx = found.objAnswers ? found.objAnswers[idx] : null;
           const isCorrect = studentAnsIdx === q.answer;
           const studentAnsText = studentAnsIdx !== null && studentAnsIdx !== undefined ? q.options[studentAnsIdx] : "Tiada jawapan";
@@ -1383,7 +1744,7 @@
         });
 
         container.innerHTML = `
-          <div class="p-5 bg-white border border-emerald-300 rounded-2xl space-y-5 shadow-sm">
+          <div class="p-5 bg-white border border-emerald-300 rounded-xl space-y-5 shadow-sm">
             <div class="flex flex-wrap justify-between items-center pb-3 border-b border-slate-200">
               <div>
                 <div class="flex items-center gap-2">
@@ -1391,7 +1752,7 @@
                   ${isLate ? '<span class="text-xs bg-rose-100 text-rose-800 font-extrabold px-2 py-0.5 rounded-md border border-rose-300">Dihantar Lewat</span>' : '<span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-md">Tepat Pada Masa</span>'}
                 </div>
                 <h4 class="font-bold text-slate-800 text-base mt-1">${found.name}</h4>
-                <p class="text-xs text-slate-500">Kelas: <span class="font-bold text-indigo-700">${found.class}</span> &bull; Tarikh: ${found.timestamp}</p>
+                <p class="text-xs text-slate-500">Kelas: <span class="font-bold text-indigo-700">${found.class}</span> &bull; Subjek: <strong>${found.subject}</strong> &bull; Tarikh: ${found.timestamp}</p>
               </div>
               <button onclick="triggerPrintSlip(${JSON.stringify(found).replace(/"/g, '&quot;')})" class="mt-2 sm:mt-0 px-3.5 py-2 bg-indigo-700 hover:bg-indigo-800 text-white rounded-lg text-xs font-bold shadow flex items-center gap-1.5">
                 <i class="fa-solid fa-file-pdf"></i> Cetak Slip Keputusan PDF
@@ -1470,7 +1831,7 @@
 
       refBtn.disabled = true;
       refBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Mengambil Data...`;
-      tbody.innerHTML = `<tr><td colspan="8" class="text-center py-6 text-slate-400">Sedang menarik data langsung dari Google Sheets...</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="9" class="text-center py-6 text-slate-400">Sedang menarik data langsung dari Google Sheets...</td></tr>`;
 
       try {
         const response = await fetch(`${SCRIPT_URL}?pass=adminzainal`);
@@ -1488,7 +1849,7 @@
 
         renderTableRows();
       } catch (err) {
-        tbody.innerHTML = `<tr><td colspan="8" class="text-center py-6 text-rose-500 font-medium">Gagal berhubung dengan Google Sheets. Sila semak sambungan internet anda.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9" class="text-center py-6 text-rose-500 font-medium">Gagal berhubung dengan Google Sheets. Sila semak sambungan internet anda.</td></tr>`;
         console.error(err);
       }
 
@@ -1577,7 +1938,7 @@
 
       tbody.innerHTML = "";
       if (filteredList.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" class="text-center py-6 text-slate-400">Tiada rekod murid bagi pilihan saringan ini.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9" class="text-center py-6 text-slate-400">Tiada rekod murid bagi pilihan saringan ini.</td></tr>`;
         return;
       }
 
@@ -1587,7 +1948,9 @@
         const isLate = sub.isLate || sub.timestamp.indexOf("LEWAT") !== -1 || (sub.reviewStatus && sub.reviewStatus.indexOf("Lewat") !== -1);
 
         const badgeClass = isReviewed ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800";
-        const classBadgeColor = sub.class === "3S1" ? "bg-blue-100 text-blue-800" : "bg-purple-100 text-purple-800";
+        let classBadgeColor = "bg-blue-100 text-blue-800";
+        if (sub.class === "2S2") classBadgeColor = "bg-amber-100 text-amber-800";
+        else if (sub.class === "3S2") classBadgeColor = "bg-purple-100 text-purple-800";
 
         tbody.innerHTML += `
           <tr class="hover:bg-slate-50 transition ${isLate ? 'bg-rose-50/20' : ''}">
@@ -1600,6 +1963,7 @@
             <td class="px-4 py-3 font-bold">
               <span class="px-2 py-0.5 rounded text-xs ${classBadgeColor}">${sub.class}</span>
             </td>
+            <td class="px-4 py-3 text-xs text-slate-600 font-semibold">${sub.subject || "RBT"}</td>
             <td class="px-4 py-3 font-extrabold text-indigo-900">${sub.objScore !== null ? sub.objScore + ' / 10' : '-'}</td>
             <td class="px-4 py-3 font-extrabold text-blue-900">${sub.subjMark || '-'} / 20</td>
             <td class="px-4 py-3">
@@ -1619,88 +1983,107 @@
        ENJIN PENJANA ULASAN KOMPREHENSIF PINTAR GURU
     ========================================================== */
     function buildComprehensiveFeedback(student, objScore, subjScore) {
+      const isT2 = student.class === "2S2" || (student.subject && student.subject.indexOf("Tingkatan 2") !== -1);
       let sections = [];
 
       // 1. Prestasi Bahagian A (Objektif)
       let objText = "";
       if (objScore >= 9) {
-        objText = `📌 Bahagian A (Objektif: ${objScore}/10):\nPenguasaan fakta teori, takrifan mekatronik dan pengetahuan am komponen berada pada tahap SANGAT CEMERLANG. Murid dapat membezakan fungsi mikropengawal, sensor, dan peralatan mekatronik dengan tepat.`;
+        objText = `📌 Bahagian A (Objektif: ${objScore}/10):\nPenguasaan fakta teori dan pengetahuan am silibus RBT ${isT2 ? 'Tingkatan 2 (Pembuatan, Mekanikal, Elektrik, Elektronik & Akuaponik)' : 'Tingkatan 3 (Mekatronik & Pembangunan Produk)'} berada pada tahap SANGAT CEMERLANG. Murid dapat mengenal pasti konsep dan fungsi komponen dengan tepat.`;
       } else if (objScore >= 7) {
-        objText = `📌 Bahagian A (Objektif: ${objScore}/10):\nPenguasaan konsep asas adalah BAIK. Terdapat sedikit kekeliruan minor pada soalan teknikal lanjutan yang memerlukan pembacaan yang lebih teliti.`;
+        objText = `📌 Bahagian A (Objektif: ${objScore}/10):\nPenguasaan konsep asas adalah BAIK. Terdapat sedikit kekeliruan minor pada soalan teknikal yang memerlukan ketelitian membaca soalan dan rajah grafik.`;
       } else if (objScore >= 5) {
-        objText = `📌 Bahagian A (Objektif: ${objScore}/10):\nTahap penguasaan MEMUASKAN. Disarankan mengulang kaji semula gambar rajah blok sistem mekatronik dan fungsi komponen mekanikal seperti gear.`;
+        objText = `📌 Bahagian A (Objektif: ${objScore}/10):\nTahap penguasaan MEMUASKAN. Disarankan mengulang kaji semula gambar rajah dan fungsi komponen utama.`;
       } else {
-        objText = `📌 Bahagian A (Objektif: ${objScore}/10):\nPenguasaan fakta asas masih LEMAH. Murid dinasihatkan membuat latih tubi pengukuhan konsep mekatronik dan lakaran idea berpandukan buku teks KSSM Tingkatan 3.`;
+        objText = `📌 Bahagian A (Objektif: ${objScore}/10):\nPenguasaan fakta asas masih LEMAH. Murid dinasihatkan membuat latih tubi pengukuhan konsep berpandukan buku teks KSSM.`;
       }
       sections.push(objText);
 
-      // 2. Analisis Terperinci Bahagian B (Subjektif) - Mengikut Jawapan Sebenar Murid
+      // 2. Analisis Terperinci Bahagian B (Subjektif)
       let subjPoints = [];
       const answers = student.subjAnswers || [];
 
-      // Soalan 1: 4 Elemen Teras Mekatronik
-      const s1 = answers[0] || "";
-      const s1Found = ["mekanikal", "elektrik", "elektronik", "kawalan", "pengaturcaraan"].filter(k => new RegExp(k, 'i').test(s1));
-      if (s1Found.length >= 4) {
-        subjPoints.push("• S1 (Elemen Mekatronik): Sangat tepat dan lengkap. Berjaya menyenaraikan keempat-empat elemen teras mekatronik.");
-      } else if (s1Found.length >= 2) {
-        subjPoints.push(`• S1 (Elemen Mekatronik): Sederhana. Berjaya menyatakan elemen (${s1Found.join(", ")}), tetapi tertinggal elemen pelengkap.`);
-      } else {
-        subjPoints.push("• S1 (Elemen Mekatronik): Kurang tepat. Perlu menguasai 4 elemen teras iaitu Mekanikal, Elektrik, Elektronik dan Kawalan/Pengaturcaraan.");
-      }
+      if (isT2) {
+        // ULASAN KHUSUS TINGKATAN 2
+        // S1: Pembuatan konvensional vs moden
+        const s1 = answers[0] || "";
+        if (/konvensional/i.test(s1) && /moden/i.test(s1) && /masa|cepat|lama/i.test(s1)) {
+          subjPoints.push("• S1 (Reka Bentuk Pembuatan): Sangat baik. Berjaya membezakan kaedah konvensional dan moden dari segi masa dan kemahiran.");
+        } else {
+          subjPoints.push("• S1 (Reka Bentuk Pembuatan): Perlu perincikan perbezaan masa penghasilan dan penggunaan mesin/alatan moden.");
+        }
 
-      // Soalan 2: Blok Input, Proses, Output
-      const s2 = answers[1] || "";
-      const hasInput = /input|sensor|penderia/i.test(s2);
-      const hasProcess = /proses|mikropengawal|microcontroller|pemproses/i.test(s2);
-      const hasOutput = /output|motor|penggerak|actuator/i.test(s2);
-      if (hasInput && hasProcess && hasOutput) {
-        subjPoints.push("• S2 (Rajah Blok Sistem): Huraian fungsi Input (penderia), Proses (mikropengawal), dan Output (penggerak) sangat jelas dan berstruktur.");
-      } else {
-        let missing = [];
-        if (!hasInput) missing.push("Input");
-        if (!hasProcess) missing.push("Proses");
-        if (!hasOutput) missing.push("Output");
-        subjPoints.push(`• S2 (Rajah Blok Sistem): Huraian masih umum. Perlu perincikan fungsi blok ${missing.join(" dan ")} secara spesifik.`);
-      }
+        // S2: Komponen mekanikal basikal / pengisar
+        const s2 = answers[1] || "";
+        if (/gear|rantai|takal|tali sawat/i.test(s2) && /kuasa|putar|gerak/i.test(s2)) {
+          subjPoints.push("• S2 (Reka Bentuk Mekanikal): Pemilihan dua komponen mekanikal tepat dan fungsi pemindahan kuasa dihuraikan dengan jelas.");
+        } else {
+          subjPoints.push("• S2 (Reka Bentuk Mekanikal): Nyatakan secara spesifik komponen seperti gear/rantai atau takal/tali sawat serta peranan pemindahan kuasanya.");
+        }
 
-      // Soalan 3: Ujian Makmal vs Parameter
-      const s3 = answers[2] || "";
-      const hasMakmal = /makmal|terkawal|bilik/i.test(s3);
-      const hasParam = /parameter|sebenar|lapangan|situasi/i.test(s3);
-      if (hasMakmal && hasParam) {
-        subjPoints.push("• S3 (Ujian Kefungsian): Perbezaan antara Ujian Makmal (persekitaran terkawal) dan Ujian Parameter (situasi sebenar) dihuraikan dengan tepat.");
-      } else {
-        subjPoints.push("• S3 (Ujian Kefungsian): Perlu perjelaskan faktor perbezaan lokasi dan kawalan parameter bagi kedua-dua ujian tersebut.");
-      }
+        // S3: Pengiraan Hukum Ohm
+        const s3 = answers[2] || "";
+        if (/3\s*A|3\s*ampere|12\s*\/\s*4/i.test(s3)) {
+          subjPoints.push("• S3 (Reka Bentuk Elektrik): Pengiraan Hukum Ohm tepat (I = 3A) dengan formula dan langkah kerja yang betul.");
+        } else {
+          subjPoints.push("• S3 (Reka Bentuk Elektrik): Semak semula formula Hukum Ohm I = V / R untuk mendapatkan nilai arus yang tepat.");
+        }
 
-      // Soalan 4: Kriteria Analisis Lakaran Idea
-      const s4 = answers[3] || "";
-      const s4Matches = ["rupa", "fungsi", "kefungsian", "ergonomik", "bahan", "selamat", "keselamatan", "kos", "tarikan"].filter(k => new RegExp(k, 'i').test(s4));
-      if (s4Matches.length >= 3) {
-        subjPoints.push("• S4 (Analisis Lakaran): Pemilihan kriteria analisis idea adalah relevan dan menepati kehendak reka bentuk produk.");
-      } else {
-        subjPoints.push("• S4 (Analisis Lakaran): Kriteria yang diberikan terhad. Sila gunakan kriteria standard seperti ergonomik, kefungsian, dan kekuatan bahan.");
-      }
+        // S4: Mikropengawal & Input/Output
+        const s4 = answers[3] || "";
+        if (/penderia|sensor|suis/i.test(s4) && /led|buzzer|motor/i.test(s4)) {
+          subjPoints.push("• S4 (Reka Bentuk Elektronik): Huraian fungsi mikropengawal berserta contoh peranti input dan output sangat lengkap.");
+        } else {
+          subjPoints.push("• S4 (Reka Bentuk Elektronik): Perlu membezakan dengan tepat antara peranti input (penderia) dan peranti output (penggerak/LED).");
+        }
 
-      // Soalan 5: Sistem Amaran Banjir
-      const s5 = answers[4] || "";
-      const hasSensor = /aras air|water level|ultrasonik|sensor|penderia/i.test(s5);
-      const hasActuator = /buzzer|penggera|led|lampu|bunyi|amaran/i.test(s5);
-      if (hasSensor && hasActuator) {
-        subjPoints.push("• S5 (Inovasi Amaran Banjir): Cadangan penderia dan logik operasi penggera amaran adalah kreatif, praktikal dan logik.");
+        // S5: Simbiosis Akuaponik
+        const s5 = answers[4] || "";
+        if (/ikan/i.test(s5) && /bakteria/i.test(s5) && /tanaman/i.test(s5)) {
+          subjPoints.push("• S5 (Reka Bentuk Akuaponik): Penerangan kitaran simbiosis antara sisa ikan, bakteria pengurai dan nutrien tanaman sangat bernas.");
+        } else {
+          subjPoints.push("• S5 (Reka Bentuk Akuaponik): Huraikan peranan bakteria menukar sisa ammonia ikan kepada nitrat untuk baja tanaman.");
+        }
       } else {
-        subjPoints.push("• S5 (Inovasi Amaran Banjir): Cadangan peranti amaran banjir perlu menyatakan jenis sensor pengesan dan peranti output amaran secara spesifik.");
+        // ULASAN KHUSUS TINGKATAN 3
+        const s1 = answers[0] || "";
+        const s1Count = ["mekanikal", "elektrik", "elektronik", "kawalan", "pengaturcaraan"].filter(k => new RegExp(k, 'i').test(s1)).length;
+        if (s1Count >= 4) subjPoints.push("• S1 (Elemen Mekatronik): Lengkap. Berjaya menyenaraikan 4 elemen teras mekatronik.");
+        else subjPoints.push("• S1 (Elemen Mekatronik): Perlu mantapkan 4 elemen teras: Mekanikal, Elektrik, Elektronik, Kawalan/Pengaturcaraan.");
+
+        const s2 = answers[1] || "";
+        if (/input/i.test(s2) && /proses|mikropengawal/i.test(s2) && /output/i.test(s2)) {
+          subjPoints.push("• S2 (Rajah Blok Sistem): Huraian blok Input, Proses dan Output sangat jelas.");
+        } else {
+          subjPoints.push("• S2 (Rajah Blok Sistem): Perlu perincikan fungsi blok Input (sensor), Proses (cip) dan Output (motor).");
+        }
+
+        const s3 = answers[2] || "";
+        if (/makmal/i.test(s3) && /parameter/i.test(s3)) {
+          subjPoints.push("• S3 (Ujian Kefungsian): Perbezaan Ujian Makmal (terkawal) dan Parameter (situasi sebenar) dihuraikan dengan tepat.");
+        } else {
+          subjPoints.push("• S3 (Ujian Kefungsian): Nyatakan perbezaan dari aspek lokasi dan keadaan persekitaran.");
+        }
+
+        const s4 = answers[3] || "";
+        subjPoints.push("• S4 (Analisis Lakaran): Pemilihan kriteria analisis idea lakaran menepati prinsip reka bentuk.");
+
+        const s5 = answers[4] || "";
+        if (/aras air|sensor/i.test(s5) && /buzzer|led/i.test(s5)) {
+          subjPoints.push("• S5 (Inovasi Amaran Banjir): Logik operasi penderia dan penggera amaran adalah kreatif dan logik.");
+        } else {
+          subjPoints.push("• S5 (Inovasi Amaran Banjir): Cadangkan jenis sensor pengesan paras air dan komponen output amaran secara spesifik.");
+        }
       }
 
       sections.push(`📌 Bahagian B (Subjektif: ${subjScore}/20):\n${subjPoints.join("\n")}`);
 
-      // 3. Status Waktu Penghantaran & Dorongan Guru
+      // 3. Disiplin & Dorongan
       const isLate = student.isLate || (student.timestamp && student.timestamp.indexOf("LEWAT") !== -1) || (student.reviewStatus && student.reviewStatus.indexOf("Lewat") !== -1);
       if (isLate) {
-        sections.push("⏱️ Disiplin & Pengurusan Masa:\nTugasan diterima selepas jam 5:00 petang (LEWAT). Komitmen murid menyiapkan tugasan dihargai, namun tingkatkan disiplin ketepatan masa untuk tugasan akan datang. Teruskan usaha gigih anda!");
+        sections.push("⏱️ Disiplin & Pengurusan Masa:\nTugasan diterima selepas had masa sasaran (LEWAT). Komitmen menyiapkan latihan dihargai, namun tingkatkan ketepatan masa pada tugasan akan datang. Teruskan usaha!");
       } else {
-        sections.push("⏱️ Disiplin & Pengurusan Masa:\nSyabas diucapkan atas disiplin dan komitmen menghantar tugasan tepat pada masa sebelum jam 5:00 petang. Kekalkan kecemerlangan ini!");
+        sections.push("⏱️ Disiplin & Pengurusan Masa:\nSyabas atas disiplin menyiapkan dan menghantar tugasan tepat pada masa yang ditetapkan. Kekalkan komitmen cemerlang ini!");
       }
 
       return sections.join("\n\n");
@@ -1710,7 +2093,6 @@
     function highlightKeywords(text, keywords) {
       if (!text || text === "(Tiada jawapan)") return `<span class="text-rose-500 italic">Tiada jawapan dihantar</span>`;
       let escapedText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-      
       keywords.forEach(kw => {
         const regex = new RegExp(`(${kw})`, 'gi');
         escapedText = escapedText.replace(regex, `<mark class="bg-emerald-200 text-emerald-950 px-1 rounded font-bold border border-emerald-300">$1</mark>`);
@@ -1718,14 +2100,16 @@
       return escapedText;
     }
 
-    /* BUKA MODAL SEMAKAN GURU */
+    /* MODAL SEMAKAN GURU */
     function openReviewModal(index) {
       selectedStudentIndex = index;
       const student = cachedSheetSubmissions[index];
       const isLate = student.isLate || student.timestamp.indexOf("LEWAT") !== -1 || (student.reviewStatus && student.reviewStatus.indexOf("Lewat") !== -1);
+      const isT2 = student.class === "2S2" || (student.subject && student.subject.indexOf("Tingkatan 2") !== -1);
+      const bank = isT2 ? questionsData_T2 : questionsData_T3;
 
       document.getElementById('modalStudentName').innerText = student.name;
-      document.getElementById('modalStudentMeta').innerText = `Kelas: ${student.class} • Baris Sheet: ${student.rowIndex} • Masa: ${student.timestamp}`;
+      document.getElementById('modalStudentMeta').innerText = `Kelas: ${student.class} • ${student.subject} • Masa: ${student.timestamp}`;
       document.getElementById('modalObjScore').innerText = `${student.objScore !== null ? student.objScore : 0} / 10`;
       document.getElementById('modalReviewStatus').innerText = student.reviewStatus;
 
@@ -1741,7 +2125,7 @@
       // 1. Semakan Objektif
       const objDetailContainer = document.getElementById('modalObjDetail');
       objDetailContainer.innerHTML = "";
-      objectiveQuestions.forEach((q, qIdx) => {
+      bank.objective.forEach((q, qIdx) => {
         const studentAnsIdx = student.objAnswers ? student.objAnswers[qIdx] : null;
         const isCorrect = studentAnsIdx === q.answer;
         const studentAnsText = studentAnsIdx !== null && studentAnsIdx !== undefined ? q.options[studentAnsIdx] : "Tiada jawapan";
@@ -1759,13 +2143,13 @@
         `;
       });
 
-      // 2. Semakan Subjektif Berbantu Kata Kunci & Rubrik
+      // 2. Semakan Subjektif Berbantu Rubrik & Kata Kunci
       const subjDetailContainer = document.getElementById('modalSubjDetail');
       subjDetailContainer.innerHTML = "";
       let totalSuggestedScore = 0;
 
-      subjectiveQuestions.forEach((q, qIdx) => {
-        const rubric = subjectiveRubrics[qIdx];
+      bank.subjective.forEach((q, qIdx) => {
+        const rubric = bank.rubrics[qIdx];
         const rawStudentText = student.subjAnswers ? student.subjAnswers[qIdx] : "(Tiada jawapan)";
         
         let matchedKeywordsCount = 0;
@@ -1790,7 +2174,7 @@
 
             <div class="bg-white p-3 rounded-lg border border-slate-300">
               <div class="text-[10px] uppercase font-bold text-slate-400 mb-1 flex items-center gap-1">
-                <i class="fa-solid fa-highlighter text-emerald-600"></i> Jawapan Murid (Kata kunci dikesan diwarnakan):
+                <i class="fa-solid fa-highlighter text-emerald-600"></i> Jawapan Murid:
               </div>
               <div class="text-slate-800 whitespace-pre-wrap leading-relaxed text-xs">
                 ${highlightedHTML}
@@ -1827,7 +2211,6 @@
       const statusSelect = document.getElementById('selectMarkStatus');
       statusSelect.value = isLate ? "Telah Disemak (Lewat)" : "Telah Disemak";
 
-      // 3. JANA ULASAN KOMPREHENSIF SECARA TERUS JIKA BELUM ADA
       const existingComment = student.teacherComment ? student.teacherComment.trim() : "";
       if (existingComment) {
         document.getElementById('inputTeacherComment').value = existingComment;
@@ -1872,21 +2255,12 @@
       document.getElementById('inputSubjMark').value = score;
     }
 
-    function appendQuickComment(commentText) {
-      const commentInput = document.getElementById('inputTeacherComment');
-      if (commentInput.value.trim() === "") {
-        commentInput.value = commentText;
-      } else {
-        commentInput.value += "\n" + commentText;
-      }
-    }
-
     function closeReviewModal() {
       document.getElementById('reviewModal').classList.add('hidden');
       selectedStudentIndex = null;
     }
 
-    /* KEMAS KINI SEMAKAN KE GOOGLE SHEET */
+    /* SIMPAN KEPUTUSAN SEMAKAN KE GOOGLE SHEET */
     async function saveReviewToSheet() {
       if (selectedStudentIndex === null) return;
       const student = cachedSheetSubmissions[selectedStudentIndex];
@@ -1938,15 +2312,19 @@
 
       document.getElementById('slipStudentName').innerText = student.name;
       document.getElementById('slipStudentClass').innerText = student.class;
+      document.getElementById('slipSubjectName').innerText = student.subject || "Reka Bentuk dan Teknologi";
       document.getElementById('slipTimestamp').innerText = student.timestamp;
 
       const lateStatusEl = document.getElementById('slipLateStatus');
+      const isT2 = student.class === "2S2" || (student.subject && student.subject.indexOf("Tingkatan 2") !== -1);
+      const deadlineStr = isT2 ? "3:00 PETANG" : "5:00 PETANG";
+
       if (isLate) {
         lateStatusEl.className = "p-2 font-bold text-rose-700";
-        lateStatusEl.innerText = "DITERIMA LEWAT (SELEPAS 5:00 PETANG)";
+        lateStatusEl.innerText = `DITERIMA LEWAT (SELEPAS ${deadlineStr})`;
       } else {
         lateStatusEl.className = "p-2 font-bold text-emerald-700";
-        lateStatusEl.innerText = "TEPAT PADA MASA (SEBELUM 5:00 PETANG)";
+        lateStatusEl.innerText = `TEPAT PADA MASA (SEBELUM ${deadlineStr})`;
       }
 
       document.getElementById('slipObjScore').innerText = `${obj} / 10`;
