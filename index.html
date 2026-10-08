@@ -212,7 +212,6 @@
           Terima kasih <span class="font-bold text-slate-800" id="resName">-</span> (<span class="font-bold text-indigo-700" id="resClassBadge">-</span>). Jawapan anda telah selamat direkodkan ke Google Sheets Cikgu Zainal.
         </p>
         
-        <!-- Kad Status Dihantar (Tepat Pada Masa atau Lewat) -->
         <div id="resTimingCard" class="p-3.5 rounded-xl text-xs font-bold flex items-center justify-between border bg-slate-50 border-slate-200">
           <span class="text-slate-600">Status Waktu Penghantaran:</span>
           <span id="resTimingBadge" class="px-3 py-1 rounded-full text-xs font-extrabold">-</span>
@@ -240,6 +239,7 @@
 
     <!-- ========================================== -->
     <!-- BAHAGIAN 2: SEMAK STATUS KEPUTUSAN (MURID) -->
+    <!-- (DROPDOWN SAHAJA & NOTA SEMAKAN GURU)      -->
     <!-- ========================================== -->
     <div id="statusSection" class="hidden fade-in space-y-6">
       <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 max-w-xl mx-auto">
@@ -248,26 +248,45 @@
             <img src="logo.png" alt="Logo SMK SEMEKAR" class="max-w-full max-h-full object-contain"
                  onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'text-2xl text-indigo-700\'><i class=\'fa-solid fa-magnifying-glass\'></i></div>';">
           </div>
-          <h2 class="text-2xl font-bold text-slate-800">Semak Keputusan Langsung</h2>
-          <p class="text-xs text-slate-500">Pilih kelas dan masukkan nama penuh anda untuk membuat semakan dari Google Sheets.</p>
+          <h2 class="text-2xl font-bold text-slate-800">Semak Keputusan Murid</h2>
+          
+          <!-- NOTA UTAMA MENGIKUT PERMINTAAN -->
+          <div class="p-3.5 bg-amber-50 border border-amber-300 rounded-xl text-amber-900 text-xs font-semibold text-left flex items-start gap-2.5">
+            <i class="fa-solid fa-circle-exclamation text-amber-600 text-sm mt-0.5 flex-shrink-0"></i>
+            <div>
+              <span class="font-bold uppercase tracking-wider block text-amber-950 mb-0.5">Peringatan Semakan:</span>
+              Keputusan, markah, dan skema jawapan <strong>hanya boleh ditunjukkan selepas Cikgu Zainal selesai menyemak tugasan anda</strong>. Jika status masih belum disemak, paparan keputusan akan kekal dikunci.
+            </div>
+          </div>
         </div>
 
+        <!-- BORANG DROPDOWN SAHAJA -->
         <div class="space-y-4">
           <div>
-            <label class="block text-xs font-semibold text-slate-700 mb-1">Pilih Kelas</label>
-            <select id="lookupClass" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-              <option value="3S1">3S1</option>
-              <option value="3S2">3S2</option>
+            <label class="block text-xs font-bold text-slate-700 mb-1">1. Pilih Kelas</label>
+            <select id="lookupClass" onchange="onLookupFilterChange()" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-slate-700">
+              <option value="" disabled selected>-- Sila Pilih Kelas --</option>
+              <option value="3S1">3S1 (Tingkatan 3)</option>
+              <option value="3S2">3S2 (Tingkatan 3)</option>
             </select>
           </div>
+
           <div>
-            <label class="block text-xs font-semibold text-slate-700 mb-1">Nama Penuh Murid</label>
-            <input type="text" id="lookupName" placeholder="Masukkan nama penuh seperti semasa daftar" 
-                   class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 uppercase" />
+            <label class="block text-xs font-bold text-slate-700 mb-1">2. Pilih Mata Pelajaran</label>
+            <select id="lookupSubject" onchange="onLookupFilterChange()" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-slate-700">
+              <option value="RBT Tingkatan 3" selected>Reka Bentuk dan Teknologi (RBT) Tingkatan 3</option>
+            </select>
           </div>
-          <button onclick="lookupStudentResultFromSheet()" id="lookupBtn" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-sm transition flex items-center justify-center gap-2">
-            <span>Semak Keputusan dari Google Sheets</span>
-          </button>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">3. Pilih Nama Murid (Senarai Telah Hantar)</label>
+            <select id="lookupStudentSelect" onchange="onStudentSelectChange()" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-slate-700" disabled>
+              <option value="">-- Sila pilih kelas terlebih dahulu --</option>
+            </select>
+            <p id="lookupLoadingNote" class="text-[11px] text-slate-400 mt-1 italic hidden">
+              <i class="fa-solid fa-spinner fa-spin"></i> Memuat turun senarai murid dari Google Sheets...
+            </p>
+          </div>
         </div>
 
         <div id="lookupResultContainer" class="mt-6 hidden"></div>
@@ -367,7 +386,7 @@
           </div>
         </div>
 
-        <!-- Jadual Data Langsung Dari Google Sheets (Dengan Penapis Kelas & Status Waktu) -->
+        <!-- Jadual Data Langsung Dari Google Sheets -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
           <div class="p-5 border-b border-slate-200 flex flex-wrap justify-between items-center gap-3">
             <div>
@@ -611,7 +630,9 @@
     </div>
   </div>
 
-  <!-- FOOTER -->
+  <!-- ========================================== -->
+  <!-- FOOTER (DIKEMAS KINI KE 'WebApp Cikgu Enal')-->
+  <!-- ========================================== -->
   <footer class="bg-slate-900 text-slate-400 py-6 text-xs text-center border-t border-slate-800 no-print">
     <div class="max-w-6xl mx-auto px-4 flex flex-col items-center justify-center space-y-2">
       <div class="w-8 h-8 rounded-lg bg-white/5 p-1 flex items-center justify-center border border-white/10">
@@ -619,17 +640,16 @@
              onerror="this.onerror=null; this.parentElement.style.display='none';">
       </div>
       <p class="font-semibold text-slate-300">Hak Cipta Terpelihara &copy; 2026 Kelas Cikgu Zainal &bull; SMK SEMEKAR</p>
-      <p>Dihoskan di GitHub Pages &bull; Domain: <span class="text-amber-400">zainal.semekar.com</span> &bull; Google Sheets Database</p>
+      <p class="text-amber-400 font-bold tracking-wide">WebApp Cikgu Enal</p>
     </div>
   </footer>
 
-  <!-- SCRIPT APLIKASI WEB & LOGIK STATUS 'LEWAT' -->
+  <!-- SCRIPT APLIKASI WEB & LOGIK DROPDOWN KEPUTUSAN -->
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxrPzsXB7xn8U4vI6LdCZQojLdmQRYOEqXL0mjAS_g-NwXNUR8Nj4x7W4yt5OH_Qh3GSQ/exec";
 
     /* ==========================================================
        PENGIRAAN & KAWALAN HAD MASA (5:00 PETANG HARI INI)
-       MURID MASIH BOLEH HANTAR, STATUS DIREKOD SEBAGAI 'LEWAT'
     ========================================================== */
     function getTodayDeadline() {
       const d = new Date();
@@ -659,7 +679,6 @@
       const submitBtnText = document.getElementById('submitBtnText');
 
       if (isLate) {
-        // LEPAS 5:00 PM
         const overdueMs = Math.abs(diff);
         const oHours = Math.floor(overdueMs / (1000 * 60 * 60));
         const oMins = Math.floor((overdueMs % (1000 * 60 * 60)) / (1000 * 60));
@@ -678,14 +697,12 @@
 
         if (lateNotice) lateNotice.classList.remove('hidden');
 
-        // Butang kekal AKTIF dan boleh ditekan
         if (submitBtn) {
           submitBtn.disabled = false;
           submitBtn.className = "px-8 py-3.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2 mx-auto";
         }
         if (submitBtnText) submitBtnText.innerText = "Hantar Tugasan (Rekod Sebagai Lewat)";
       } else {
-        // SEBELUM 5:00 PM
         const hours = Math.floor(diff / (1000 * 60 * 60));
         const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const secs = Math.floor((diff % (1000 * 60)) / 1000);
@@ -755,6 +772,8 @@
       } else if (tab === 'status') {
         stSec.classList.remove('hidden');
         stBtn.className = "px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-indigo-700 text-white flex items-center gap-1.5";
+        // Muat turun data terkini untuk mengisi dropdown murid secara automatik
+        ensureDataLoadedForLookup();
       } else {
         aSec.classList.remove('hidden');
         aBtn.className = "px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-indigo-700 text-white flex items-center gap-1.5";
@@ -926,129 +945,171 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    /* SEMAK STATUS KEPUTUSAN DARI GOOGLE SHEETS */
-    async function lookupStudentResultFromSheet() {
-      const name = document.getElementById('lookupName').value.trim().toUpperCase();
-      const cls = document.getElementById('lookupClass').value;
-      const container = document.getElementById('lookupResultContainer');
-      const btn = document.getElementById('lookupBtn');
-
-      if (!name) return alert("Sila masukkan nama anda!");
-
-      btn.disabled = true;
-      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Membaca Data Google Sheet...`;
-
+    /* ==========================================================
+       LOGIK SEMAK KEPUTUSAN (DROPDOWN SAHAJA & NOTA SEMAKAN)
+    ========================================================== */
+    async function ensureDataLoadedForLookup() {
+      const note = document.getElementById('lookupLoadingNote');
+      if (note) note.classList.remove('hidden');
       try {
         const response = await fetch(SCRIPT_URL);
         const result = await response.json();
-        const list = result.data || [];
-        
-        container.classList.remove('hidden');
-        const found = list.find(s => s.name.toUpperCase() === name && s.class === cls);
+        cachedSheetSubmissions = result.data || [];
+      } catch (e) {
+        console.error("Gagal muat data Google Sheet:", e);
+      }
+      if (note) note.classList.add('hidden');
+      onLookupFilterChange();
+    }
 
-        if (!found) {
-          container.innerHTML = `
-            <div class="p-4 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 text-xs text-center">
-              <i class="fa-solid fa-circle-exclamation text-base mb-1 block"></i>
-              Tiada rekod penghantaran dijumpai dalam Google Sheets untuk <strong>${name}</strong> (${cls}). Sila pastikan pilihan kelas dan ejaan nama adalah tepat.
-            </div>
-          `;
-        } else if (found.reviewStatus.indexOf("Telah Disemak") === -1) {
-          const isLate = found.isLate || found.timestamp.indexOf("LEWAT") !== -1 || found.reviewStatus.indexOf("Lewat") !== -1;
-          container.innerHTML = `
-            <div class="p-5 bg-amber-50 border border-amber-200 rounded-xl text-center space-y-3">
-              <div class="w-12 h-12 bg-amber-100 text-amber-700 rounded-full flex items-center justify-center mx-auto text-xl font-bold">
-                <i class="fa-solid fa-hourglass-start"></i>
-              </div>
-              <h4 class="font-bold text-slate-800 text-sm">Tugasan Sedang Disemak oleh Guru</h4>
-              <p class="text-xs text-slate-600">
-                Kelas: <strong>${found.class}</strong> &bull; Masa: <strong>${found.timestamp}</strong> 
-                ${isLate ? '<span class="ml-1 px-2 py-0.5 bg-rose-100 text-rose-800 text-[10px] font-bold rounded-full">LEWAT</span>' : '<span class="ml-1 px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded-full">TEPAT MASA</span>'}
-              </p>
-              <div class="p-3 bg-white rounded-lg border border-amber-200 text-xs text-amber-800">
-                <i class="fa-solid fa-lock"></i> Jawapan dan markah penuh akan dipaparkan secara automatik sebaik sahaja Cikgu Zainal selesai memeriksa jawapan anda di Google Sheets.
-              </div>
-            </div>
-          `;
-        } else {
-          // TELAH DISEMAK
-          const isLate = found.isLate || found.timestamp.indexOf("LEWAT") !== -1 || found.reviewStatus.indexOf("Lewat") !== -1;
-          const objScore = parseInt(found.objScore) || 0;
-          const subjScore = parseInt(found.subjMark) || 0;
-          const totalScore = objScore + subjScore;
-          const totalPercent = Math.round((totalScore / 30) * 100);
+    function onLookupFilterChange() {
+      const selectedClass = document.getElementById('lookupClass').value;
+      const studentSelect = document.getElementById('lookupStudentSelect');
+      const resultContainer = document.getElementById('lookupResultContainer');
 
-          let objReviewHtml = "";
-          objectiveQuestions.forEach((q, idx) => {
-            const studentAnsIdx = found.objAnswers ? found.objAnswers[idx] : null;
-            const isCorrect = studentAnsIdx === q.answer;
-            const studentAnsText = studentAnsIdx !== null && studentAnsIdx !== undefined ? q.options[studentAnsIdx] : "Tiada jawapan";
-            const correctAnsText = q.options[q.answer];
+      resultContainer.classList.add('hidden');
+      resultContainer.innerHTML = "";
 
-            objReviewHtml += `
-              <div class="p-3 rounded-lg border ${isCorrect ? 'border-emerald-200 bg-emerald-50/40' : 'border-rose-200 bg-rose-50/40'} text-xs space-y-1">
-                <div class="flex justify-between font-semibold text-slate-800">
-                  <span>S${idx + 1}. ${q.question}</span>
-                  <span class="${isCorrect ? 'text-emerald-700 font-bold' : 'text-rose-600 font-bold'}">${isCorrect ? '✓ Betul (1m)' : '✗ Salah (0m)'}</span>
-                </div>
-                <div class="text-slate-600">Jawapan Anda: <span class="font-medium">${studentAnsText}</span></div>
-                ${!isCorrect ? `<div class="text-emerald-800 font-semibold">Skema Tepat: ${correctAnsText}</div>` : ''}
-              </div>
-            `;
-          });
-
-          container.innerHTML = `
-            <div class="p-5 bg-white border border-emerald-300 rounded-xl space-y-5 shadow-sm">
-              <div class="flex flex-wrap justify-between items-center pb-3 border-b border-slate-200">
-                <div>
-                  <div class="flex items-center gap-2">
-                    <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-md">Telah Disemak</span>
-                    ${isLate ? '<span class="text-xs bg-rose-100 text-rose-800 font-extrabold px-2 py-0.5 rounded-md border border-rose-300">Dihantar Lewat</span>' : '<span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-md">Tepat Pada Masa</span>'}
-                  </div>
-                  <h4 class="font-bold text-slate-800 text-base mt-1">${found.name}</h4>
-                  <p class="text-xs text-slate-500">Kelas: <span class="font-bold text-indigo-700">${found.class}</span> &bull; Tarikh: ${found.timestamp}</p>
-                </div>
-                <button onclick="triggerPrintSlip(${JSON.stringify(found).replace(/"/g, '&quot;')})" class="mt-2 sm:mt-0 px-3.5 py-2 bg-indigo-700 hover:bg-indigo-800 text-white rounded-lg text-xs font-bold shadow flex items-center gap-1.5">
-                  <i class="fa-solid fa-file-pdf"></i> Cetak Slip Keputusan PDF
-                </button>
-              </div>
-
-              <div class="grid grid-cols-3 gap-2 text-center">
-                <div class="bg-indigo-50 p-2.5 rounded-lg border border-indigo-100">
-                  <span class="text-[10px] text-slate-500 block uppercase font-bold">Objektif</span>
-                  <span class="text-base font-extrabold text-indigo-700">${objScore} / 10</span>
-                </div>
-                <div class="bg-blue-50 p-2.5 rounded-lg border border-blue-100">
-                  <span class="text-[10px] text-slate-500 block uppercase font-bold">Subjektif</span>
-                  <span class="text-base font-extrabold text-blue-700">${found.subjMark} / 20</span>
-                </div>
-                <div class="bg-emerald-50 p-2.5 rounded-lg border border-emerald-100">
-                  <span class="text-[10px] text-slate-500 block uppercase font-bold">Jumlah (${totalPercent}%)</span>
-                  <span class="text-base font-extrabold text-emerald-700">${totalScore} / 30</span>
-                </div>
-              </div>
-
-              ${found.teacherComment ? `
-                <div class="p-3 bg-amber-50 rounded-lg border border-amber-200 text-xs">
-                  <span class="font-bold text-amber-900 block mb-0.5"><i class="fa-solid fa-comment-dots"></i> Komen Cikgu Zainal:</span>
-                  <p class="italic text-slate-700">${found.teacherComment}</p>
-                </div>
-              ` : ''}
-
-              <div class="space-y-3 pt-2">
-                <h5 class="text-xs font-bold uppercase text-slate-700 border-b pb-1">Skema & Semakan 10 Soalan Objektif:</h5>
-                <div class="space-y-2">${objReviewHtml}</div>
-              </div>
-            </div>
-          `;
-        }
-      } catch (err) {
-        alert("Ralat semasa menyambung ke Google Sheets.");
-        console.error(err);
+      if (!selectedClass) {
+        studentSelect.disabled = true;
+        studentSelect.innerHTML = `<option value="">-- Sila pilih kelas terlebih dahulu --</option>`;
+        return;
       }
 
-      btn.disabled = false;
-      btn.innerHTML = `<span>Semak Keputusan dari Google Sheets</span>`;
+      // Tapis senarai murid bagi kelas yang dipilih
+      const filtered = cachedSheetSubmissions.filter(s => s.class === selectedClass);
+
+      if (filtered.length === 0) {
+        studentSelect.disabled = true;
+        studentSelect.innerHTML = `<option value="">Tiada murid telah hantar bagi kelas ${selectedClass}</option>`;
+        return;
+      }
+
+      studentSelect.disabled = false;
+      let optHtml = `<option value="" disabled selected>-- Pilih Nama Murid (${filtered.length} telah hantar) --</option>`;
+      filtered.forEach(sub => {
+        const realIdx = cachedSheetSubmissions.indexOf(sub);
+        optHtml += `<option value="${realIdx}">${sub.name}</option>`;
+      });
+
+      studentSelect.innerHTML = optHtml;
+    }
+
+    function onStudentSelectChange() {
+      const studentSelect = document.getElementById('lookupStudentSelect');
+      const selectedIdx = studentSelect.value;
+      const container = document.getElementById('lookupResultContainer');
+
+      if (selectedIdx === "") {
+        container.classList.add('hidden');
+        return;
+      }
+
+      const found = cachedSheetSubmissions[parseInt(selectedIdx)];
+      if (!found) return;
+
+      container.classList.remove('hidden');
+
+      // SEMAK STATUS: JIKA BELUM DISEMAK GURU, JAWAPAN & MARKAH DIKUNCI
+      const isReviewed = found.reviewStatus && found.reviewStatus.indexOf("Telah Disemak") !== -1;
+      const isLate = found.isLate || found.timestamp.indexOf("LEWAT") !== -1 || (found.reviewStatus && found.reviewStatus.indexOf("Lewat") !== -1);
+
+      if (!isReviewed) {
+        // PAPARAN KUNCI (BELUM DISEMAK)
+        container.innerHTML = `
+          <div class="p-5 bg-amber-50 border-2 border-amber-300 rounded-2xl text-center space-y-3.5 shadow-sm animate-scale">
+            <div class="w-14 h-14 bg-amber-100 text-amber-700 rounded-2xl flex items-center justify-center mx-auto text-2xl font-bold border border-amber-200">
+              <i class="fa-solid fa-lock"></i>
+            </div>
+            <div>
+              <span class="px-2.5 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wide bg-amber-200 text-amber-900">
+                Status: Menunggu Semakan Guru
+              </span>
+              <h4 class="font-extrabold text-slate-800 text-lg mt-2">${found.name}</h4>
+              <p class="text-xs text-slate-600 mt-0.5">
+                Kelas: <strong>${found.class}</strong> &bull; Dihantar: <span class="font-mono">${found.timestamp}</span>
+                ${isLate ? '<span class="ml-1 px-2 py-0.5 bg-rose-100 text-rose-800 text-[10px] font-bold rounded-full">LEWAT</span>' : '<span class="ml-1 px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded-full">TEPAT MASA</span>'}
+              </p>
+            </div>
+            
+            <div class="p-3.5 bg-white rounded-xl border border-amber-200 text-xs text-amber-950 text-left leading-relaxed shadow-inner">
+              <i class="fa-solid fa-shield-halved text-amber-600 mr-1"></i>
+              <strong>Keputusan Belum Boleh Ditunjukkan:</strong><br>
+              Tugasan anda telah berjaya direkodkan dalam Google Sheet. Walau bagaimanapun, markah dan skema jawapan <strong>hanya akan dibuka secara automatik selepas Cikgu Zainal menyemak dan meluluskan jawapan anda</strong>. Sila semak semula kemudian.
+            </div>
+          </div>
+        `;
+      } else {
+        // TELAH DISEMAK: PAPAR KEPUTUSAN PENUH & CETAK SLIP PDF
+        const objScore = parseInt(found.objScore) || 0;
+        const subjScore = parseInt(found.subjMark) || 0;
+        const totalScore = objScore + subjScore;
+        const totalPercent = Math.round((totalScore / 30) * 100);
+
+        let objReviewHtml = "";
+        objectiveQuestions.forEach((q, idx) => {
+          const studentAnsIdx = found.objAnswers ? found.objAnswers[idx] : null;
+          const isCorrect = studentAnsIdx === q.answer;
+          const studentAnsText = studentAnsIdx !== null && studentAnsIdx !== undefined ? q.options[studentAnsIdx] : "Tiada jawapan";
+          const correctAnsText = q.options[q.answer];
+
+          objReviewHtml += `
+            <div class="p-3 rounded-lg border ${isCorrect ? 'border-emerald-200 bg-emerald-50/40' : 'border-rose-200 bg-rose-50/40'} text-xs space-y-1">
+              <div class="flex justify-between font-semibold text-slate-800">
+                <span>S${idx + 1}. ${q.question}</span>
+                <span class="${isCorrect ? 'text-emerald-700 font-bold' : 'text-rose-600 font-bold'}">${isCorrect ? '✓ Betul (1m)' : '✗ Salah (0m)'}</span>
+              </div>
+              <div class="text-slate-600">Jawapan Anda: <span class="font-medium">${studentAnsText}</span></div>
+              ${!isCorrect ? `<div class="text-emerald-800 font-semibold">Skema Tepat: ${correctAnsText}</div>` : ''}
+            </div>
+          `;
+        });
+
+        container.innerHTML = `
+          <div class="p-5 bg-white border border-emerald-300 rounded-2xl space-y-5 shadow-sm">
+            <div class="flex flex-wrap justify-between items-center pb-3 border-b border-slate-200">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded-md">Telah Disemak & Disahkan</span>
+                  ${isLate ? '<span class="text-xs bg-rose-100 text-rose-800 font-extrabold px-2 py-0.5 rounded-md border border-rose-300">Dihantar Lewat</span>' : '<span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-md">Tepat Pada Masa</span>'}
+                </div>
+                <h4 class="font-bold text-slate-800 text-base mt-1">${found.name}</h4>
+                <p class="text-xs text-slate-500">Kelas: <span class="font-bold text-indigo-700">${found.class}</span> &bull; Tarikh: ${found.timestamp}</p>
+              </div>
+              <button onclick="triggerPrintSlip(${JSON.stringify(found).replace(/"/g, '&quot;')})" class="mt-2 sm:mt-0 px-3.5 py-2 bg-indigo-700 hover:bg-indigo-800 text-white rounded-lg text-xs font-bold shadow flex items-center gap-1.5">
+                <i class="fa-solid fa-file-pdf"></i> Cetak Slip Keputusan PDF
+              </button>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 text-center">
+              <div class="bg-indigo-50 p-2.5 rounded-lg border border-indigo-100">
+                <span class="text-[10px] text-slate-500 block uppercase font-bold">Objektif</span>
+                <span class="text-base font-extrabold text-indigo-700">${objScore} / 10</span>
+              </div>
+              <div class="bg-blue-50 p-2.5 rounded-lg border border-blue-100">
+                <span class="text-[10px] text-slate-500 block uppercase font-bold">Subjektif</span>
+                <span class="text-base font-extrabold text-blue-700">${found.subjMark} / 20</span>
+              </div>
+              <div class="bg-emerald-50 p-2.5 rounded-lg border border-emerald-100">
+                <span class="text-[10px] text-slate-500 block uppercase font-bold">Jumlah (${totalPercent}%)</span>
+                <span class="text-base font-extrabold text-emerald-700">${totalScore} / 30</span>
+              </div>
+            </div>
+
+            ${found.teacherComment ? `
+              <div class="p-3 bg-amber-50 rounded-lg border border-amber-200 text-xs">
+                <span class="font-bold text-amber-900 block mb-0.5"><i class="fa-solid fa-comment-dots"></i> Komen Cikgu Zainal:</span>
+                <p class="italic text-slate-700">${found.teacherComment}</p>
+              </div>
+            ` : ''}
+
+            <div class="space-y-3 pt-2">
+              <h5 class="text-xs font-bold uppercase text-slate-700 border-b pb-1">Skema & Semakan 10 Soalan Objektif:</h5>
+              <div class="space-y-2">${objReviewHtml}</div>
+            </div>
+          </div>
+        `;
+      }
     }
 
     /* DASHBOARD GURU: BACA DATA GOOGLE SHEETS */
@@ -1095,11 +1156,10 @@
         const result = await response.json();
         cachedSheetSubmissions = result.data || [];
 
-        // Kira statistik
         document.getElementById('statTotalSubmissions').innerText = cachedSheetSubmissions.length;
         const pendingCount = cachedSheetSubmissions.filter(item => item.reviewStatus.indexOf("Telah Disemak") === -1).length;
         document.getElementById('statPendingReview').innerText = pendingCount;
-        const lateCount = cachedSheetSubmissions.filter(item => item.isLate || item.timestamp.indexOf("LEWAT") !== -1 || item.reviewStatus.indexOf("Lewat") !== -1).length;
+        const lateCount = cachedSheetSubmissions.filter(item => item.isLate || item.timestamp.indexOf("LEWAT") !== -1 || (item.reviewStatus && item.reviewStatus.indexOf("Lewat") !== -1)).length;
         document.getElementById('statLateSubmissions').innerText = lateCount;
 
         renderTableRows();
@@ -1125,9 +1185,9 @@
       }
 
       if (timingFilter === "ON_TIME") {
-        filteredList = filteredList.filter(s => !s.isLate && s.timestamp.indexOf("LEWAT") === -1 && s.reviewStatus.indexOf("Lewat") === -1);
+        filteredList = filteredList.filter(s => !s.isLate && s.timestamp.indexOf("LEWAT") === -1 && (!s.reviewStatus || s.reviewStatus.indexOf("Lewat") === -1));
       } else if (timingFilter === "LATE") {
-        filteredList = filteredList.filter(s => s.isLate || s.timestamp.indexOf("LEWAT") !== -1 || s.reviewStatus.indexOf("Lewat") !== -1);
+        filteredList = filteredList.filter(s => s.isLate || s.timestamp.indexOf("LEWAT") !== -1 || (s.reviewStatus && s.reviewStatus.indexOf("Lewat") !== -1));
       }
 
       tbody.innerHTML = "";
@@ -1138,8 +1198,8 @@
 
       filteredList.forEach((sub) => {
         const realIdx = cachedSheetSubmissions.indexOf(sub);
-        const isReviewed = sub.reviewStatus.indexOf("Telah Disemak") !== -1;
-        const isLate = sub.isLate || sub.timestamp.indexOf("LEWAT") !== -1 || sub.reviewStatus.indexOf("Lewat") !== -1;
+        const isReviewed = sub.reviewStatus && sub.reviewStatus.indexOf("Telah Disemak") !== -1;
+        const isLate = sub.isLate || sub.timestamp.indexOf("LEWAT") !== -1 || (sub.reviewStatus && sub.reviewStatus.indexOf("Lewat") !== -1);
 
         const badgeClass = isReviewed ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800";
         const classBadgeColor = sub.class === "3S1" ? "bg-blue-100 text-blue-800" : "bg-purple-100 text-purple-800";
@@ -1174,7 +1234,7 @@
     function openReviewModal(index) {
       selectedStudentIndex = index;
       const student = cachedSheetSubmissions[index];
-      const isLate = student.isLate || student.timestamp.indexOf("LEWAT") !== -1 || student.reviewStatus.indexOf("Lewat") !== -1;
+      const isLate = student.isLate || student.timestamp.indexOf("LEWAT") !== -1 || (student.reviewStatus && student.reviewStatus.indexOf("Lewat") !== -1);
 
       document.getElementById('modalStudentName').innerText = student.name;
       document.getElementById('modalStudentMeta').innerText = `Kelas: ${student.class} • Baris Sheet: ${student.rowIndex} • Masa: ${student.timestamp}`;
@@ -1285,7 +1345,7 @@
 
     /* CETAK SLIP KEPUTUSAN PDF */
     function triggerPrintSlip(student) {
-      const isLate = student.isLate || student.timestamp.indexOf("LEWAT") !== -1 || student.reviewStatus.indexOf("Lewat") !== -1;
+      const isLate = student.isLate || student.timestamp.indexOf("LEWAT") !== -1 || (student.reviewStatus && student.reviewStatus.indexOf("Lewat") !== -1);
       const obj = parseInt(student.objScore) || 0;
       const subj = parseInt(student.subjMark) || 0;
       const total = obj + subj;
