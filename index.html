@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Kelas Cikgu Zainal | SEMEKAR</title>
+  <!-- Tailwind CSS & FontAwesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .fade-in { animation: fadeIn 0.3s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Gaya Khusus Cetakan Slip PDF */
+    @media print {
+      body * { visibility: hidden; }
+      #printableSlip, #printableSlip * { visibility: visible; }
+      #printableSlip {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 24px;
+        background: white;
+        color: black;
+      }
+      .no-print { display: none !important; }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+  <!-- ========================================== -->
+  <!-- NAVBAR                                     -->
+  <!-- ========================================== -->
+  <header class="bg-indigo-900 text-white shadow-lg sticky top-0 z-40 no-print">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-amber-400 text-indigo-950 flex items-center justify-center font-bold text-xl shadow">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold tracking-tight">PORTAL KELAS CIKGU ZAINAL</h1>
+          <p class="text-xs text-indigo-200">SMK SEMEKAR &bull; zainal.semekar.com</p>
+        </div>
+      </div>
+      <nav class="flex items-center space-x-2 mt-2 sm:mt-0">
+        <button id="navStudentBtn" onclick="switchTab('student')" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-indigo-700 text-white flex items-center gap-1.5">
+          <i class="fa-solid fa-book-open"></i> Latihan
+        </button>
+        <button id="navStatusBtn" onclick="switchTab('status')" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-transparent text-indigo-200 hover:bg-indigo-800 hover:text-white flex items-center gap-1.5">
+          <i class="fa-solid fa-square-poll-vertical"></i> Semak Keputusan
+        </button>
+        <button id="navAdminBtn" onclick="switchTab('admin')" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-transparent text-indigo-200 hover:bg-indigo-800 hover:text-white flex items-center gap-1.5">
+          <i class="fa-solid fa-gauge-high"></i> Dashboard
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- KANDUNGAN UTAMA                            -->
+  <!-- ========================================== -->
+  <main class="max-w-5xl mx-auto px-4 py-8 flex-grow w-full no-print">
+
+    <!-- ========================================== -->
+    <!-- BAHAGIAN 1: KELAS & LATIHAN (MURID)        -->
+    <!-- ========================================== -->
+    <div id="studentSection" class="fade-in space-y-6">
+
+      <!-- Langkah 1: Pendaftaran Masuk Kelas -->
+      <div id="regBox" class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+        <div class="max-w-xl mx-auto text-center space-y-3">
+          <span class="inline-block px-3 py-1 bg-indigo-100 text-indigo-800 text-xs font-semibold rounded-full uppercase tracking-wider">
+            Sesi Tugasan Atas Talian
+          </span>
+          <h2 class="text-2xl font-extrabold text-slate-800">Daftar Masuk Kelas</h2>
+          <p class="text-sm text-slate-500">Pilih kelas dan masukkan nama penuh anda untuk memulakan latihan RBT Tingkatan 3.</p>
+        </div>
+
+        <div class="max-w-md mx-auto mt-6 space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Pilih Kelas</label>
+            <div class="relative">
+              <select id="classSelect" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-700 font-medium appearance-none">
+                <option value="" disabled selected>-- Sila Pilih Kelas --</option>
+                <option value="3S2">3S2 (Tingkatan 3)</option>
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
+                <i class="fa-solid fa-chevron-down text-sm"></i>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Nama Penuh Murid</label>
+            <input type="text" id="studentNameInput" placeholder="Contoh: MUHAMMAD HAZIQ BIN AZMAN" 
+                   class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-700 uppercase" />
+          </div>
+
+          <button onclick="startExercise()" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md transition flex items-center justify-center gap-2">
+            <span>Daftar & Mula Menjawab</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Langkah 2: Borang Menjawab Soalan Latihan -->
+      <div id="quizBox" class="hidden space-y-8">
+        
+        <!-- Bar Maklumat Murid -->
+        <div class="bg-indigo-900 text-white rounded-2xl p-5 shadow flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <div class="text-xs text-indigo-300 font-medium">MAKLUMAT MURID & TUGASAN</div>
+            <div class="text-lg font-bold" id="badgeStudentName">-</div>
+            <div class="text-xs text-indigo-200 mt-0.5">
+              Kelas: <span class="font-semibold text-amber-300" id="badgeStudentClass">3S2</span> &bull; 
+              Mata Pelajaran: <span class="font-semibold text-amber-300">Reka Bentuk dan Teknologi (RBT) Tingkatan 3</span>
+            </div>
+          </div>
+          <button onclick="resetRegistration()" class="text-xs bg-indigo-800 hover:bg-indigo-700 px-3 py-1.5 rounded-lg border border-indigo-600">
+            Tukar Nama / Kelas
+          </button>
+        </div>
+
+        <!-- Bahagian A: 10 Soalan Objektif -->
+        <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-6">
+          <div class="border-b border-slate-200 pb-4 flex items-center justify-between">
+            <div>
+              <h3 class="text-xl font-bold text-slate-800">Bahagian A: 10 Soalan Objektif</h3>
+              <p class="text-sm text-slate-500">Pilih satu jawapan yang paling tepat bagi setiap soalan. (10 Markah)</p>
+            </div>
+            <span class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded-full">10 Soalan</span>
+          </div>
+          <div id="objectiveQuestionsList" class="space-y-6"></div>
+        </div>
+
+        <!-- Bahagian B: 5 Soalan Subjektif -->
+        <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-6">
+          <div class="border-b border-slate-200 pb-4 flex items-center justify-between">
+            <div>
+              <h3 class="text-xl font-bold text-slate-800">Bahagian B: 5 Soalan Subjektif</h3>
+              <p class="text-sm text-slate-500">Tulis jawapan penerangan anda dengan jelas dan padat.</p>
+            </div>
+            <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-bold rounded-full">5 Soalan</span>
+          </div>
+          <div id="subjectiveQuestionsList" class="space-y-6"></div>
+        </div>
+
+        <!-- Butang Hantar Tugasan -->
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 text-center">
+          <p class="text-xs text-slate-500 mb-3">Peringatan: Jawapan dan keputusan tidak akan dipaparkan serta-merta. Semakan penuh akan dibuat oleh Cikgu Zainal.</p>
+          <button onclick="submitQuiz()" id="submitBtn" class="px-8 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2 mx-auto">
+            <i class="fa-solid fa-paper-plane"></i>
+            <span>Hantar Tugasan Sekarang</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Langkah 3: Pengesahan Dihantar (Tiada Markah / Jawapan Dibocorkan) -->
+      <div id="resultBox" class="hidden bg-white rounded-2xl p-8 shadow-sm border border-slate-200 text-center space-y-4 max-w-lg mx-auto">
+        <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-3xl">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+        </div>
+        <h3 class="text-2xl font-bold text-slate-800">Tugasan Berjaya Dihantar!</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">
+          Terima kasih <span class="font-bold text-slate-800" id="resName">-</span>. Jawapan anda telah selamat direkodkan ke pangkalan data Cikgu Zainal.
+        </p>
+        
+        <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl text-left space-y-2 text-xs text-amber-900">
+          <div class="flex items-center gap-2 font-bold text-sm text-amber-950 mb-1">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>Status Keputusan: MENUNGGU SEMAKAN GURU</span>
+          </div>
+          <p>
+            Bagi menjamin integriti pentaksiran bilik darjah, <strong>markah dan skema jawapan tidak dipaparkan sekarang</strong>.
+          </p>
+          <p>
+            Sila gunakan tab <strong>"Semak Keputusan"</strong> di bahagian atas selepas Cikgu Zainal selesai memeriksa jawapan anda.
+          </p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-2 justify-center pt-2">
+          <button onclick="switchTab('status')" class="px-4 py-2.5 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-700 transition">
+            Ke Laman Semak Keputusan
+          </button>
+          <button onclick="resetRegistration()" class="px-4 py-2.5 bg-slate-100 text-slate-700 rounded-xl text-xs font-semibold hover:bg-slate-200 transition">
+            Hantar Respons Baharu
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- BAHAGIAN 2: SEMAK STATUS KEPUTUSAN (MURID) -->
+    <!-- ========================================== -->
+    <div id="statusSection" class="hidden fade-in space-y-6">
+      <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 max-w-xl mx-auto">
+        <div class="text-center space-y-2 mb-6">
+          <div class="w-12 h-12 bg-indigo-100 text-indigo-700 rounded-2xl flex items-center justify-center mx-auto text-xl font-bold">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </div>
+          <h2 class="text-2xl font-bold text-slate-800">Semak Keputusan & Jawapan</h2>
+          <p class="text-xs text-slate-500">Masukkan nama dan kelas untuk melihat markah serta skema yang telah disahkan oleh Cikgu Zainal.</p>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Pilih Kelas</label>
+            <select id="lookupClass" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="3S2">3S2</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Nama Penuh Murid</label>
+            <input type="text" id="lookupName" placeholder="Masukkan nama penuh seperti semasa daftar" 
+                   class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 uppercase" />
+          </div>
+          <button onclick="lookupStudentResult()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-sm transition">
+            Semak Status Keputusan
+          </button>
+        </div>
+
+        <!-- Keputusan Paparan Murid -->
+        <div id="lookupResultContainer" class="mt-6 hidden"></div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- BAHAGIAN 3: DASHBOARD GURU (CIKGU ZAINAL)  -->
+    <!-- ========================================== -->
+    <div id="adminSection" class="hidden fade-in space-y-6">
+
+      <!-- Login Guru -->
+      <div id="adminLoginBox" class="bg-white rounded-2xl p-8 shadow-sm border border-slate-200 max-w-md mx-auto text-center space-y-4">
+        <div class="w-14 h-14 bg-indigo-100 text-indigo-700 rounded-2xl flex items-center justify-center mx-auto text-2xl shadow-inner">
+          <i class="fa-solid fa-lock"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-slate-800">Akses Dashboard Guru</h2>
+        <p class="text-xs text-slate-500">Sila masukkan kata laluan untuk menyemak tugasan murid.</p>
+
+        <div class="space-y-3 pt-2">
+          <input type="password" id="adminPassInput" placeholder="Kata Laluan Pentadbir" 
+                 class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none text-center font-semibold tracking-wider" />
+          <button onclick="loginAdmin()" class="w-full py-3 bg-indigo-900 hover:bg-indigo-800 text-white font-bold rounded-xl shadow transition text-sm">
+            Log Masuk
+          </button>
+        </div>
+        <p id="adminLoginErr" class="text-xs text-rose-500 font-semibold hidden">Kata laluan tidak tepat!</p>
+      </div>
+
+      <!-- Panel Pengurusan Guru -->
+      <div id="adminPanelBox" class="hidden space-y-6">
+
+        <!-- Header Dashboard -->
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-4">
+          <div>
+            <h2 class="text-2xl font-extrabold text-slate-800 flex items-center gap-2">
+              <span>Dashboard Cikgu Zainal</span>
+              <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-full">Sesi Aktif</span>
+            </h2>
+            <p class="text-sm text-slate-500 mt-1">Pemantauan & Semakan Latihan RBT Tingkatan 3</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="refreshData()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-rotate"></i> Muat Semula
+            </button>
+            <button onclick="logoutAdmin()" class="px-3.5 py-2 bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-right-from-bracket"></i> Log Keluar
+            </button>
+          </div>
+        </div>
+
+        <!-- 3 Kad Metrik Ringkasan -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl">
+              <i class="fa-solid fa-users"></i>
+            </div>
+            <div>
+              <div class="text-xs text-slate-500 font-medium">Kelas / Mata Pelajaran</div>
+              <div class="text-base font-bold text-slate-800">3S2 &bull; RBT Tingkatan 3</div>
+            </div>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
+              <i class="fa-solid fa-file-circle-check"></i>
+            </div>
+            <div>
+              <div class="text-xs text-slate-500 font-medium">Jumlah Dihantar</div>
+              <div class="text-2xl font-extrabold text-slate-800" id="statTotalSubmissions">0</div>
+            </div>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl">
+              <i class="fa-solid fa-hourglass-half"></i>
+            </div>
+            <div>
+              <div class="text-xs text-slate-500 font-medium">Belum Disemak Guru</div>
+              <div class="text-2xl font-extrabold text-amber-600" id="statPendingReview">0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tetapan Webhook Google Sheets -->
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-900 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-sheet-plastic text-amber-600 text-base"></i>
+            <span><strong>Integrasi Google Sheets:</strong> Masukkan URL Web App Apps Script anda di sini untuk sandaran automatik.</span>
+          </div>
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <input type="text" id="scriptUrlInput" placeholder="https://script.google.com/macros/s/.../exec" 
+                   class="px-3 py-1.5 rounded-lg border border-amber-300 bg-white text-xs flex-grow sm:w-80" />
+            <button onclick="saveScriptUrl()" class="px-3 py-1.5 bg-amber-700 text-white font-semibold rounded-lg hover:bg-amber-800">
+              Simpan URL
+            </button>
+          </div>
+        </div>
+
+        <!-- Jadual Kerja Murid -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          <div class="p-5 border-b border-slate-200 flex justify-between items-center">
+            <div>
+              <h3 class="text-lg font-bold text-slate-800">Senarai Tugasan Dihantar (Kelas 3S2)</h3>
+              <p class="text-xs text-slate-500">Klik "Semak & Nilai" untuk melihat jawapan murid, memberi markah subjektif dan mencetak slip PDF.</p>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-slate-50 text-slate-600 text-xs uppercase font-semibold border-b border-slate-200">
+                <tr>
+                  <th class="px-4 py-3">#</th>
+                  <th class="px-4 py-3">Masa Hantar</th>
+                  <th class="px-4 py-3">Nama Murid</th>
+                  <th class="px-4 py-3">Kelas</th>
+                  <th class="px-4 py-3">Objektif (/10)</th>
+                  <th class="px-4 py-3">Subjektif (/20)</th>
+                  <th class="px-4 py-3">Status</th>
+                  <th class="px-4 py-3 text-center">Tindakan</th>
+                </tr>
+              </thead>
+              <tbody id="studentSubmissionsTable" class="divide-y divide-slate-100 text-slate-700">
+                <!-- Dijana oleh JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ========================================== -->
+  <!-- MODAL SEMAKAN GURU (CIKGU ZAINAL)          -->
+  <!-- ========================================== -->
+  <div id="reviewModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[92vh] flex flex-col overflow-hidden">
+      
+      <div class="p-5 bg-indigo-900 text-white flex justify-between items-center">
+        <div>
+          <h3 class="text-lg font-bold" id="modalStudentName">-</h3>
+          <p class="text-xs text-indigo-200" id="modalStudentMeta">Kelas: 3S2 &bull; RBT Tingkatan 3</p>
+        </div>
+        <button onclick="closeReviewModal()" class="text-indigo-200 hover:text-white text-xl">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="p-6 overflow-y-auto space-y-6 text-sm">
+        
+        <!-- Status & Markah Semasa -->
+        <div class="grid grid-cols-2 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <div>
+            <span class="text-xs text-slate-500 block">Skor Objektif (Auto-Semak):</span>
+            <span class="text-xl font-extrabold text-indigo-700" id="modalObjScore">0 / 10</span>
+          </div>
+          <div>
+            <span class="text-xs text-slate-500 block">Status Semakan:</span>
+            <span class="text-sm font-bold text-amber-600" id="modalReviewStatus">Belum Disemak</span>
+          </div>
+        </div>
+
+        <!-- 10 Soalan Objektif -->
+        <div>
+          <h4 class="font-bold text-slate-800 text-base mb-3 border-b pb-1 flex items-center gap-2">
+            <i class="fa-solid fa-list-check text-indigo-600"></i> Semakan 10 Soalan Objektif
+          </h4>
+          <div id="modalObjDetail" class="space-y-3"></div>
+        </div>
+
+        <!-- 5 Soalan Subjektif & Jawapan Murid -->
+        <div>
+          <h4 class="font-bold text-slate-800 text-base mb-3 border-b pb-1 flex items-center gap-2">
+            <i class="fa-solid fa-pen-nib text-indigo-600"></i> Semakan 5 Soalan Subjektif
+          </h4>
+          <div id="modalSubjDetail" class="space-y-4"></div>
+        </div>
+
+        <!-- Ruangan Pemberian Markah & Ulasan -->
+        <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 space-y-3">
+          <h5 class="font-bold text-indigo-950 text-sm">Pemarkahan & Pengesahan Guru</h5>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Markah Subjektif (/20)</label>
+              <input type="number" id="inputSubjMark" min="0" max="20" placeholder="0 - 20" 
+                     class="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Kemas Kini Status</label>
+              <select id="selectMarkStatus" class="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="Belum Disemak">Belum Disemak</option>
+                <option value="Telah Disemak">Telah Disemak (Buka Keputusan ke Murid)</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Ulasan / Komen Cikgu Zainal</label>
+            <textarea id="inputTeacherComment" rows="2" placeholder="Tulis maklum balas dan pembetulan untuk murid..." 
+                      class="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xs"></textarea>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-between items-center">
+        <button onclick="printSlipFromModal()" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-bold shadow flex items-center gap-1.5">
+          <i class="fa-solid fa-file-pdf"></i> Jana Slip PDF
+        </button>
+        <div class="flex gap-2">
+          <button onclick="closeReviewModal()" class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-200 text-xs font-semibold">Tutup</button>
+          <button onclick="saveReview()" class="px-5 py-2 rounded-xl bg-indigo-700 hover:bg-indigo-800 text-white text-xs font-bold shadow">
+            Simpan & Sahkan Keputusan
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- TEMPLAT SLIP MARKAH PDF (PRINT LAYOUT)     -->
+  <!-- ========================================== -->
+  <div id="printableSlip" class="hidden">
+    <div class="max-w-3xl mx-auto border-2 border-slate-800 p-8 rounded-lg">
+      <!-- Kepala Surat Rasmi Sekolah -->
+      <div class="text-center border-b-2 border-slate-800 pb-4 mb-6">
+        <h2 class="text-xl font-extrabold uppercase tracking-wide">SEKOLAH MENENGAH KEBANGSAAN SEMEKAR</h2>
+        <p class="text-sm font-semibold text-slate-600">PENTAKSIRAN BILIK DARJAH (PBD) - REKA BENTUK DAN TEKNOLOGI</p>
+        <p class="text-xs text-slate-500">Guru Mata Pelajaran: Cikgu Zainal &bull; zainal.semekar.com</p>
+      </div>
+
+      <div class="text-center my-4">
+        <h3 class="text-lg font-bold uppercase underline">SLIP KEPUTUSAN LATIHAN RBT TINGKATAN 3</h3>
+      </div>
+
+      <!-- Maklumat Murid -->
+      <table class="w-full text-sm mb-6 border border-slate-300">
+        <tr class="border-b">
+          <td class="p-2 font-bold bg-slate-100 w-1/3">Nama Penuh Murid:</td>
+          <td class="p-2 font-bold uppercase" id="slipStudentName">-</td>
+        </tr>
+        <tr class="border-b">
+          <td class="p-2 font-bold bg-slate-100">Tingkatan / Kelas:</td>
+          <td class="p-2" id="slipStudentClass">3S2</td>
+        </tr>
+        <tr class="border-b">
+          <td class="p-2 font-bold bg-slate-100">Mata Pelajaran:</td>
+          <td class="p-2">Reka Bentuk dan Teknologi (KSSM Tingkatan 3)</td>
+        </tr>
+        <tr>
+          <td class="p-2 font-bold bg-slate-100">Tarikh & Masa Penghantaran:</td>
+          <td class="p-2" id="slipTimestamp">-</td>
+        </tr>
+      </table>
+
+      <!-- Jadual Markah & Gred -->
+      <div class="mb-6">
+        <h4 class="font-bold text-sm mb-2 uppercase">Ringkasan Markah Pencapaian:</h4>
+        <table class="w-full text-sm border border-slate-400 text-center">
+          <thead class="bg-slate-200">
+            <tr>
+              <th class="border border-slate-400 p-2">Komponen</th>
+              <th class="border border-slate-400 p-2">Markah Penuh</th>
+              <th class="border border-slate-400 p-2">Markah Diperoleh</th>
+              <th class="border border-slate-400 p-2">Peratus (%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="border border-slate-400 p-2 text-left font-semibold">Bahagian A (10 Soalan Objektif)</td>
+              <td class="border border-slate-400 p-2">10</td>
+              <td class="border border-slate-400 p-2 font-bold" id="slipObjScore">-</td>
+              <td class="border border-slate-400 p-2" id="slipObjPercent">-</td>
+            </tr>
+            <tr>
+              <td class="border border-slate-400 p-2 text-left font-semibold">Bahagian B (5 Soalan Subjektif)</td>
+              <td class="border border-slate-400 p-2">20</td>
+              <td class="border border-slate-400 p-2 font-bold" id="slipSubjScore">-</td>
+              <td class="border border-slate-400 p-2" id="slipSubjPercent">-</td>
+            </tr>
+            <tr class="bg-slate-100 font-extrabold text-base">
+              <td class="border border-slate-400 p-2 text-left">JUMLAH KESELURUHAN</td>
+              <td class="border border-slate-400 p-2">30</td>
+              <td class="border border-slate-400 p-2 text-indigo-900" id="slipTotalScore">-</td>
+              <td class="border border-slate-400 p-2 text-indigo-900" id="slipTotalPercent">-</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Ulasan Guru & Pengesahan -->
+      <div class="border border-slate-300 p-4 rounded bg-slate-50 mb-8">
+        <h4 class="font-bold text-xs uppercase mb-1 text-slate-700">Ulasan / Maklum Balas Cikgu Zainal:</h4>
+        <p class="text-sm italic text-slate-800" id="slipTeacherComment">-</p>
+      </div>
+
+      <!-- Ruangan Tandatangan -->
+      <div class="grid grid-cols-2 gap-8 pt-6 border-t border-slate-300 text-xs">
+        <div class="text-center">
+          <p class="text-slate-500 mb-12">Disahkan oleh Guru Mata Pelajaran:</p>
+          <p class="font-bold underline text-sm">CIKGU ZAINAL</p>
+          <p class="text-slate-600">Guru Panitia RBT SMK SEMEKAR</p>
+        </div>
+        <div class="text-center">
+          <p class="text-slate-500 mb-12">Tandatangan Penjaga / Murid:</p>
+          <p class="font-bold underline text-sm">___________________________</p>
+          <p class="text-slate-600">Tarikh: .......................................</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-slate-900 text-slate-400 py-6 text-xs text-center border-t border-slate-800 no-print">
+    <div class="max-w-6xl mx-auto px-4">
+      <p class="font-semibold text-slate-300">Hak Cipta Terpelihara &copy; 2026 Kelas Cikgu Zainal &bull; SMK SEMEKAR</p>
+      <p class="mt-1">Dihoskan di GitHub Pages &bull; Domain: <span class="text-amber-400">zainal.semekar.com</span> &bull; Integrasi Google Sheets</p>
+    </div>
+  </footer>
+
+  <!-- ========================================== -->
+  <!-- JAVASCRIPT LOGIK                           -->
+  <!-- ========================================== -->
+  <script>
+    /* 10 Soalan Objektif RBT Tingkatan 3 */
+    const objectiveQuestions = [
+      {
+        id: 1,
+        question: "Apakah takrifan yang paling tepat bagi reka bentuk mekatronik?",
+        options: [
+          "A. Gabungan sistem mekanikal dan elektrik semata-mata.",
+          "B. Aplikasi reka bentuk industri dalam menghasilkan perabot moden.",
+          "C. Integrasi disiplin ilmu mekanikal, elektrik, elektronik, serta kawalan dan pengaturcaraan.",
+          "D. Penggunaan komputer untuk melukis pelan struktur bangunan."
+        ],
+        answer: 2
+      },
+      {
+        id: 2,
+        question: "Antara berikut, yang manakah merupakan salah satu daripada EMPAT elemen utama mekatronik?",
+        options: [
+          "A. Sistem hidraulik tekanan tinggi",
+          "B. Sistem kawalan dan pengaturcaraan",
+          "C. Sistem aerodinamik kenderaan",
+          "D. Sistem penyejukan cecair"
+        ],
+        answer: 1
+      },
+      {
+        id: 3,
+        question: "Dalam gambar rajah blok sistem mekatronik, komponen mikropengawal (microcontroller) berfungsi di bahagian mana?",
+        options: ["A. Input", "B. Proses", "C. Output", "D. Bekalan Kuasa"],
+        answer: 1
+      },
+      {
+        id: 4,
+        question: "Apakah fungsi penderia inframerah (IR Sensor) pada sebuah pintu gelangsar automatik?",
+        options: [
+          "A. Membekalkan bekalan elektrik ke motor pemacu",
+          "B. Mengunci pintu secara mekanikal pada waktu malam",
+          "C. Mengesan pergerakan atau kehadiran objek/manusia sebagai isyarat input",
+          "D. Memperlahankan pergerakan takal pintu secara fizikal"
+        ],
+        answer: 2
+      },
+      {
+        id: 5,
+        question: "Antara produk berikut, yang manakah BUKAN produk mekatronik?",
+        options: [
+          "A. Mesin basuh automatik",
+          "B. Kereta kawalan jauh (RC car)",
+          "C. Palang keselamatan pintar",
+          "D. Basikal manual bergear"
+        ],
+        answer: 3
+      },
+      {
+        id: 6,
+        question: "Dalam fasa pembangunan produk, mengapakah borang Kajian Keperluan Pelanggan perlu disediakan?",
+        options: [
+          "A. Untuk menentukan harga jualan runcit di pasaran",
+          "B. Untuk mengenal pasti masalah sebenar, keperluan, dan kehendak pengguna",
+          "C. Untuk menggantikan proses lakaran perkembangan idea",
+          "D. Untuk menguji ketahanan produk di makmal"
+        ],
+        answer: 1
+      },
+      {
+        id: 7,
+        question: "Ujian parameter dijalankan untuk menilai kefungsian sesuatu produk. Di manakah ujian ini lazimnya dilakukan?",
+        options: [
+          "A. Di dalam bilik makmal yang terkawal suhunya sahaja",
+          "B. Di atas kertas lakaran reka bentuk",
+          "C. Di persekitaran atau situasi sebenar penggunaan produk",
+          "D. Di bahagian pemasaran jualan produk"
+        ],
+        answer: 2
+      },
+      {
+        id: 8,
+        question: "Apakah tujuan utama membuat lakaran perkembangan idea 3D dalam penghasilan produk?",
+        options: [
+          "A. Menggambarkan rupa bentuk, saiz, dan prinsip reka bentuk secara visual dan terperinci",
+          "B. Supaya mikropengawal dapat diprogram secara terus",
+          "C. Mengelakkan pembinaan model awal (mock-up)",
+          "D. Menyenaraikan senarai pembekal bahan mentah secara rasmi"
+        ],
+        answer: 0
+      },
+      {
+        id: 9,
+        question: "Apakah fungsi 'Gear' dalam komponen mekanikal bagi sesebuah produk mekatronik?",
+        options: [
+          "A. Membekalkan tenaga elektrik voltan tinggi",
+          "B. Memindahkan kuasa, menukar kelajuan, dan mengubah arah pusingan",
+          "C. Menukarkan isyarat gelombang kepada isyarat analog",
+          "D. Menyimpan data pengaturcaraan cip secara kekal"
+        ],
+        answer: 1
+      },
+      {
+        id: 10,
+        question: "Apakah perbezaan utama antara 'Model Olokan (Mock-up)' dan 'Prototaip'?",
+        options: [
+          "A. Mock-up mempunyai fungsi mekanikal sepenuhnya, manakala prototaip tidak berfungsi",
+          "B. Mock-up hanya menunjukkan rupa bentuk luaran tanpa fungsi sebenar, manakala prototaip boleh berfungsi",
+          "C. Mock-up diperbuat daripada besi keluli, manakala prototaip daripada polisterina",
+          "D. Mock-up dibina selepas produk siap dijual secara komersial"
+        ],
+        answer: 1
+      }
+    ];
+
+    /* 5 Soalan Subjektif RBT Tingkatan 3 */
+    const subjectiveQuestions = [
+      {
+        id: 1,
+        question: "Nyatakan EMPAT (4) elemen teras yang disepadukan dalam mereka bentuk sistem mekatronik yang lengkap.",
+        hint: "Kombinasi 4 disiplin teknologi kejuruteraan."
+      },
+      {
+        id: 2,
+        question: "Berdasarkan contoh produk mekatronik (contohnya Kereta Kawalan Jauh atau Mesin Basuh Automatik), terangkan fungsi blok Input, Proses, dan Output.",
+        hint: "Penderia (Input) -> Mikropengawal (Proses) -> Penggerak/Motor (Output)."
+      },
+      {
+        id: 3,
+        question: "Huraikan perbezaan antara Ujian Makmal (Laboratory Test) dengan Ujian Parameter (Field Test) dalam penilaian kefungsian produk.",
+        hint: "Bandingkan dari segi lokasi dan persekitaran ujian."
+      },
+      {
+        id: 4,
+        question: "Senaraikan TIGA (3) kriteria penting yang dinilai semasa membuat analisis terhadap lakaran idea produk yang dipilih.",
+        hint: "Contoh: Daya tarikan, kefungsian, ergonomik, kesesuaian bahan."
+      },
+      {
+        id: 5,
+        question: "Cikgu Zainal meminta murid Tingkatan 3S2 mereka bentuk peranti amaran banjir mekatronik. Cadangkan penderia yang sesuai dan terangkan bagaimana sistem tersebut beroperasi apabila paras air meningkat.",
+        hint: "Penderia aras air/ultrasonik, mikropengawal, buzzer & LED."
+      }
+    ];
+
+    /* Pengurusan Storan & Data */
+    let currentStudent = { name: "", class: "" };
+    let isAdminLoggedIn = false;
+    let reviewingStudentIndex = null;
+
+    function getStoredSubmissions() {
+      const data = localStorage.getItem('semekar_submissions');
+      if (data) {
+        try { return JSON.parse(data); } catch(e) { return []; }
+      }
+      return [
+        {
+          timestamp: "2026-10-07 09:30:15",
+          name: "AHMAD SYAHMI BIN ROSLAN",
+          class: "3S2",
+          subject: "RBT Tingkatan 3",
+          objScore: 9,
+          objAnswers: [2, 1, 1, 2, 3, 1, 2, 0, 1, 1],
+          subjAnswers: [
+            "1. Sistem Mekanikal\n2. Sistem Elektrik\n3. Sistem Elektronik\n4. Sistem Kawalan dan Pengaturcaraan",
+            "Input: Penderia menerima isyarat.\nProses: Mikropengawal memproses data kod.\nOutput: Motor DC memutarkan roda kereta kawalan jauh.",
+            "Ujian makmal dilakukan dalam keadaan bilik terkawal, manakala ujian parameter dijalankan di tapak penggunaan sebenar.",
+            "1. Keringkasan dan kefungsian rupa bentuk\n2. Kesesuaian bahan\n3. Faktor ergonomik dan keselamatan",
+            "Gunakan Water Level Sensor. Apabila paras air naik menyentuh penderia, mikropengawal membunyikan buzzer dan menyalakan lampu LED merah."
+          ],
+          reviewStatus: "Telah Disemak",
+          subjMark: "18",
+          teacherComment: "Penerangan sangat baik dan menepati skema pembelajaran KSSM Tingkatan 3."
+        }
+      ];
+    }
+
+    function saveSubmissions(list) {
+      localStorage.setItem('semekar_submissions', JSON.stringify(list));
+    }
+
+    /* Penukaran Tab */
+    function switchTab(tab) {
+      const sSec = document.getElementById('studentSection');
+      const stSec = document.getElementById('statusSection');
+      const aSec = document.getElementById('adminSection');
+      const sBtn = document.getElementById('navStudentBtn');
+      const stBtn = document.getElementById('navStatusBtn');
+      const aBtn = document.getElementById('navAdminBtn');
+
+      // Reset style
+      [sBtn, stBtn, aBtn].forEach(b => {
+        b.className = "px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-transparent text-indigo-200 hover:bg-indigo-800 hover:text-white flex items-center gap-1.5";
+      });
+      [sSec, stSec, aSec].forEach(s => s.classList.add('hidden'));
+
+      if (tab === 'student') {
+        sSec.classList.remove('hidden');
+        sBtn.className = "px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-indigo-700 text-white flex items-center gap-1.5";
+      } else if (tab === 'status') {
+        stSec.classList.remove('hidden');
+        stBtn.className = "px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-indigo-700 text-white flex items-center gap-1.5";
+      } else {
+        aSec.classList.remove('hidden');
+        aBtn.className = "px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-indigo-700 text-white flex items-center gap-1.5";
+        if (isAdminLoggedIn) showAdminPanel(); else showAdminLogin();
+      }
+    }
+
+    /* Pendaftaran Murid & Menjawab */
+    function startExercise() {
+      const cls = document.getElementById('classSelect').value;
+      const name = document.getElementById('studentNameInput').value.trim();
+
+      if (!cls) return alert("Sila pilih kelas terlebih dahulu!");
+      if (!name) return alert("Sila isi nama penuh anda secara manual!");
+
+      currentStudent = { name: name.toUpperCase(), class: cls };
+
+      document.getElementById('badgeStudentName').innerText = currentStudent.name;
+      document.getElementById('badgeStudentClass').innerText = currentStudent.class;
+
+      document.getElementById('regBox').classList.add('hidden');
+      document.getElementById('resultBox').classList.add('hidden');
+      document.getElementById('quizBox').classList.remove('hidden');
+
+      renderQuestions();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function resetRegistration() {
+      document.getElementById('quizBox').classList.add('hidden');
+      document.getElementById('resultBox').classList.add('hidden');
+      document.getElementById('regBox').classList.remove('hidden');
+      document.getElementById('studentNameInput').value = "";
+    }
+
+    function renderQuestions() {
+      // 10 Objektif
+      const objContainer = document.getElementById('objectiveQuestionsList');
+      objContainer.innerHTML = "";
+      objectiveQuestions.forEach((q, index) => {
+        let optHtml = "";
+        q.options.forEach((opt, optIndex) => {
+          optHtml += `
+            <label class="flex items-start gap-3 p-3 rounded-xl border border-slate-200 hover:bg-indigo-50/50 cursor-pointer transition text-sm">
+              <input type="radio" name="q_obj_${q.id}" value="${optIndex}" class="mt-1 text-indigo-600 focus:ring-indigo-500">
+              <span class="text-slate-700 font-medium">${opt}</span>
+            </label>
+          `;
+        });
+
+        objContainer.innerHTML += `
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+            <div class="flex items-start gap-2">
+              <span class="font-bold text-indigo-800 text-sm bg-indigo-100 px-2 py-0.5 rounded-md">S${index + 1}</span>
+              <p class="font-semibold text-slate-800 text-sm leading-relaxed">${q.question}</p>
+            </div>
+            <div class="grid grid-cols-1 gap-2 pt-1">
+              ${optHtml}
+            </div>
+          </div>
+        `;
+      });
+
+      // 5 Subjektif
+      const subjContainer = document.getElementById('subjectiveQuestionsList');
+      subjContainer.innerHTML = "";
+      subjectiveQuestions.forEach((q, index) => {
+        subjContainer.innerHTML += `
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+            <div class="flex items-start gap-2">
+              <span class="font-bold text-blue-800 text-sm bg-blue-100 px-2 py-0.5 rounded-md">S${index + 1}</span>
+              <div>
+                <p class="font-semibold text-slate-800 text-sm leading-relaxed">${q.question}</p>
+                <p class="text-xs text-slate-400 mt-1 italic"><i class="fa-regular fa-lightbulb"></i> Panduan: ${q.hint}</p>
+              </div>
+            </div>
+            <textarea id="q_subj_${q.id}" rows="3" placeholder="Tuliskan jawapan lengkap anda di sini..." 
+                      class="w-full p-3 rounded-xl border border-slate-300 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm text-slate-700"></textarea>
+          </div>
+        `;
+      });
+    }
+
+    /* Penghantaran Tugasan (Kerahsiaan Dikekalkan) */
+    async function submitQuiz() {
+      let objAnswers = [];
+      let unansweredObj = 0;
+      let calculatedObjScore = 0;
+
+      for (let i = 0; i < objectiveQuestions.length; i++) {
+        const q = objectiveQuestions[i];
+        const selected = document.querySelector(`input[name="q_obj_${q.id}"]:checked`);
+        if (!selected) {
+          unansweredObj++;
+          objAnswers.push(null);
+        } else {
+          const val = parseInt(selected.value);
+          objAnswers.push(val);
+          if (val === q.answer) calculatedObjScore++;
+        }
+      }
+
+      let subjAnswers = [];
+      let emptySubj = 0;
+      for (let i = 0; i < subjectiveQuestions.length; i++) {
+        const q = subjectiveQuestions[i];
+        const text = document.getElementById(`q_subj_${q.id}`).value.trim();
+        if (!text) emptySubj++;
+        subjAnswers.push(text || "(Tiada jawapan)");
+      }
+
+      if (unansweredObj > 0 || emptySubj > 0) {
+        const confirmSend = confirm(`Peringatan: Terdapat ${unansweredObj} soalan objektif dan ${emptySubj} soalan subjektif belum dijawab. Pastikan hantar sekarang?`);
+        if (!confirmSend) return;
+      }
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Menghantar ke Google Sheets...`;
+
+      const now = new Date();
+      const timestamp = now.toLocaleDateString('ms-MY') + ' ' + now.toLocaleTimeString('ms-MY');
+
+      const submissionData = {
+        timestamp: timestamp,
+        name: currentStudent.name,
+        class: currentStudent.class,
+        subject: "RBT Tingkatan 3",
+        objScore: calculatedObjScore,
+        objAnswers: objAnswers,
+        subjAnswers: subjAnswers,
+        reviewStatus: "Belum Disemak", // Status terkunci
+        subjMark: "-",
+        teacherComment: ""
+      };
+
+      // Simpan ke LocalStorage
+      const list = getStoredSubmissions();
+      list.unshift(submissionData);
+      saveSubmissions(list);
+
+      // Simpan ke Google Sheets via Apps Script Webhook
+      const scriptUrl = localStorage.getItem('semekar_script_url');
+      if (scriptUrl && scriptUrl.startsWith('http')) {
+        try {
+          await fetch(scriptUrl, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(submissionData)
+          });
+        } catch (e) {
+          console.warn("Ralat Apps Script:", e);
+        }
+      }
+
+      // Paparan resit penghantaran tanpa markah
+      document.getElementById('quizBox').classList.add('hidden');
+      document.getElementById('resultBox').classList.remove('hidden');
+      document.getElementById('resName').innerText = currentStudent.name;
+
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Hantar Tugasan Sekarang`;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* Semakan Keputusan Oleh Murid */
+    function lookupStudentResult() {
+      const name = document.getElementById('lookupName').value.trim().toUpperCase();
+      const cls = document.getElementById('lookupClass').value;
+      const container = document.getElementById('lookupResultContainer');
+
+      if (!name) return alert("Sila masukkan nama anda!");
+
+      const list = getStoredSubmissions();
+      const found = list.find(s => s.name.toUpperCase() === name && s.class === cls);
+
+      container.classList.remove('hidden');
+
+      if (!found) {
+        container.innerHTML = `
+          <div class="p-4 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 text-xs text-center">
+            <i class="fa-solid fa-circle-exclamation text-base mb-1 block"></i>
+            Rekod penghantaran untuk <strong>${name}</strong> (${cls}) tidak dijumpai. Sila pastikan ejaan nama adalah tepat.
+          </div>
+        `;
+        return;
+      }
+
+      // KES 1: Belum Disemak Cikgu Zainal (Jawapan tidak ditunjuk)
+      if (found.reviewStatus !== "Telah Disemak") {
+        container.innerHTML = `
+          <div class="p-5 bg-amber-50 border border-amber-200 rounded-xl text-center space-y-3">
+            <div class="w-12 h-12 bg-amber-100 text-amber-700 rounded-full flex items-center justify-center mx-auto text-xl font-bold">
+              <i class="fa-solid fa-hourglass-start"></i>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-800 text-sm">Tugasan Sedang Disemak</h4>
+              <p class="text-xs text-slate-600 mt-1">
+                Tugasan anda yang dihantar pada <strong>${found.timestamp}</strong> sedang dalam semakan oleh Cikgu Zainal.
+              </p>
+            </div>
+            <div class="p-3 bg-white rounded-lg border border-amber-200 text-xs text-amber-800">
+              <i class="fa-solid fa-lock"></i> <strong>Pemberitahuan:</strong> Markah dan skema jawapan akan dipaparkan secara automatik sebaik sahaja semakan disahkan oleh guru.
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      // KES 2: Telah Disemak (Buka Keputusan + Skema + Butang Cetak Slip PDF)
+      const objScore = found.objScore || 0;
+      const subjScore = parseInt(found.subjMark) || 0;
+      const totalScore = objScore + subjScore;
+      const totalPercent = Math.round((totalScore / 30) * 100);
+
+      let objReviewHtml = "";
+      objectiveQuestions.forEach((q, idx) => {
+        const studentAnsIdx = found.objAnswers ? found.objAnswers[idx] : null;
+        const isCorrect = studentAnsIdx === q.answer;
+        const studentAnsText = studentAnsIdx !== null && studentAnsIdx !== undefined ? q.options[studentAnsIdx] : "Tiada jawapan";
+        const correctAnsText = q.options[q.answer];
+
+        objReviewHtml += `
+          <div class="p-3 rounded-lg border ${isCorrect ? 'border-emerald-200 bg-emerald-50/40' : 'border-rose-200 bg-rose-50/40'} text-xs space-y-1">
+            <div class="flex justify-between font-semibold text-slate-800">
+              <span>S${idx + 1}. ${q.question}</span>
+              <span class="${isCorrect ? 'text-emerald-700 font-bold' : 'text-rose-600 font-bold'}">${isCorrect ? '✓ Betul (1m)' : '✗ Salah (0m)'}</span>
+            </div>
+            <div class="text-slate-600">Jawapan Anda: <span class="font-medium">${studentAnsText}</span></div>
+            ${!isCorrect ? `<div class="text-emerald-800 font-semibold">Skema Tepat: ${correctAnsText}</div>` : ''}
+          </div>
+        `;
+      });
+
+      container.innerHTML = `
+        <div class="p-5 bg-white border border-emerald-300 rounded-xl space-y-5 shadow-sm">
+          <div class="flex flex-wrap justify-between items-center pb-3 border-b border-slate-200">
+            <div>
+              <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-md">Telah Disemak & Disahkan</span>
+              <h4 class="font-bold text-slate-800 text-base mt-1">${found.name}</h4>
+              <p class="text-xs text-slate-500">Kelas: ${found.class} &bull; Tarikh: ${found.timestamp}</p>
+            </div>
+            <button onclick="generateSlipPdfDirect('${found.name}')" class="mt-2 sm:mt-0 px-3.5 py-2 bg-indigo-700 hover:bg-indigo-800 text-white rounded-lg text-xs font-bold shadow flex items-center gap-1.5">
+              <i class="fa-solid fa-file-pdf"></i> Cetak Slip Keputusan PDF
+            </button>
+          </div>
+
+          <!-- Kad Skor Ringkas -->
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="bg-indigo-50 p-2.5 rounded-lg border border-indigo-100">
+              <span class="text-[10px] text-slate-500 block uppercase font-bold">Objektif</span>
+              <span class="text-base font-extrabold text-indigo-700">${objScore} / 10</span>
+            </div>
+            <div class="bg-blue-50 p-2.5 rounded-lg border border-blue-100">
+              <span class="text-[10px] text-slate-500 block uppercase font-bold">Subjektif</span>
+              <span class="text-base font-extrabold text-blue-700">${found.subjMark} / 20</span>
+            </div>
+            <div class="bg-emerald-50 p-2.5 rounded-lg border border-emerald-100">
+              <span class="text-[10px] text-slate-500 block uppercase font-bold">Jumlah (${totalPercent}%)</span>
+              <span class="text-base font-extrabold text-emerald-700">${totalScore} / 30</span>
+            </div>
+          </div>
+
+          ${found.teacherComment ? `
+            <div class="p-3 bg-amber-50 rounded-lg border border-amber-200 text-xs">
+              <span class="font-bold text-amber-900 block mb-0.5"><i class="fa-solid fa-comment-dots"></i> Komen Cikgu Zainal:</span>
+              <p class="italic text-slate-700">${found.teacherComment}</p>
+            </div>
+          ` : ''}
+
+          <!-- Paparan Skema Jawapan Objektif -->
+          <div class="space-y-3 pt-2">
+            <h5 class="text-xs font-bold uppercase text-slate-700 border-b pb-1">Skema & Semakan 10 Soalan Objektif:</h5>
+            <div class="space-y-2">
+              ${objReviewHtml}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    /* Dashboard Guru (Admin) */
+    function loginAdmin() {
+      const pass = document.getElementById('adminPassInput').value;
+      const err = document.getElementById('adminLoginErr');
+
+      if (pass === 'adminzainal') {
+        isAdminLoggedIn = true;
+        err.classList.add('hidden');
+        showAdminPanel();
+      } else {
+        err.classList.remove('hidden');
+      }
+    }
+
+    function logoutAdmin() {
+      isAdminLoggedIn = false;
+      document.getElementById('adminPassInput').value = "";
+      showAdminLogin();
+    }
+
+    function showAdminLogin() {
+      document.getElementById('adminLoginBox').classList.remove('hidden');
+      document.getElementById('adminPanelBox').classList.add('hidden');
+    }
+
+    function showAdminPanel() {
+      document.getElementById('adminLoginBox').classList.add('hidden');
+      document.getElementById('adminPanelBox').classList.remove('hidden');
+      document.getElementById('scriptUrlInput').value = localStorage.getItem('semekar_script_url') || "";
+      refreshData();
+    }
+
+    function saveScriptUrl() {
+      const url = document.getElementById('scriptUrlInput').value.trim();
+      localStorage.setItem('semekar_script_url', url);
+      alert("URL Google Apps Script berjaya disimpan!");
+    }
+
+    function refreshData() {
+      const list = getStoredSubmissions();
+
+      document.getElementById('statTotalSubmissions').innerText = list.length;
+      const pendingCount = list.filter(item => item.reviewStatus !== "Telah Disemak").length;
+      document.getElementById('statPendingReview').innerText = pendingCount;
+
+      const tbody = document.getElementById('studentSubmissionsTable');
+      tbody.innerHTML = "";
+
+      if (list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="text-center py-6 text-slate-400">Tiada rekod penghantaran lagi.</td></tr>`;
+        return;
+      }
+
+      list.forEach((sub, idx) => {
+        const isReviewed = sub.reviewStatus === "Telah Disemak";
+        const badgeClass = isReviewed ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800";
+
+        tbody.innerHTML += `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="px-4 py-3 font-semibold text-slate-400">${idx + 1}</td>
+            <td class="px-4 py-3 text-xs text-slate-500">${sub.timestamp}</td>
+            <td class="px-4 py-3 font-bold text-slate-800">${sub.name}</td>
+            <td class="px-4 py-3 font-semibold text-indigo-700">${sub.class}</td>
+            <td class="px-4 py-3 font-extrabold text-indigo-900">${sub.objScore} / 10</td>
+            <td class="px-4 py-3 font-extrabold text-blue-900">${sub.subjMark || '-'} / 20</td>
+            <td class="px-4 py-3">
+              <span class="px-2.5 py-1 rounded-full text-xs font-bold ${badgeClass}">${sub.reviewStatus}</span>
+            </td>
+            <td class="px-4 py-3 text-center space-x-1">
+              <button onclick="openReviewModal(${idx})" class="px-2.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold shadow transition">
+                <i class="fa-solid fa-file-pen"></i> Semak & Nilai
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    /* Semakan Jawapan di Modal Guru */
+    function openReviewModal(index) {
+      reviewingStudentIndex = index;
+      const list = getStoredSubmissions();
+      const student = list[index];
+
+      document.getElementById('modalStudentName').innerText = student.name;
+      document.getElementById('modalStudentMeta').innerText = `Kelas: ${student.class} • ${student.subject} • Masa: ${student.timestamp}`;
+      document.getElementById('modalObjScore').innerText = `${student.objScore} / 10`;
+      document.getElementById('modalReviewStatus').innerText = student.reviewStatus;
+
+      // Papar semakan Objektif
+      const objDetailContainer = document.getElementById('modalObjDetail');
+      objDetailContainer.innerHTML = "";
+      objectiveQuestions.forEach((q, qIdx) => {
+        const studentAnsIdx = student.objAnswers ? student.objAnswers[qIdx] : null;
+        const isCorrect = studentAnsIdx === q.answer;
+        const studentAnsText = studentAnsIdx !== null && studentAnsIdx !== undefined ? q.options[studentAnsIdx] : "Tiada jawapan";
+        const correctAnsText = q.options[q.answer];
+
+        objDetailContainer.innerHTML += `
+          <div class="p-3 rounded-lg border ${isCorrect ? 'border-emerald-200 bg-emerald-50/50' : 'border-rose-200 bg-rose-50/50'} text-xs space-y-1">
+            <div class="font-semibold text-slate-800 flex justify-between">
+              <span>S${qIdx + 1}. ${q.question}</span>
+              <span class="font-bold ${isCorrect ? 'text-emerald-700' : 'text-rose-700'}">${isCorrect ? '✓ Betul' : '✗ Salah'}</span>
+            </div>
+            <div class="text-slate-600">Jawapan Murid: <span class="font-medium">${studentAnsText}</span></div>
+            ${!isCorrect ? `<div class="text-emerald-800 font-medium">Skema Betul: ${correctAnsText}</div>` : ''}
+          </div>
+        `;
+      });
+
+      // Papar semakan Subjektif
+      const subjDetailContainer = document.getElementById('modalSubjDetail');
+      subjDetailContainer.innerHTML = "";
+      subjectiveQuestions.forEach((q, qIdx) => {
+        const studentSubjText = student.subjAnswers ? student.subjAnswers[qIdx] : "(Tiada jawapan)";
+
+        subjDetailContainer.innerHTML += `
+          <div class="p-3.5 rounded-lg border border-slate-200 bg-slate-50 text-xs space-y-2">
+            <div class="font-bold text-slate-800">S${qIdx + 1}. ${q.question}</div>
+            <div class="p-2.5 bg-white rounded border border-slate-200 text-slate-700 whitespace-pre-wrap leading-relaxed font-mono">
+              ${studentSubjText}
+            </div>
+          </div>
+        `;
+      });
+
+      // Set input markah & komen
+      document.getElementById('inputSubjMark').value = student.subjMark !== "-" ? student.subjMark : "";
+      document.getElementById('selectMarkStatus').value = student.reviewStatus || "Telah Disemak";
+      document.getElementById('inputTeacherComment').value = student.teacherComment || "";
+
+      document.getElementById('reviewModal').classList.remove('hidden');
+    }
+
+    function closeReviewModal() {
+      document.getElementById('reviewModal').classList.add('hidden');
+      reviewingStudentIndex = null;
+    }
+
+    function saveReview() {
+      if (reviewingStudentIndex === null) return;
+      const list = getStoredSubmissions();
+
+      const mark = document.getElementById('inputSubjMark').value || "-";
+      const status = document.getElementById('selectMarkStatus').value;
+      const comment = document.getElementById('inputTeacherComment').value;
+
+      list[reviewingStudentIndex].subjMark = mark;
+      list[reviewingStudentIndex].reviewStatus = status;
+      list[reviewingStudentIndex].teacherComment = comment;
+
+      saveSubmissions(list);
+      closeReviewModal();
+      refreshData();
+      alert("Semakan disimpan! Murid kini boleh melihat keputusan jika status ditetapkan ke 'Telah Disemak'.");
+    }
+
+    /* ==========================================================
+       MODUL JANA & CETAK SLIP KEPUTUSAN PDF (PILIHAN A)
+    ========================================================== */
+    function triggerPrintSlip(student) {
+      const obj = student.objScore || 0;
+      const subj = parseInt(student.subjMark) || 0;
+      const total = obj + subj;
+      const objPct = Math.round((obj / 10) * 100);
+      const subjPct = Math.round((subj / 20) * 100);
+      const totPct = Math.round((total / 30) * 100);
+
+      document.getElementById('slipStudentName').innerText = student.name;
+      document.getElementById('slipStudentClass').innerText = student.class;
+      document.getElementById('slipTimestamp').innerText = student.timestamp;
+
+      document.getElementById('slipObjScore').innerText = `${obj} / 10`;
+      document.getElementById('slipObjPercent').innerText = `${objPct}%`;
+      document.getElementById('slipSubjScore').innerText = `${subj} / 20`;
+      document.getElementById('slipSubjPercent').innerText = `${subjPct}%`;
+      document.getElementById('slipTotalScore').innerText = `${total} / 30`;
+      document.getElementById('slipTotalPercent').innerText = `${totPct}%`;
+
+      document.getElementById('slipTeacherComment').innerText = student.teacherComment || "Tahniah atas usaha menjawab tugasan dengan baik.";
+
+      const slipElement = document.getElementById('printableSlip');
+      slipElement.classList.remove('hidden');
+
+      window.print();
+
+      // Sembunyikan semula selepas cetak dialog ditutup
+      setTimeout(() => {
+        slipElement.classList.add('hidden');
+      }, 800);
+    }
+
+    function printSlipFromModal() {
+      if (reviewingStudentIndex === null) return;
+      const list = getStoredSubmissions();
+      const student = list[reviewingStudentIndex];
+      triggerPrintSlip(student);
+    }
+
+    function generateSlipPdfDirect(studentName) {
+      const list = getStoredSubmissions();
+      const student = list.find(s => s.name.toUpperCase() === studentName.toUpperCase());
+      if (student) triggerPrintSlip(student);
+    }
+  </script>
+</body>
+</html>
