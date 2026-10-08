@@ -12,14 +12,14 @@
   <script src="https://cdn.tailwindcss.com"></script>
   
   <style>
-    /* Fon Sistem Pantas (0ms loading tanpa Google Fonts) */
+    /* Fon Sistem Pantas (Tanpa Bebanan Fon Luaran) */
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
     .fade-in { animation: fadeIn 0.15s ease-out; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
     /* Format Cetakan PDF Rasmi A4 */
     @media print {
-      @page { size: A4 portrait; margin: 10mm; }
+      @page { size: A4 portrait; margin: 12mm; }
       body * { visibility: hidden; }
       #printableSlip, #printableSlip * { visibility: visible; }
       #printableSlip {
@@ -39,14 +39,14 @@
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased">
 
   <!-- ========================================== -->
-  <!-- NAVBAR RINGAN (IKON SVG TERBINA)           -->
+  <!-- NAVBAR RINGAN                              -->
   <!-- ========================================== -->
   <header class="bg-indigo-900 text-white shadow sticky top-0 z-40 no-print">
     <div class="max-w-6xl mx-auto px-4 py-2.5 flex flex-wrap justify-between items-center">
       <div class="flex items-center space-x-3">
         <div class="w-10 h-10 rounded-xl bg-white/10 p-1 flex items-center justify-center border border-white/20">
           <img src="logo.png" alt="Logo Sekolah" class="max-w-full max-h-full object-contain"
-               onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-full h-full bg-amber-400 text-indigo-950 font-black rounded flex items-center justify-center text-sm\'>ZA</div>';">
+               onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-full h-full bg-amber-400 text-indigo-950 font-black rounded flex items-center justify-center text-xs\'>SEMEKAR</div>';">
         </div>
         <div>
           <h1 class="text-base sm:text-lg font-extrabold tracking-tight">PORTAL KELAS CIKGU ZAINAL</h1>
@@ -208,7 +208,7 @@
         </div>
 
         <div class="bg-amber-50 border border-amber-200 p-3.5 rounded-xl text-left text-xs text-amber-900 leading-relaxed">
-          <strong>Peringatan Semakan:</strong> Keputusan dan skema jawapan dikunci buat sementara waktu bagi mengelakkan murid lain daripada meniru. Sila semak semula selepas Cikgu Zainal meluluskan semakan.
+          <strong>Peringatan Semakan:</strong> Keputusan dan skema jawapan dikunci buat sementara waktu bagi mengelakkan murid lain daripada meniru. Sila semak semula selepas Cikgu Zainal meluluskan pelepasan keputusan di portal.
         </div>
 
         <div class="flex gap-2 justify-center pt-2">
@@ -225,6 +225,7 @@
 
     <!-- ======================================================== -->
     <!-- BAHAGIAN 2: HALAMAN PENGHANTARAN (MENGIKUT SESI)        -->
+    <!-- STATUS: 'Patuh Masa' ATAU 'Lewat'                        -->
     <!-- ======================================================== -->
     <div id="submissionsSection" class="hidden fade-in space-y-5">
       <div class="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200 space-y-4">
@@ -232,23 +233,23 @@
         <div class="flex flex-wrap justify-between items-center gap-3 border-b border-slate-200 pb-3">
           <div>
             <h2 class="text-lg sm:text-xl font-black text-slate-800">Senarai Penghantaran Murid</h2>
-            <p class="text-xs text-slate-500">Dikelompokkan mengikut sesi kelas yang telah dihantar ke Google Sheet.</p>
+            <p class="text-xs text-slate-500">Dikelompokkan mengikut sesi kelas. Status waktu: <strong>Patuh Masa</strong> atau <strong>Lewat</strong>.</p>
           </div>
           <button onclick="loadPublicSubmissions(true)" id="publicRefreshBtn" class="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold rounded-lg transition">
             Muat Semula
           </button>
         </div>
 
-        <!-- Butang Tab Sesi untuk memudahkan saringan -->
+        <!-- Butang Sesi Pengelompokan -->
         <div class="flex flex-wrap gap-2 pt-1" id="subSessionPills">
-          <button onclick="filterSubmissionsBySession('ALL')" id="pill_ALL" class="sub-pill px-3 py-1 rounded-lg text-xs font-bold border transition bg-indigo-600 text-white border-indigo-700">
-            Semua Sesi (<span id="countPillAll">0</span>)
-          </button>
-          <button onclick="filterSubmissionsBySession('T3')" id="pill_T3" class="sub-pill px-3 py-1 rounded-lg text-xs font-bold border transition bg-white text-slate-700 border-slate-300 hover:bg-slate-50">
-            Sesi T3 (3S1 & 3S2) (<span id="countPillT3">0</span>)
+          <button onclick="filterSubmissionsBySession('T3')" id="pill_T3" class="sub-pill px-3 py-1 rounded-lg text-xs font-bold border transition bg-indigo-600 text-white border-indigo-700">
+            Sesi RBT T3 (3S1 & 3S2) (<span id="countPillT3">0</span>)
           </button>
           <button onclick="filterSubmissionsBySession('T2')" id="pill_T2" class="sub-pill px-3 py-1 rounded-lg text-xs font-bold border transition bg-white text-slate-700 border-slate-300 hover:bg-slate-50">
-            Sesi T2 (2S2) (<span id="countPillT2">0</span>)
+            Sesi RBT T2 (2S2) (<span id="countPillT2">0</span>)
+          </button>
+          <button onclick="filterSubmissionsBySession('ALL')" id="pill_ALL" class="sub-pill px-3 py-1 rounded-lg text-xs font-bold border transition bg-white text-slate-700 border-slate-300 hover:bg-slate-50">
+            Semua Sesi (<span id="countPillAll">0</span>)
           </button>
         </div>
 
@@ -267,7 +268,7 @@
                 <th class="px-3 py-2.5">Kelas</th>
                 <th class="px-3 py-2.5">Mata Pelajaran</th>
                 <th class="px-3 py-2.5">Masa Hantar</th>
-                <th class="px-3 py-2.5 text-center">Status</th>
+                <th class="px-3 py-2.5 text-center">Status Waktu</th>
               </tr>
             </thead>
             <tbody id="publicSubmissionsTableBody" class="divide-y divide-slate-100 bg-white">
@@ -279,14 +280,13 @@
     </div>
 
     <!-- ======================================================== -->
-    <!-- BAHAGIAN 3: SEMAK STATUS KEPUTUSAN (MURID)               -->
-    <!-- (DROPDOWN HIERARKI & MUAT TURUN PDF)                     -->
+    <!-- BAHAGIAN 3: SEMAK STATUS KEPUTUSAN & DOWNLOAD PDF        -->
     <!-- ======================================================== -->
     <div id="statusSection" class="hidden fade-in space-y-5">
       <div class="bg-white rounded-2xl p-6 sm:p-7 shadow-sm border border-slate-200 max-w-xl mx-auto space-y-4">
         <div class="text-center space-y-1.5">
           <h2 class="text-xl font-black text-slate-800">Semak Keputusan Tugasan</h2>
-          <p class="text-xs text-slate-500">Pilih sesi kelas dan nama anda untuk melihat keputusan yang disahkan guru.</p>
+          <p class="text-xs text-slate-500">Pilih sesi kelas dan nama anda untuk melihat keputusan & memuat turun slip PDF.</p>
         </div>
 
         <div class="space-y-3 pt-2">
@@ -317,6 +317,7 @@
 
     <!-- ======================================================== -->
     <!-- BAHAGIAN 4: DASHBOARD GURU (CIKGU ZAINAL)                -->
+    <!-- SENARAI DIKUMPUL MENGIKUT SESI & MARKAH SENTIASA TEPAT   -->
     <!-- ======================================================== -->
     <div id="adminSection" class="hidden fade-in space-y-5">
 
@@ -342,9 +343,9 @@
           <div>
             <h2 class="text-xl font-black text-slate-800 flex items-center gap-2">
               <span>Dashboard Cikgu Zainal</span>
-              <span class="text-[10px] bg-emerald-100 text-emerald-800 font-black px-2 py-0.5 rounded-full">Google Sheet</span>
+              <span class="text-[10px] bg-emerald-100 text-emerald-800 font-black px-2 py-0.5 rounded-full">Data Penuh Google Sheet</span>
             </h2>
-            <p class="text-xs text-slate-500">Semakan tugasan murid & kawalan keselamatan.</p>
+            <p class="text-xs text-slate-500">Semakan tugasan murid & kawalan pelepasan keputusan.</p>
           </div>
           <div class="flex items-center gap-2">
             <button onclick="fetchSheetData(true)" id="refreshBtn" class="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold rounded-lg transition">
@@ -356,17 +357,17 @@
           </div>
         </div>
 
-        <!-- SUIS KAWALAN PELEPASAN KEPUTUSAN KEPADA MURID -->
+        <!-- SUIS KAWALAN PELEPASAN KEPUTUSAN KEPADA MURID (TERHUBUNG KE SEL K2 SHEET) -->
         <div id="releaseControlCard" class="rounded-2xl p-4 border shadow-sm flex flex-wrap items-center justify-between gap-3 bg-amber-50 border-amber-300">
           <div>
             <div class="flex items-center gap-2">
-              <span class="text-xs font-black uppercase text-slate-700">Status Pelepasan Keputusan:</span>
+              <span class="text-xs font-black uppercase text-slate-700">Status Pelepasan Keputusan (Sel K2):</span>
               <span id="releaseStatusBadge" class="px-2.5 py-0.5 rounded-full text-xs font-black bg-amber-200 text-amber-900">
                 DIKUNCI (SULIT)
               </span>
             </div>
             <p id="releaseStatusDesc" class="text-xs text-slate-600 mt-0.5">
-              Murid tidak dapat melihat markah/skema selagi butang ini belum ditekan bagi mengelakkan meniru.
+              Keputusan dikunci daripada murid bagi mengelakkan meniru. Cikgu boleh menyemak markah dengan bebas di sini.
             </p>
           </div>
           <button onclick="toggleResultsRelease()" id="btnToggleRelease" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow transition">
@@ -390,26 +391,41 @@
           </div>
           <div class="bg-white p-3.5 rounded-xl border border-slate-200">
             <span class="text-[10px] text-indigo-600 font-bold block uppercase">Kelas Aktif</span>
-            <span class="text-sm font-black text-indigo-700">2S2, 3S1, 3S2</span>
+            <span class="text-sm font-black text-indigo-700">3S1, 3S2, 2S2</span>
           </div>
         </div>
 
-        <!-- Jadual Semakan Tugasan Murid -->
+        <!-- Jadual Semakan Tugasan Murid (DIKUMPULKAN MENGIKUT SESI) -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-          <div class="p-4 border-b border-slate-200 flex flex-wrap justify-between items-center gap-2">
-            <h3 class="text-sm font-black text-slate-800">Senarai Tugasan Murid</h3>
-            <div class="flex gap-2">
-              <select id="adminTimingFilter" onchange="renderTableRows()" class="px-2.5 py-1 rounded-lg border border-slate-300 text-xs font-bold text-slate-700 bg-slate-50">
-                <option value="ALL">Semua Waktu</option>
-                <option value="ON_TIME">Tepat Masa</option>
-                <option value="LATE">Lewat</option>
-              </select>
-              <select id="adminClassFilter" onchange="renderTableRows()" class="px-2.5 py-1 rounded-lg border border-slate-300 text-xs font-bold text-slate-700 bg-slate-50">
-                <option value="ALL">Semua Kelas</option>
-                <option value="2S2">Kelas 2S2</option>
-                <option value="3S1">Kelas 3S1</option>
-                <option value="3S2">Kelas 3S2</option>
-              </select>
+          <div class="p-4 border-b border-slate-200 space-y-3">
+            <div class="flex flex-wrap justify-between items-center gap-2">
+              <h3 class="text-sm font-black text-slate-800">Senarai Tugasan Mengikut Sesi</h3>
+              <div class="flex gap-2">
+                <select id="adminTimingFilter" onchange="renderTableRows()" class="px-2.5 py-1 rounded-lg border border-slate-300 text-xs font-bold text-slate-700 bg-slate-50">
+                  <option value="ALL">Semua Waktu</option>
+                  <option value="ON_TIME">Patuh Masa</option>
+                  <option value="LATE">Lewat</option>
+                </select>
+                <select id="adminClassFilter" onchange="renderTableRows()" class="px-2.5 py-1 rounded-lg border border-slate-300 text-xs font-bold text-slate-700 bg-slate-50">
+                  <option value="ALL">Semua Kelas</option>
+                  <option value="3S1">Kelas 3S1</option>
+                  <option value="3S2">Kelas 3S2</option>
+                  <option value="2S2">Kelas 2S2</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- BUTANG PIL KUMPULAN SESI DI DASHBOARD -->
+            <div class="flex flex-wrap gap-2">
+              <button onclick="filterAdminSession('T3')" id="adminPill_T3" class="px-3 py-1 rounded-lg text-xs font-bold border transition bg-indigo-600 text-white border-indigo-700">
+                Sesi RBT Tingkatan 3 (3S1 & 3S2) [<span id="adminCountT3">0</span> Murid]
+              </button>
+              <button onclick="filterAdminSession('T2')" id="adminPill_T2" class="px-3 py-1 rounded-lg text-xs font-bold border transition bg-white text-slate-700 border-slate-300 hover:bg-slate-50">
+                Sesi RBT Tingkatan 2 (2S2) [<span id="adminCountT2">0</span> Murid]
+              </button>
+              <button onclick="filterAdminSession('ALL')" id="adminPill_ALL" class="px-3 py-1 rounded-lg text-xs font-bold border transition bg-white text-slate-700 border-slate-300 hover:bg-slate-50">
+                Semua Sesi [<span id="adminCountAll">0</span>]
+              </button>
             </div>
           </div>
 
@@ -417,18 +433,19 @@
             <table class="w-full text-left text-xs">
               <thead class="bg-slate-50 text-slate-600 uppercase font-bold border-b border-slate-200">
                 <tr>
-                  <th class="px-3 py-2 w-8">#</th>
-                  <th class="px-3 py-2">Nama Murid</th>
-                  <th class="px-3 py-2">Kelas</th>
-                  <th class="px-3 py-2">Mata Pelajaran</th>
-                  <th class="px-3 py-2">Objektif</th>
-                  <th class="px-3 py-2">Subjektif</th>
-                  <th class="px-3 py-2">Status</th>
-                  <th class="px-3 py-2 text-center">Tindakan</th>
+                  <th class="px-3 py-2.5 w-8">#</th>
+                  <th class="px-3 py-2.5">Nama Murid</th>
+                  <th class="px-3 py-2.5">Kelas</th>
+                  <th class="px-3 py-2.5">Mata Pelajaran</th>
+                  <th class="px-3 py-2.5">Objektif (/10)</th>
+                  <th class="px-3 py-2.5">Subjektif (/20)</th>
+                  <th class="px-3 py-2.5">Status Waktu</th>
+                  <th class="px-3 py-2.5">Status Semakan</th>
+                  <th class="px-3 py-2.5 text-center">Tindakan</th>
                 </tr>
               </thead>
               <tbody id="studentSubmissionsTable" class="divide-y divide-slate-100">
-                <tr><td colspan="8" class="text-center py-6 text-slate-400">Memuat data...</td></tr>
+                <tr><td colspan="9" class="text-center py-6 text-slate-400">Memuat data dari Google Sheet...</td></tr>
               </tbody>
             </table>
           </div>
@@ -462,7 +479,7 @@
       <div class="p-5 overflow-y-auto space-y-5 text-xs">
         <div class="grid grid-cols-2 gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200">
           <div>
-            <span class="text-slate-500 block">Skor Objektif (Auto):</span>
+            <span class="text-slate-500 block">Skor Objektif:</span>
             <span class="text-lg font-black text-indigo-700" id="modalObjScore">0 / 10</span>
           </div>
           <div>
@@ -477,7 +494,7 @@
         </div>
 
         <div>
-          <h4 class="font-bold text-slate-800 text-sm mb-2 border-b pb-1">Semakan 5 Soalan Subjektif (Kata Kunci & Rubrik)</h4>
+          <h4 class="font-bold text-slate-800 text-sm mb-2 border-b pb-1">Semakan 5 Soalan Subjektif</h4>
           <div id="modalSubjDetail" class="space-y-3"></div>
         </div>
 
@@ -672,7 +689,7 @@
       objective: [
         { id: 1, question: "Apakah maksud kaedah penyelesaian masalah inventif dalam proses reka bentuk?", graphic: null, options: ["A. Kaedah menghasilkan produk tanpa sebarang lakaran idea awal.", "B. Kaedah menyelesaikan masalah yang mempunyai kesan sampingan tanpa menjejaskan fungsi lain.", "C. Proses mengurangkan kos produk dengan menggunakan bahan terpakai semata-mata.", "D. Kaedah membuat rekaan produk berasaskan perisian komputer secara automatik."], answer: 1 },
         { id: 2, question: "Antara berikut, yang manakah merupakan kelebihan utama kaedah pembuatan moden berbanding kaedah konvensional?", graphic: null, options: ["A. Memerlukan masa yang lebih lama untuk menyiapkan satu produk", "B. Bergantung sepenuhnya kepada kemahiran individu pembuat", "C. Menghasilkan produk yang seragam dengan kuantiti yang banyak dalam masa yang singkat", "D. Kos permulaan peralatan yang jauh lebih murah daripada alatan tangan biasa"], answer: 2 },
-        { id: 3, question: "Rajah di bawah menunjukkan proses pembuatan produk menggunakan kaedah tuangan. Bahagian bertanda 'X' berfungsi untuk menuangkan cecair bahan pembuatan ke dalam rongga acuan. Apakah nama bahagian tersebut?", graphic: `<div class="my-2 p-2 bg-white rounded border border-slate-200 flex flex-col items-center"><svg viewBox="0 0 320 130" class="w-full max-w-xs h-auto"><rect x="30" y="20" width="260" height="95" rx="8" fill="#e2e8f0" stroke="#475569" stroke-width="2"/><path d="M 100 55 L 220 55 L 200 100 L 120 100 Z" fill="#94a3b8" stroke="#334155" stroke-width="2"/><path d="M 140 20 L 180 20 L 170 55 L 150 55 Z" fill="#f59e0b" stroke="#b45309" stroke-width="2"/><text x="160" y="38" font-family="sans-serif" font-weight="bold" font-size="12" fill="#ffffff" text-anchor="middle">X</text><text x="160" y="80" font-family="sans-serif" font-weight="bold" font-size="10" fill="#1e293b" text-anchor="middle">Rongga Acuan (Cavity)</text></svg><span class="text-[10px] text-slate-500 font-bold mt-1">Rajah: Keratan Rentas Acuan Tuangan</span></div>`, options: ["A. Rongga acuan (Cavity)", "B. Liang tuang / Corong tuangan (Sprue)", "C. Teras dalaman (Core)", "D. Penyejuk udara (Chiller)"], answer: 1 },
+        { id: 3, question: "Rajah menunjukkan proses pembuatan menggunakan kaedah tuangan. Bahagian bertanda 'X' berfungsi untuk menuangkan cecair bahan pembuatan ke dalam rongga acuan. Apakah nama bahagian tersebut?", graphic: `<div class="my-2 p-2 bg-white rounded border border-slate-200 flex flex-col items-center"><svg viewBox="0 0 320 130" class="w-full max-w-xs h-auto"><rect x="30" y="20" width="260" height="95" rx="8" fill="#e2e8f0" stroke="#475569" stroke-width="2"/><path d="M 100 55 L 220 55 L 200 100 L 120 100 Z" fill="#94a3b8" stroke="#334155" stroke-width="2"/><path d="M 140 20 L 180 20 L 170 55 L 150 55 Z" fill="#f59e0b" stroke="#b45309" stroke-width="2"/><text x="160" y="38" font-family="sans-serif" font-weight="bold" font-size="12" fill="#ffffff" text-anchor="middle">X</text><text x="160" y="80" font-family="sans-serif" font-weight="bold" font-size="10" fill="#1e293b" text-anchor="middle">Rongga Acuan (Cavity)</text></svg><span class="text-[10px] text-slate-500 font-bold mt-1">Rajah: Keratan Rentas Acuan Tuangan</span></div>`, options: ["A. Rongga acuan (Cavity)", "B. Liang tuang / Corong tuangan (Sprue)", "C. Teras dalaman (Core)", "D. Penyejuk udara (Chiller)"], answer: 1 },
         { id: 4, question: "Antara komponen mekanikal berikut, yang manakah berfungsi untuk memindahkan kuasa antara dua aci yang selari menggunakan geseran?", graphic: null, options: ["A. Tali sawat dan takal (Belt & Pulley)", "B. Gear serong (Bevel gear)", "C. Pautan (Linkage)", "D. Aci sesondol (Camshaft)"], answer: 0 },
         { id: 5, question: "Jika gear pemacu A berputar mengikut arah jam, bagaimanakah arah putaran bagi gear dipacu B yang berganding dengannya?", graphic: `<div class="my-2 p-2 bg-white rounded border border-slate-200 flex flex-col items-center"><svg viewBox="0 0 300 110" class="w-full max-w-xs h-auto"><circle cx="90" cy="55" r="35" fill="#c7d2fe" stroke="#3730a3" stroke-width="2" stroke-dasharray="4,3"/><circle cx="90" cy="55" r="10" fill="#3730a3"/><text x="90" y="58" fill="#ffffff" font-size="9" font-weight="bold" text-anchor="middle">A</text><circle cx="165" cy="55" r="28" fill="#fed7aa" stroke="#c2410c" stroke-width="2" stroke-dasharray="4,3"/><circle cx="165" cy="55" r="8" fill="#c2410c"/><text x="165" y="58" fill="#ffffff" font-size="9" font-weight="bold" text-anchor="middle">B</text></svg><span class="text-[10px] text-slate-500 font-bold mt-1">Rajah: Gandingan Dua Gear Taji</span></div>`, options: ["A. Mengikut arah jam", "B. Melawan arah jam", "C. Berputar berselang-seli", "D. Tidak berputar langsung"], answer: 1 },
         { id: 6, question: "Berdasarkan Hukum Ohm (V = I x R), jika nilai voltan ialah 9V dan rintangan litar ialah 3 Ohm, berapakah nilai arus (I) yang mengalir?", graphic: null, options: ["A. 0.33 A", "B. 3.0 A", "C. 12.0 A", "D. 27.0 A"], answer: 1 },
@@ -731,37 +748,43 @@
     let currentSessionKey = "T2_SESI_ESOK";
     let isAdminLoggedIn = false;
     let cachedSheetSubmissions = [];
-    let isResultsReleased = false; // Dikawal rapi oleh Sel K2 Google Sheet
+    let isResultsReleased = false;
     let selectedStudentIndex = null;
-    let activeSubSessionFilter = "ALL";
+    let activeSubSessionFilter = "T3"; // Default ke T3 kerana sudah mempunyai 13 murid
+    let activeAdminSessionFilter = "T3"; // Default Dashboard ke T3
 
     /* ==========================================================
-       PENGURUSAN DATA & CACHE
+       PENGAMBILAN DATA DARI SHEET (DIBEZAKAN GURU VS MURID)
     ========================================================== */
     async function syncData(isAdmin = false) {
       try {
-        const url = isAdmin ? `${SCRIPT_URL}?pass=adminzainal` : SCRIPT_URL;
+        const url = isAdmin 
+          ? `${SCRIPT_URL}?pass=adminzainal&_t=${Date.now()}` 
+          : `${SCRIPT_URL}?_t=${Date.now()}`;
+        
         const res = await fetch(url);
         const json = await res.json();
         
         if (json && json.data) {
           cachedSheetSubmissions = json.data;
           isResultsReleased = (json.isReleased === true);
-          localStorage.setItem('semekar_cached_data', JSON.stringify(cachedSheetSubmissions));
-          localStorage.setItem('semekar_is_released', isResultsReleased ? "true" : "false");
+          if (isAdmin) {
+            localStorage.setItem('semekar_admin_cached_data', JSON.stringify(cachedSheetSubmissions));
+          } else {
+            localStorage.setItem('semekar_public_cached_data', JSON.stringify(cachedSheetSubmissions));
+          }
         }
       } catch (e) {
         console.warn("Gagal menyegerak dengan Google Sheets, guna data luar talian:", e);
-        const local = localStorage.getItem('semekar_cached_data');
+        const local = isAdmin ? localStorage.getItem('semekar_admin_cached_data') : localStorage.getItem('semekar_public_cached_data');
         if (local) {
           try { cachedSheetSubmissions = JSON.parse(local); } catch(err){}
         }
-        isResultsReleased = (localStorage.getItem('semekar_is_released') === "true");
       }
     }
 
     /* ==========================================================
-       NAVIGASI TAB SERTA-MERTA
+       PENGURUSAN TAB NAVIGASI
     ========================================================== */
     function switchTab(tab) {
       const sSec = document.getElementById('studentSection');
@@ -1020,7 +1043,7 @@
       });
     }
 
-    /* PENGHANTARAN JAWAPAN */
+    /* PENGHANTARAN JAWAPAN KE GOOGLE SHEET */
     async function submitQuiz() {
       const isLate = isLateForSession(currentStudent.sessionKey);
       const isT2 = (currentStudent.sessionKey === "T2_SESI_ESOK");
@@ -1088,7 +1111,7 @@
         timingBadge.innerText = "Dihantar LEWAT";
       } else {
         timingBadge.className = "px-2.5 py-0.5 rounded-full text-xs font-black bg-emerald-100 text-emerald-800";
-        timingBadge.innerText = "Tepat Pada Masa";
+        timingBadge.innerText = "Patuh Masa";
       }
 
       submitBtn.disabled = false;
@@ -1098,6 +1121,7 @@
 
     /* ==========================================================
        HALAMAN PENGHANTARAN: KELOMPOK MENGIKUT SESI
+       STATUS WAKTU: 'Patuh Masa' ATAU 'Lewat'
     ========================================================== */
     async function loadPublicSubmissions(force = false) {
       if (force || cachedSheetSubmissions.length === 0) {
@@ -1108,7 +1132,7 @@
 
     function filterSubmissionsBySession(pill) {
       activeSubSessionFilter = pill;
-      ['ALL', 'T3', 'T2'].forEach(p => {
+      ['T3', 'T2', 'ALL'].forEach(p => {
         const btn = document.getElementById(`pill_${p}`);
         if (p === pill) {
           btn.className = "sub-pill px-3 py-1 rounded-lg text-xs font-bold border transition bg-indigo-600 text-white border-indigo-700";
@@ -1151,6 +1175,7 @@
       }
 
       list.forEach((sub, idx) => {
+        // Semakan Patuh Masa vs Lewat
         const isLate = sub.isLate || (sub.timestamp && sub.timestamp.indexOf("LEWAT") !== -1);
         let classColor = (sub.class === "2S2") ? "bg-amber-100 text-amber-800" : (sub.class === "3S1" ? "bg-blue-100 text-blue-800" : "bg-purple-100 text-purple-800");
 
@@ -1162,7 +1187,7 @@
             <td class="px-3 py-2 text-slate-600">${sub.subject || "RBT"}</td>
             <td class="px-3 py-2 font-mono text-slate-600">${(sub.timestamp || "").replace(" [LEWAT]", "")}</td>
             <td class="px-3 py-2 text-center">
-              ${isLate ? '<span class="px-2 py-0.5 rounded text-[10px] font-black bg-rose-100 text-rose-800">LEWAT</span>' : '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">TEPAT</span>'}
+              ${isLate ? '<span class="px-2 py-0.5 rounded text-[10px] font-black bg-rose-100 text-rose-800">Lewat</span>' : '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">Patuh Masa</span>'}
             </td>
           </tr>
         `;
@@ -1170,7 +1195,7 @@
     }
 
     /* ==========================================================
-       SEMAK KEPUTUSAN (KUNCI KETAT SEL K2 & CETAK/DOWNLOAD PDF)
+       SEMAK KEPUTUSAN & DOWNLOAD SLIP PDF
     ========================================================== */
     async function ensureDataLoadedForLookup() {
       if (cachedSheetSubmissions.length === 0) {
@@ -1241,7 +1266,7 @@
       const bank = isT2 ? questionsData_T2 : questionsData_T3;
 
       // KAWALAN KESELAMATAN KUNCI KEPUTUSAN:
-      // Jika Cikgu belum melepaskan keputusan (isResultsReleased == false),
+      // Jika Cikgu belum melepaskan keputusan di Google Sheet (isResultsReleased == false),
       // Paparkan skrin mangga kunci & jangan paparkan sebarang markah!
       if (!isResultsReleased) {
         container.innerHTML = `
@@ -1258,7 +1283,7 @@
             </div>
             <div class="p-3 bg-white rounded-xl border border-amber-200 text-xs text-amber-950 leading-relaxed text-left">
               <strong>Pemberitahuan Guru:</strong><br>
-              Tugasan anda telah berjaya direkodkan. Cikgu Zainal sedang menyemak jawapan semua murid. Bagi menjamin integriti dan mengelakkan murid lain meniru, <strong>markah dan skema jawapan belum dilepaskan</strong>. Sila tunggu pengumuman rasmi daripada guru.
+              Tugasan anda telah berjaya direkodkan. Cikgu Zainal sedang menyemak jawapan murid. Bagi menjamin integriti dan mengelakkan murid lain meniru, <strong>markah dan skema jawapan belum dilepaskan</strong>. Sila tunggu pengumuman guru.
             </div>
           </div>
         `;
@@ -1308,7 +1333,7 @@
               </div>
               <!-- BUTANG DOWNLOAD / CETAK PDF -->
               <button onclick="downloadResultPdf(${selectedIdx})" class="px-3.5 py-2 bg-indigo-700 hover:bg-indigo-800 text-white rounded-xl text-xs font-black shadow flex items-center gap-1.5 transition">
-                📄 Muat Turun Slip PDF
+                📥 Muat Turun Slip PDF
               </button>
             </div>
 
@@ -1344,7 +1369,7 @@
     }
 
     /* ==========================================================
-       DASHBOARD GURU & SUIS KAWALAN
+       DASHBOARD GURU: PENGELOMPOKAN SESI & KAWALAN PELEPASAN
     ========================================================== */
     function loginAdmin() {
       const pass = document.getElementById('adminPassInput').value;
@@ -1373,15 +1398,15 @@
     function showAdminPanel() {
       document.getElementById('adminLoginBox').classList.add('hidden');
       document.getElementById('adminPanelBox').classList.remove('hidden');
-      fetchSheetData(false);
+      fetchSheetData(true);
     }
 
     async function fetchSheetData(force = false) {
-      const tbody = document.getElementById('studentSubmissionsTable');
       const refBtn = document.getElementById('refreshBtn');
 
       if (force || cachedSheetSubmissions.length === 0) {
         if (refBtn) { refBtn.disabled = true; refBtn.innerText = "Memuat..."; }
+        // Muat turun terus dengan pass=adminzainal supaya markah sentiasa lengkap
         await syncData(true);
         if (refBtn) { refBtn.disabled = false; refBtn.innerText = "Muat Semula"; }
       }
@@ -1394,6 +1419,26 @@
       const late = cachedSheetSubmissions.filter(item => item.isLate || (item.timestamp && item.timestamp.indexOf("LEWAT") !== -1)).length;
       document.getElementById('statLateSubmissions').innerText = late;
 
+      // Kemas kini bilangan murid pada butang sesi Dashboard
+      const t3Count = cachedSheetSubmissions.filter(s => s.class === "3S1" || s.class === "3S2").length;
+      const t2Count = cachedSheetSubmissions.filter(s => s.class === "2S2").length;
+      document.getElementById('adminCountT3').innerText = t3Count;
+      document.getElementById('adminCountT2').innerText = t2Count;
+      document.getElementById('adminCountAll').innerText = cachedSheetSubmissions.length;
+
+      renderTableRows();
+    }
+
+    function filterAdminSession(sessionPill) {
+      activeAdminSessionFilter = sessionPill;
+      ['T3', 'T2', 'ALL'].forEach(p => {
+        const btn = document.getElementById(`adminPill_${p}`);
+        if (p === sessionPill) {
+          btn.className = "px-3 py-1 rounded-lg text-xs font-bold border transition bg-indigo-600 text-white border-indigo-700";
+        } else {
+          btn.className = "px-3 py-1 rounded-lg text-xs font-bold border transition bg-white text-slate-700 border-slate-300 hover:bg-slate-50";
+        }
+      });
       renderTableRows();
     }
 
@@ -1414,7 +1459,7 @@
         card.className = "rounded-2xl p-4 border shadow-sm flex flex-wrap items-center justify-between gap-3 bg-amber-50 border-amber-300";
         badge.className = "px-2.5 py-0.5 rounded-full text-xs font-black bg-amber-200 text-amber-900";
         badge.innerText = "DIKUNCI (SULIT)";
-        desc.innerText = "Murid tidak dapat melihat markah/skema selagi butang ini belum ditekan bagi mengelakkan meniru.";
+        desc.innerText = "Keputusan dikunci daripada murid bagi mengelakkan meniru. Cikgu boleh menyemak markah dengan bebas di sini.";
         btn.className = "px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow transition";
         btn.innerText = "Lepaskan Keputusan Kepada Murid";
       }
@@ -1457,6 +1502,13 @@
 
       let list = cachedSheetSubmissions;
 
+      // Saringan Pengelompokan Sesi
+      if (activeAdminSessionFilter === "T3") {
+        list = list.filter(s => s.class === "3S1" || s.class === "3S2");
+      } else if (activeAdminSessionFilter === "T2") {
+        list = list.filter(s => s.class === "2S2");
+      }
+
       if (classFilter !== "ALL") {
         list = list.filter(s => s.class === classFilter);
       }
@@ -1469,7 +1521,7 @@
 
       tbody.innerHTML = "";
       if (list.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" class="text-center py-6 text-slate-400">Tiada rekod murid bagi saringan ini.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9" class="text-center py-6 text-slate-400">Tiada rekod murid bagi saringan sesi ini.</td></tr>`;
         return;
       }
 
@@ -1487,12 +1539,17 @@
             <td class="px-3 py-2 font-bold text-slate-800">${sub.name}</td>
             <td class="px-3 py-2"><span class="px-2 py-0.5 rounded text-[10px] font-black ${classColor}">${sub.class}</span></td>
             <td class="px-3 py-2 text-slate-600">${sub.subject || "RBT"}</td>
-            <td class="px-3 py-2 font-black text-indigo-900">${sub.objScore !== null ? sub.objScore + '/10' : '-'}</td>
-            <td class="px-3 py-2 font-black text-blue-900">${sub.subjMark || '-'}</td>
+            <!-- MARKAH OBJEKTIF SENTIASA TEPAT -->
+            <td class="px-3 py-2 font-black text-indigo-900">${sub.objScore !== null ? sub.objScore + ' / 10' : '0 / 10'}</td>
+            <!-- MARKAH SUBJEKTIF SENTIASA TEPAT -->
+            <td class="px-3 py-2 font-black text-blue-900">${sub.subjMark !== null && sub.subjMark !== "" ? sub.subjMark + ' / 20' : '-'}</td>
+            <td class="px-3 py-2">
+              ${isLate ? '<span class="px-2 py-0.5 rounded text-[10px] font-black bg-rose-100 text-rose-800">Lewat</span>' : '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">Patuh Masa</span>'}
+            </td>
             <td class="px-3 py-2"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${badgeClass}">${sub.reviewStatus}</span></td>
             <td class="px-3 py-2 text-center">
-              <button onclick="openReviewModal(${realIdx})" class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded font-bold text-[11px]">
-                Semak
+              <button onclick="openReviewModal(${realIdx})" class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded font-bold text-[11px] transition shadow">
+                Semak & Nilai
               </button>
             </td>
           </tr>
@@ -1518,9 +1575,9 @@
 
       const isLate = student.isLate || (student.timestamp && student.timestamp.indexOf("LEWAT") !== -1);
       if (isLate) {
-        points.push(`⏱️ Pengurusan Masa:\nTugasan diterima selepas waktu sasaran (LEWAT). Komitmen menyiapkan latihan dihargai, tingkatkan ketepatan masa kelak.`);
+        points.push(`⏱️ Pengurusan Masa:\nTugasan diterima selepas waktu sasaran (Lewat). Komitmen menyiapkan latihan dihargai, tingkatkan ketepatan masa kelak.`);
       } else {
-        points.push(`⏱️ Pengurusan Masa:\nSyabas atas disiplin menyiapkan dan menghantar tugasan tepat pada masa yang ditetapkan.`);
+        points.push(`⏱️ Pengurusan Masa:\nSyabas atas disiplin menyiapkan dan menghantar tugasan tepat pada masa yang ditetapkan (Patuh Masa).`);
       }
 
       return points.join("\n\n");
@@ -1540,7 +1597,7 @@
 
       const timingBadge = document.getElementById('modalTimingBadge');
       timingBadge.className = isLate ? "text-[10px] px-2 py-0.5 rounded-full font-black bg-rose-500 text-white" : "text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-500 text-white";
-      timingBadge.innerText = isLate ? "LEWAT" : "TEPAT MASA";
+      timingBadge.innerText = isLate ? "LEWAT" : "PATUH MASA";
 
       // Objektif
       const objDetail = document.getElementById('modalObjDetail');
@@ -1675,7 +1732,7 @@
 
       const lateEl = document.getElementById('slipLateStatus');
       lateEl.className = isLate ? "p-1.5 font-bold text-rose-700" : "p-1.5 font-bold text-emerald-700";
-      lateEl.innerText = isLate ? "DITERIMA LEWAT" : "TEPAT PADA MASA";
+      lateEl.innerText = isLate ? "LEWAT" : "PATUH MASA";
 
       document.getElementById('slipObjScore').innerText = `${obj} / 10`;
       document.getElementById('slipObjPercent').innerText = `${Math.round((obj/10)*100)}%`;
