@@ -12,7 +12,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   
   <style>
-    /* Fon Sistem Asli Pantas (0ms Latensi) */
+    /* Fon Sistem Pantas (0ms Latensi) */
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
     
     .ease-smooth {
@@ -27,7 +27,7 @@
       to { opacity: 1; transform: translateY(0); } 
     }
 
-    /* Format Cetakan Slip PDF Rasmi A4 */
+    /* Cetakan Slip PDF Rasmi A4 */
     @media print {
       @page { size: A4 portrait; margin: 12mm 10mm; }
       body * { visibility: hidden; }
@@ -92,7 +92,7 @@
     <!-- BAHAGIAN 1: KELAS & LATIHAN (MURID) -->
     <div id="studentSection" class="fade-in space-y-4">
       
-      <!-- Banner Pemasa & Status Masa Sesi -->
+      <!-- Banner Status Waktu (Patuh Masa / Lewat / Ditutup) -->
       <div id="deadlineBanner" class="bg-indigo-950 text-white rounded-xl p-3.5 shadow-sm flex flex-wrap items-center justify-between gap-3 border border-indigo-800 ease-smooth">
         <div>
           <h4 id="deadlineBannerTitle" class="font-extrabold text-xs sm:text-sm text-amber-300">SESI PEMBELAJARAN HARI INI</h4>
@@ -103,7 +103,7 @@
         </div>
       </div>
 
-      <!-- Borang Pendaftaran -->
+      <!-- Borang Pendaftaran Sesi -->
       <div id="regBox" class="bg-white rounded-2xl p-5 sm:p-7 shadow-sm border border-slate-200 ease-smooth">
         <div class="max-w-xl mx-auto text-center space-y-1.5">
           <div class="w-14 h-14 mx-auto p-1 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center mb-1">
@@ -114,7 +114,7 @@
             Sesi Hari Semasa
           </span>
           <h2 class="text-lg sm:text-xl font-black text-slate-800">Daftar Masuk Kelas</h2>
-          <p class="text-xs text-slate-500">Sesi hari semasa telah diutamakan secara automatik. Anda juga boleh menukar sesi jika perlu.</p>
+          <p class="text-xs text-slate-500">Pilih sesi kelas dan masukkan nama penuh anda untuk memulakan latihan.</p>
         </div>
 
         <div class="max-w-md mx-auto mt-4 space-y-3">
@@ -140,7 +140,7 @@
                    class="w-full px-3 py-2 rounded-xl border border-slate-300 font-bold text-xs text-slate-800 uppercase focus:ring-2 focus:ring-indigo-500 ease-smooth" />
           </div>
 
-          <button onclick="startExercise()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white font-extrabold rounded-xl shadow text-xs ease-smooth">
+          <button onclick="startExercise()" id="startBtn" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white font-extrabold rounded-xl shadow text-xs ease-smooth">
             Daftar & Mula Menjawab
           </button>
         </div>
@@ -166,7 +166,7 @@
           </div>
         </div>
 
-        <!-- Bahagian A: Objektif -->
+        <!-- Bahagian A: 10 Soalan Objektif -->
         <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
           <div class="border-b border-slate-200 pb-2.5 flex justify-between items-center">
             <div>
@@ -178,7 +178,7 @@
           <div id="objectiveQuestionsList" class="space-y-4"></div>
         </div>
 
-        <!-- Bahagian B: Subjektif -->
+        <!-- Bahagian B: 5 Soalan Subjektif -->
         <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
           <div class="border-b border-slate-200 pb-2.5 flex justify-between items-center">
             <div>
@@ -190,10 +190,10 @@
           <div id="subjectiveQuestionsList" class="space-y-4"></div>
         </div>
 
-        <!-- Butang Hantar -->
+        <!-- Butang Hantar & Peringatan Waktu -->
         <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 text-center space-y-2">
-          <div id="lateNoticeBox" class="hidden p-2.5 bg-rose-50 border border-rose-300 rounded-lg text-rose-800 text-xs font-bold">
-            Masa sasaran telah berlalu. Anda masih dibenarkan menghantar, namun tugasan akan direkodkan sebagai 'Lewat'.
+          <div id="lateNoticeBox" class="hidden p-2.5 bg-rose-50 border border-rose-300 rounded-lg text-rose-800 text-xs font-bold leading-relaxed">
+            Masa sasaran telah berakhir. Anda masih dibenarkan menghantar sehingga jam 12.00 tengah malam, namun tugasan akan direkodkan sebagai 'Lewat'.
           </div>
           <button onclick="submitQuiz()" id="submitBtn" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-extrabold rounded-xl shadow ease-smooth text-xs">
             <span id="submitBtnText">Hantar Tugasan ke Google Sheet</span>
@@ -444,7 +444,7 @@
 
   </main>
 
-  <!-- MODAL SEMAKAN GURU (LENGKAP SKEMA JAWAPAN TEPAT & PERINCIAN MARKAH) -->
+  <!-- MODAL SEMAKAN GURU (SKEMA JAWAPAN LENGKAP & PEMARKAHAN) -->
   <div id="reviewModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-3 no-print">
     <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[92vh] flex flex-col overflow-hidden ease-smooth">
       <div class="p-3.5 bg-indigo-900 text-white flex justify-between items-center">
@@ -539,7 +539,7 @@
     </div>
   </div>
 
-  <!-- TEMPLAT CETAKAN SLIP PDF A4 RASMI (TERMASUK SKEMA PENUH) -->
+  <!-- TEMPLAT CETAKAN SLIP PDF A4 RASMI -->
   <div id="printableSlip" class="hidden">
     <div class="max-w-3xl mx-auto border-2 border-slate-800 p-8 rounded bg-white text-slate-900">
       
@@ -585,7 +585,7 @@
         </tr>
       </table>
 
-      <!-- Ringkasan Markah Pencapaian -->
+      <!-- Ringkasan Markah -->
       <div class="mb-4">
         <h4 class="font-bold text-xs mb-1.5 uppercase">Ringkasan Markah Pencapaian:</h4>
         <table class="w-full text-xs border border-slate-400 text-center">
@@ -626,7 +626,7 @@
         <p class="text-xs leading-relaxed text-slate-800 whitespace-pre-wrap font-sans" id="slipTeacherComment">-</p>
       </div>
 
-      <!-- Tandatangan & Pengesahan -->
+      <!-- Pengesahan -->
       <div class="grid grid-cols-2 gap-6 pt-3 border-t border-slate-300 text-xs mb-6">
         <div class="text-center">
           <p class="text-slate-500 mb-9">Disahkan oleh Guru Mata Pelajaran:</p>
@@ -658,7 +658,9 @@
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxrPzsXB7xn8U4vI6LdCZQojLdmQRYOEqXL0mjAS_g-NwXNUR8Nj4x7W4yt5OH_Qh3GSQ/exec";
 
-    /* SEMUA SESI DIHADKAN SEHINGGA JAM 12.00 MALAM (23:59) HARI SESI */
+    /* ==========================================================
+       KONFIGURASI SESI KELAS & DUA TAHAP WAKTU (PATUH & TUTUP)
+    ========================================================== */
     const SESSIONS_CONFIG = {
       "T3_SESI_HARI_INI": {
         subject: "RBT Tingkatan 3",
@@ -666,9 +668,14 @@
         defaultClass: "3S2",
         sessionName: "Sesi 10.30 pagi - 11.30 pagi (Khamis, 8 Okt 2026)",
         shortName: "Sesi T3 (3S1 & 3S2)",
-        deadlineHour: 23,
-        deadlineMinute: 59,
-        deadlineDate: "2026-10-08"
+        // Peringkat 1: Had Patuh Masa (5.00 Petang)
+        onTimeHour: 17,
+        onTimeMinute: 0,
+        // Peringkat 2: Had Terakhir Penghantaran / Portal Tutup (12.00 Malam)
+        closeHour: 23,
+        closeMinute: 59,
+        closeSecond: 59,
+        sessionDate: "2026-10-08"
       },
       "T2_SESI_ESOK": {
         subject: "RBT Tingkatan 2",
@@ -676,9 +683,14 @@
         defaultClass: "2S1",
         sessionName: "Sesi 8.00 pagi - 9.00 pagi (Jumaat, 9 Okt 2026)",
         shortName: "Sesi T2 (2S1 & 2S2)",
-        deadlineHour: 23,
-        deadlineMinute: 59,
-        deadlineDate: "2026-10-09"
+        // Peringkat 1: Had Patuh Masa (3.00 Petang)
+        onTimeHour: 15,
+        onTimeMinute: 0,
+        // Peringkat 2: Had Terakhir Penghantaran / Portal Tutup (12.00 Malam)
+        closeHour: 23,
+        closeMinute: 59,
+        closeSecond: 59,
+        sessionDate: "2026-10-09"
       }
     };
 
@@ -1087,37 +1099,52 @@
       const isT2 = (selectedKey === "T2_SESI_ESOK");
       
       sessionSelect.innerHTML = `
-        <option value="T3_SESI_HARI_INI" ${!isT2 ? "selected" : ""}>Sesi 10.30 pagi - 11.30 pagi (Khamis, 8 Okt) - Kelas 3S1 & 3S2 [Tamat 12:00 MLM]</option>
-        <option value="T2_SESI_ESOK" ${isT2 ? "selected" : ""}>Sesi 8.00 pagi - 9.00 pagi (Jumaat, 9 Okt) - Kelas 2S1 & 2S2 [Tamat 12:00 MLM]</option>
+        <option value="T3_SESI_HARI_INI" ${!isT2 ? "selected" : ""}>Sesi 10.30 pagi - 11.30 pagi (Khamis, 8 Okt) - Kelas 3S1 & 3S2 [Patuh: sblm 5.00 PTG | Tutup: 12.00 MLM]</option>
+        <option value="T2_SESI_ESOK" ${isT2 ? "selected" : ""}>Sesi 8.00 pagi - 9.00 pagi (Jumaat, 9 Okt) - Kelas 2S1 & 2S2 [Patuh: sblm 3.00 PTG | Tutup: 12.00 MLM]</option>
       `;
 
       const note = document.getElementById('regSessionNote');
       if (isT2) {
-        note.innerHTML = `Sesi Jumaat: <strong>8.00 pg - 9.00 pg</strong> &bull; Had hantar: <strong>Jam 12.00 tengah malam</strong>`;
+        note.innerHTML = `Sesi Jumaat: <strong>8.00 pg - 9.00 pg</strong> &bull; Patuh Masa: <strong>Sebelum 3.00 ptg</strong> &bull; Had Tutup: <strong>12.00 tgh malam (Lewat)</strong>`;
         document.getElementById('regSessionBadge').innerText = "Sesi 2S1 & 2S2 (9 Okt)";
       } else {
-        note.innerHTML = `Sesi Khamis: <strong>10.30 pg - 11.30 pg</strong> &bull; Had hantar: <strong>Jam 12.00 tengah malam</strong>`;
+        note.innerHTML = `Sesi Khamis: <strong>10.30 pg - 11.30 pg</strong> &bull; Patuh Masa: <strong>Sebelum 5.00 ptg</strong> &bull; Had Tutup: <strong>12.00 tgh malam (Lewat)</strong>`;
         document.getElementById('regSessionBadge').innerText = "Sesi 3S1 & 3S2 (8 Okt)";
       }
     }
 
-    function getSessionDeadline(sessionKey) {
+    /* MENGIRA DUA TARIKH SASARAN WAKTU */
+    function getSessionOnTimeDeadline(sessionKey) {
       const config = SESSIONS_CONFIG[sessionKey] || SESSIONS_CONFIG["T3_SESI_HARI_INI"];
-      const d = new Date(config.deadlineDate + "T00:00:00");
-      d.setHours(config.deadlineHour || 23, config.deadlineMinute || 59, 59, 999);
+      const d = new Date(config.sessionDate + "T00:00:00");
+      d.setHours(config.onTimeHour, config.onTimeMinute, 0, 0);
+      return d;
+    }
+
+    function getSessionCloseDeadline(sessionKey) {
+      const config = SESSIONS_CONFIG[sessionKey] || SESSIONS_CONFIG["T3_SESI_HARI_INI"];
+      const d = new Date(config.sessionDate + "T00:00:00");
+      d.setHours(config.closeHour || 23, config.closeMinute || 59, config.closeSecond || 59, 999);
       return d;
     }
 
     function isLateForSession(sessionKey) {
-      return new Date() > getSessionDeadline(sessionKey);
+      return new Date() > getSessionOnTimeDeadline(sessionKey);
     }
 
+    function isClosedForSession(sessionKey) {
+      return new Date() > getSessionCloseDeadline(sessionKey);
+    }
+
+    /* ==========================================================
+       PENGEMASKINIAN UI PEMASA MENGIKUT 3 TAHAP STATUS WAKTU
+    ========================================================== */
     function updateBannerUI() {
-      const deadline = getSessionDeadline(currentSessionKey);
-      const diff = deadline - new Date();
-      const isLate = diff <= 0;
+      const now = new Date();
+      const onTimeDeadline = getSessionOnTimeDeadline(currentSessionKey);
+      const closeDeadline = getSessionCloseDeadline(currentSessionKey);
       const config = SESSIONS_CONFIG[currentSessionKey] || SESSIONS_CONFIG["T3_SESI_HARI_INI"];
-      const targetStr = "12:00 TENGAH MALAM";
+      const onTimeStr = (config.onTimeHour === 15) ? "3:00 PETANG" : "5:00 PETANG";
 
       const banner = document.getElementById('deadlineBanner');
       const title = document.getElementById('deadlineBannerTitle');
@@ -1129,41 +1156,89 @@
       const lateNotice = document.getElementById('lateNoticeBox');
       const submitBtn = document.getElementById('submitBtn');
       const submitBtnText = document.getElementById('submitBtnText');
+      const startBtn = document.getElementById('startBtn');
 
-      if (isLate) {
-        const ms = Math.abs(diff);
-        const h = Math.floor(ms / 3600000);
-        const m = Math.floor((ms % 3600000) / 60000);
+      // TAHAP 3: SELEPAS JAM 12.00 MALAM (PORTAL DITUTUP SEPENUHNYA)
+      if (now > closeDeadline) {
+        banner.className = "bg-slate-900 text-white rounded-xl p-3.5 shadow-sm flex flex-wrap items-center justify-between gap-3 border border-rose-600 ease-smooth";
+        title.innerText = `${config.subject.toUpperCase()} - PENGHANTARAN TELAH DITUTUP`;
+        desc.innerHTML = `Had masa terakhir (12.00 tengah malam) telah berakhir. Portal tidak lagi menerima penghantaran bagi sesi ini.`;
+        label.innerText = "Status:";
+        text.innerText = "DITUTUP";
 
-        banner.className = "bg-rose-950 text-white rounded-xl p-3.5 shadow-sm flex flex-wrap items-center justify-between gap-3 border border-rose-800 ease-smooth";
-        title.innerText = `${config.subject.toUpperCase()} - HAD MASA ${targetStr} TELAH BERLALU`;
-        desc.innerHTML = `Penghantaran masih dibuka tetapi akan ditandakan sebagai <span class='font-black underline'>Lewat</span>.`;
-        label.innerText = "Lewat:";
-        text.innerText = `${h}j ${m}m`;
+        quizBadge.className = "bg-rose-900 text-rose-200 px-2.5 py-1 rounded-lg font-mono font-bold text-xs";
+        quizText.innerText = "PORTAL DITUTUP";
 
-        quizBadge.className = "bg-rose-500 text-white px-2.5 py-1 rounded-lg font-mono font-bold text-xs";
-        quizText.innerText = `LEWAT (${h}j ${m}m)`;
+        lateNotice.className = "p-2.5 bg-rose-100 border border-rose-400 rounded-lg text-rose-900 text-xs font-black";
+        lateNotice.innerText = "Penghantaran bagi sesi ini telah ditutup sepenuhnya pada jam 12.00 tengah malam.";
         lateNotice.classList.remove('hidden');
 
+        submitBtn.disabled = true;
+        submitBtn.className = "px-6 py-2.5 bg-slate-400 cursor-not-allowed text-white font-extrabold rounded-xl shadow text-xs";
+        submitBtnText.innerText = "Penghantaran Ditutup";
+
+        if (startBtn) {
+          startBtn.disabled = true;
+          startBtn.className = "w-full py-2.5 bg-slate-400 cursor-not-allowed text-white font-extrabold rounded-xl shadow text-xs";
+          startBtn.innerText = "Sesi Telah Ditutup (Tamat 12.00 Malam)";
+        }
+      }
+      // TAHAP 2: SELEPAS JAM SASARAN SEHINGGA 12.00 MALAM (LEWAT)
+      else if (now > onTimeDeadline) {
+        const diffClose = closeDeadline - now;
+        const h = Math.floor(diffClose / 3600000);
+        const m = Math.floor((diffClose % 3600000) / 60000);
+        const s = Math.floor((diffClose % 60000) / 1000);
+
+        banner.className = "bg-rose-950 text-white rounded-xl p-3.5 shadow-sm flex flex-wrap items-center justify-between gap-3 border border-rose-700 ease-smooth";
+        title.innerText = `${config.subject.toUpperCase()} - STATUS: LEWAT (DITUTUP JAM 12.00 MALAM)`;
+        desc.innerHTML = `Masa sasaran (${onTimeStr}) telah berlalu. Masih boleh dihantar sehingga <strong>12.00 tengah malam</strong> (direkodkan sebagai <span class='font-black underline'>Lewat</span>).`;
+        label.innerText = "Tutup dalam:";
+        text.innerText = `${h}j ${m}m ${s}s`;
+
+        quizBadge.className = "bg-rose-500 text-white px-2.5 py-1 rounded-lg font-mono font-bold text-xs";
+        quizText.innerText = `LEWAT (Tutup: ${h}j ${m}m ${s}s)`;
+
+        lateNotice.className = "p-2.5 bg-rose-50 border border-rose-300 rounded-lg text-rose-800 text-xs font-bold";
+        lateNotice.innerText = `Masa sasaran (${onTimeStr}) telah berlalu. Anda masih dibenarkan menghantar sehingga jam 12.00 tengah malam, namun tugasan akan direkodkan sebagai 'Lewat'.`;
+        lateNotice.classList.remove('hidden');
+
+        submitBtn.disabled = false;
         submitBtn.className = "px-6 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-extrabold rounded-xl shadow ease-smooth text-xs";
         submitBtnText.innerText = "Hantar Tugasan (Rekod Sebagai Lewat)";
-      } else {
-        const h = Math.floor(diff / 3600000);
-        const m = Math.floor((diff % 3600000) / 60000);
-        const s = Math.floor((diff % 60000) / 1000);
+
+        if (startBtn) {
+          startBtn.disabled = false;
+          startBtn.className = "w-full py-2.5 bg-rose-600 hover:bg-rose-700 active:scale-[0.99] text-white font-extrabold rounded-xl shadow text-xs ease-smooth";
+          startBtn.innerText = "Daftar & Mula Menjawab (Status: Lewat)";
+        }
+      }
+      // TAHAP 1: SEBELUM JAM SASARAN (PATUH MASA)
+      else {
+        const diffOnTime = onTimeDeadline - now;
+        const h = Math.floor(diffOnTime / 3600000);
+        const m = Math.floor((diffOnTime % 3600000) / 60000);
+        const s = Math.floor((diffOnTime % 60000) / 1000);
 
         banner.className = "bg-indigo-950 text-white rounded-xl p-3.5 shadow-sm flex flex-wrap items-center justify-between gap-3 border border-indigo-800 ease-smooth";
-        title.innerText = `${config.subject.toUpperCase()} - HAD MASA HANTAR: JAM ${targetStr}`;
-        desc.innerText = `${config.sessionName}. Sila hantar sebelum jam ${targetStr}.`;
-        label.innerText = "Baki:";
+        title.innerText = `${config.subject.toUpperCase()} - PATUH MASA SEHINGGA JAM ${onTimeStr}`;
+        desc.innerText = `${config.sessionName}. Sila hantar sebelum jam ${onTimeStr} untuk status Patuh Masa.`;
+        label.innerText = "Baki Patuh Masa:";
         text.innerText = `${h}j ${m}m ${s}s`;
 
         quizBadge.className = "bg-amber-400 text-indigo-950 px-2.5 py-1 rounded-lg font-mono font-bold text-xs";
         quizText.innerText = `Baki: ${h}j ${m}m ${s}s`;
         lateNotice.classList.add('hidden');
 
+        submitBtn.disabled = false;
         submitBtn.className = "px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold rounded-xl shadow ease-smooth text-xs";
         submitBtnText.innerText = "Hantar Tugasan ke Google Sheet";
+
+        if (startBtn) {
+          startBtn.disabled = false;
+          startBtn.className = "w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white font-extrabold rounded-xl shadow text-xs ease-smooth";
+          startBtn.innerText = "Daftar & Mula Menjawab";
+        }
       }
     }
 
@@ -1177,6 +1252,10 @@
 
       if (!cls) return alert("Sila pilih kelas!");
       if (!name) return alert("Sila isi nama penuh!");
+
+      if (isClosedForSession(sess)) {
+        return alert("Maaf, penghantaran bagi sesi ini telah ditutup sepenuhnya selepas jam 12.00 tengah malam.");
+      }
 
       currentStudent = { name: name.toUpperCase(), class: cls, subject: subj, sessionKey: sess };
       const config = SESSIONS_CONFIG[sess];
@@ -1256,6 +1335,10 @@
     }
 
     async function submitQuiz() {
+      if (isClosedForSession(currentStudent.sessionKey)) {
+        return alert("Penghantaran gagal. Portal telah ditutup sepenuhnya selepas jam 12.00 tengah malam bagi sesi ini.");
+      }
+
       const isLate = isLateForSession(currentStudent.sessionKey);
       const isT2 = (currentStudent.sessionKey === "T2_SESI_ESOK");
       const bank = isT2 ? questionsData_T2 : questionsData_T3;
@@ -1573,7 +1656,6 @@
               </button>
             </div>
 
-            <!-- Kad Skor -->
             <div class="grid grid-cols-3 gap-2 text-center">
               <div class="bg-indigo-50 p-1.5 rounded-lg">
                 <span class="text-[9px] text-slate-500 font-bold block">Objektif</span>
